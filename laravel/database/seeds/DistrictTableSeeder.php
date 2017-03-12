@@ -11,7 +11,7 @@ class DistrictsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('Districts')->insert([
+        DB::table('District')->insert([
             'name' => str_random(10),
             'station' => 1
         ]);
