@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -26,4 +28,5 @@ class LandingController extends BaseController
 
         return View('landing_page', ['districts' => $districts]);#.index', ['districts' => $districts]);
     }
+
 }

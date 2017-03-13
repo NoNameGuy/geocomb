@@ -15,4 +15,4 @@
     return view('welcome');
 });*/
 
-Route::get('/', 'LandingController@index');
+Route::get('/', 'WebScrapperController@getIndex');

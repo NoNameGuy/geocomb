@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+use Goutte\Client;
+use Symfony\Component\DomCrawler\Crawler;
+use Session;
 
 class WebScrapperController extends BaseController
 {
@@ -14,18 +18,18 @@ class WebScrapperController extends BaseController
 
     public function __construct(Client $client){
 
-      $this->cliente = $cliente;
+      $this->client = $client;
 
     }
 
     public function getIndex(){
 
-      $this->url = 'http://code.tutsplus.com';
+      $this->url = 'http://testing-ground.scraping.pro/';
       $this->setScrapeUrl( $this->url );
 
       $this->filters = [
-        'title' => '.posts__post-title',
-        'author' => '.posts__post-author-link'
+        'title' => '.caseblock',
+        'author' => '.casedescr'
       ];
 
       return view('scraper')
@@ -41,13 +45,13 @@ class WebScrapperController extends BaseController
       return $this->content = $this->startScraper();
     }
 
-    private fuction startScraper(){
+    private function startScraper(){
 
-      $countContent = $this->crawler->filter('.posts__post-title')->count();
+      $countContent = $this->crawler->filter('.caseblock')->count();
 
       if ($countContent){
 
-        $this->content = $this->crawler->filter('.posts--list-large li')->each(function Crawler $node, $i)
+        $this->content = $this->crawler->filter('.posts--list-large li')->each(function (Crawler $node, $i){
           return [
             'title' =>  $node->filter($this->filters['title'])->text(),
             'url' =>  $this->url.$node->filter($this->filters['title'])->attr('href'),
