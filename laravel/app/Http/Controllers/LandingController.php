@@ -13,6 +13,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+
+use App\District;
+
 class LandingController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -26,10 +29,10 @@ class LandingController extends BaseController
     public function index()
     {
         $districts = array();
-        #$districts = DB::select('select name from District;');
+        
         $districts = DB::table('District')->orderBy('name')->get();
-
-        return View('landing_page', ['districts' => $districts]);#.index', ['districts' => $districts]);
+        
+        return View('landing_page', ['districts' => $districts]);
     }
 
     public function fetchData()
@@ -55,13 +58,13 @@ class LandingController extends BaseController
             array_push($resultArray, $item);
         }
         foreach ($resultArray as $key => $value) {
-            $data = $this->filterStationData($value);
+            $data = $this->convertPageToCsv($value);
             echo "$data";
         }
 
     }
 
-    private function filterStationData($stationData){
+    private function convertPageToCsv($stationData){
         
         $stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
         $stationData = str_replace("function","",$stationData); #remove as funcoes javascript

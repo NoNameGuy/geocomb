@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 
-class DistrictsTableSeeder extends Seeder
+class DistrictTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +12,7 @@ class DistrictsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('District')->insert([
+        $data = [
             'name' => 'Leiria',
             'station' => 1
         ],[
@@ -23,7 +24,8 @@ class DistrictsTableSeeder extends Seeder
         ],[
             'name' => 'Porto',
             'station' => 4
-        ]
-        );
+        ];
+        
+        DB::table('District')->insert($data);
     }
 }
