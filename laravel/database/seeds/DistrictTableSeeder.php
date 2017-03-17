@@ -12,8 +12,18 @@ class DistrictsTableSeeder extends Seeder
     public function run()
     {
         DB::table('District')->insert([
-            'name' => str_random(10),
+            'name' => 'Leiria',
             'station' => 1
-        ]);
+        ],[
+            'name' => 'Coimbra',
+            'station' => 2
+        ],[
+            'name' => 'Lisboa',
+            'station' => 3
+        ],[
+            'name' => 'Porto',
+            'station' => 4
+        ]
+        );
     }
 }

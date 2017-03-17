@@ -10,6 +10,9 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 class LandingController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -27,6 +30,49 @@ class LandingController extends BaseController
         $districts = DB::table('District')->orderBy('name')->get();
 
         return View('landing_page', ['districts' => $districts]);#.index', ['districts' => $districts]);
+    }
+
+    public function fetchData()
+    {
+        $client = new Client(); //GuzzleHttp\Client
+        $resultArray = array();
+
+        for($i=1;$i<18;$i++)
+        {
+            if($i<10)
+            {
+                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD0'.$i.'.js', [
+    //                'auth' => ['user', 'pass']
+                ]);
+            }else{
+                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD'.$i.'.js', [
+    //                'auth' => ['user', 'pass']
+                ]);
+            }
+
+            $item = $result->getBody();
+
+            array_push($resultArray, $item);
+        }
+        foreach ($resultArray as $key => $value) {
+            $data = $this->filterStationData($value);
+            echo "$data";
+        }
+
+    }
+
+    private function filterStationData($stationData){
+        
+        $stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
+        $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
+        $stationData = preg_replace("/fAD[0-9][0-9]\(/","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace("{","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace("fAdicionaPontoGM(","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace(",urlImagens+",", ",$stationData); #remove as funcoes javascript
+        $stationData = str_replace(")","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace("}","",$stationData); #remove as funcoes javascript
+
+        return $stationData;
     }
 
 }

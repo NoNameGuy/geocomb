@@ -13,5 +13,6 @@
         }
     ?>
     </select>
+    <a href="{{action('LandingController@fetchData')}}">Fetch data Aveiro</a>
 </body>
 </html>
