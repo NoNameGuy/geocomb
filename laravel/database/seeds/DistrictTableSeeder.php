@@ -12,7 +12,7 @@ class DistrictTableSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
+        $data = array([
             'name' => 'Leiria',
             'station' => 1
         ],[
@@ -24,8 +24,8 @@ class DistrictTableSeeder extends Seeder
         ],[
             'name' => 'Porto',
             'station' => 4
-        ];
-        
+        ]);
+
         DB::table('District')->insert($data);
     }
 }
