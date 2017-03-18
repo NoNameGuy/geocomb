@@ -18,3 +18,5 @@
 Route::get('/', 'LandingController@index');
 
 Route::get('/fetch', 'LandingController@fetchData');
+Route::get('/fetchStation', 'LandingController@fetchStationData');
+Route::get('/maps', 'LandingController@mapsApi');

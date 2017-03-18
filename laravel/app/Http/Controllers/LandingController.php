@@ -57,14 +57,16 @@ class LandingController extends BaseController
 
             array_push($resultArray, $item);
         }
-        foreach ($resultArray as $key => $value) {
+        foreach ($resultArray as $key => $value)
+        {
             $data = $this->convertPageToCsv($value);
             echo "$data";
         }
 
     }
 
-    private function convertPageToCsv($stationData){
+    private function convertPageToCsv($stationData)
+    {
         
         $stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
         $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
@@ -76,6 +78,32 @@ class LandingController extends BaseController
         $stationData = str_replace("}","",$stationData); #remove as funcoes javascript
 
         return $stationData;
+    }
+
+    public function fetchStationData($stationId=165954)
+    {
+        $link = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=HTML&nppostocombustivel=$stationId";
+        $link2 = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=PDF&nppostocombustivel=177901&center=39.84721,-8.6033&zoom=15&maptype=roadmap";
+
+       /* $client = new Client(); //GuzzleHttp\Client
+        $resultArray = array();
+        $result = $client->request('GET', $link, [
+            //                'auth' => ['user', 'pass']
+        ]);*/
+
+
+        $page = htmlentities(file_get_contents($link));
+
+        echo $page;
+    }
+
+    public function mapsApi()
+    {
+        $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
+        $latitude = '40.508489';
+        $longitude = '-8.668739';
+        $iframe = '<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='.$apiKey.' &q='.$latitude.', '.$longitude.'" allowfullscreen> </iframe>';
+        echo $iframe;
     }
 
 }
