@@ -12,7 +12,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use GuzzleHttp;
+use Symfony\Component\DomCrawler\Crawler;
 
+#use JonnyW\PhantomJs\Client;
 
 use App\District;
 
@@ -31,15 +34,46 @@ class LandingController extends BaseController
         $districts = array();
         
         $districts = DB::table('District')->orderBy('name')->get();
+
+        $this->askLocation();
         
         return View('landing_page', ['districts' => $districts]);
+    }
+
+    private function askLocation()
+    {
+        //echo var_export(unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$_SERVER['REMOTE_ADDR'])));
+
+        $location ='<script>
+                         window.onload = getLocation;
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+function showPosition(position) {
+    document.getElementById("latitude").value =position.coords.latitude;
+    document.getElementById("longitude").value =position.coords.longitude;
+}
+</script>
+<form id = "geolocation" action="/maps" method="POST" >
+           <!-- {% csrf_token %}-->
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+        <input type="text" id = "latitude" name="location" value="" />
+        <input type="text" id = "longitude" name="location" value="" />
+        <input type="submit" />
+
+</form>';
+        echo "$location";
     }
 
     public function fetchData()
     {
         $client = new Client(); //GuzzleHttp\Client
         $resultArray = array();
-
+/*
         for($i=1;$i<18;$i++)
         {
             if($i<10)
@@ -56,19 +90,45 @@ class LandingController extends BaseController
             $item = $result->getBody();
 
             array_push($resultArray, $item);
-        }
+        }*/
+        $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD01.js', [
+    //                'auth' => ['user', 'pass']
+                ]);
+        $item = $result->getBody();
+        array_push($resultArray, $item);
         foreach ($resultArray as $key => $value)
         {
-            $data = $this->convertPageToCsv($value);
-            echo "$data";
+            $csv = $this->convertPageToCsv($value);
+            $this->retrieveData($csv);
+            //echo "$csv";
         }
 
+    }
+
+    private function retrieveData($csv)
+    {
+        $districts = ['Aveiro', 'Beja', 'Braga', 'Bragança', 'Castelo Branco', 'Coimbra', 'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre', 'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'];
+       // $array = str_getcsv($csv, ';');
+        //var_dump($array);
+        $data = array_map("str_getcsv", preg_split('/\r*\n+|\r+|;/', $csv));
+        array_pop($data);
+       // print_r( $data[0]);
+        foreach($data as $value){
+           printf("Posto: %s, Latitude: %s, Longitude: %s, Image: %s <br>", $value[0], $value[2], $value[3], $value[4] );
+        }
+        //print_r($data);
+        
+        //print_r($data);
+        //print_r($csv);
+        /*foreach ($array as $key => $value) {
+            echo "$key => $value<br>";  
+        }*/
     }
 
     private function convertPageToCsv($stationData)
     {
         
-        $stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
+        //$stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
         $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
         $stationData = preg_replace("/fAD[0-9][0-9]\(/","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("{","",$stationData); #remove as funcoes javascript
@@ -84,17 +144,52 @@ class LandingController extends BaseController
     {
         $link = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=HTML&nppostocombustivel=$stationId";
         $link2 = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=PDF&nppostocombustivel=177901&center=39.84721,-8.6033&zoom=15&maptype=roadmap";
+        
+        /*$guzzle = new GuzzleHttp\Client();
+        $request = $guzzle->request('GET', $link);
 
-       /* $client = new Client(); //GuzzleHttp\Client
+        $client = new Client(); //GuzzleHttp\Client
         $resultArray = array();
-        $result = $client->request('GET', $link, [
-            //                'auth' => ['user', 'pass']
-        ]);*/
+        $crawler = new Crawler((string) $request->getBody());
+        $result = $crawler->filter('body')->html();
 
+$useragent="Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
 
-        $page = htmlentities(file_get_contents($link));
+        $ch = curl_init();
+curl_setopt($ch, CURLOPT_URL,$link);
+curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  #return the result insted of printing it
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);    #allow redirects
+$ret = curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+$status_code = curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
+//curl_setopt($ch, CURLOPT_MAXREDIRS,5);
+$html = curl_exec($ch);*/
 
-        echo $page;
+        #$page = htmlentities(file_get_contents($last_url));
+
+#phantom    
+  /*      $client = Client::getInstance();
+        $client->getEngine()->setPath();
+
+    
+    $client = Client::getInstance();
+    
+    $request  = $client->getMessageFactory()->createRequest();
+    $response = $client->getMessageFactory()->createResponse();
+    
+    $request->setMethod('GET');
+    $request->setUrl($link);
+    
+    $client->send($request, $response);
+    
+    if($response->getStatus() === 200) {
+        echo $response->getContent();
+    }*/
+    }
+
+    public function receiveGPSCoordinates()
+    {
+        echo '<script> alert("Latitude: "+ latitude+" Longitude: "+longitude );</script>';
     }
 
     public function mapsApi()
@@ -104,6 +199,17 @@ class LandingController extends BaseController
         $longitude = '-8.668739';
         $iframe = '<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='.$apiKey.' &q='.$latitude.', '.$longitude.'" allowfullscreen> </iframe>';
         echo $iframe;
+
+        $link = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=39.7360689,-8.8473024&destinations=40.508489,-8.668739&key=$apiKey";
+        
+        $client = new GuzzleHttp\Client();
+        $json = $client->get($link)->getBody();
+        
+        echo "$json<br><br>";
+
+        
+        $obj = json_decode($json); //converts json to object
+        echo $obj->rows[0]->elements[0]->distance->text;
     }
 
 }

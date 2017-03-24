@@ -18,5 +18,8 @@
 Route::get('/', 'LandingController@index');
 
 Route::get('/fetch', 'LandingController@fetchData');
-Route::get('/fetchStation', 'LandingController@fetchStationData');
+Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
+Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 Route::get('/maps', 'LandingController@mapsApi');
+
+Route::post('/maps', 'LandingController@receiveGPSCoordinates');
