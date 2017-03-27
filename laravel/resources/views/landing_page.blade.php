@@ -68,6 +68,15 @@
             }
           ?>
 				</select>
+         
+        {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
+
+        {!! Form::label('input', 'Location', ['class' => 'col-lg-2 control-label'] )  !!}
+          <input type="text" name="location"/>
+          
+          {!! Form::submit("Pesquisar")  !!}
+        {!! Form::close()  !!}
+
 			</div>
 			<div class="col-sm-6">
 				<p class="center"> Por Combustível :</p>

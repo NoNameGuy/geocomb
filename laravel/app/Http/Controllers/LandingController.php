@@ -23,6 +23,9 @@ class LandingController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
+    private $allStations = array();
+    private $fiveClosestStations = array();
 
     /**
      * Show a list of all of the application's districts.
@@ -36,8 +39,108 @@ class LandingController extends BaseController
         $districts = DB::table('District')->orderBy('name')->get();
 
         $this->askLocation();
+
+        //print_r($_POST);
         
+        if (array_key_exists('location', $_POST)) {
+            #echo addslashes($_POST['location']);
+            $this->fetchAllStations();
+            $coordinates = array();
+            $coordinates = $this->getCoordinatesByPlace(addslashes($_POST['location']));
+            #print_r($coordinates);
+            #echo $coordinates["latitude"]. $coordinates["longitude"];
+            $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
+        }
+
         return View('landing_page', ['districts' => $districts]);
+    }
+
+    private function getCoordinatesByPlace($address)
+    {
+        $address = str_replace(" ", "+", $address);#google maps api uses plus instead of spaces
+        
+        $link = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$this->apiKey";
+
+        $client = new GuzzleHttp\Client();
+        $json = $client->get($link)->getBody();
+        
+        $obj = json_decode($json); //converts json to object
+        #echo $obj->results[0]->geometry->location->lat;
+
+        $coordinates['latitude'] = $obj->results[0]->geometry->location->lat;
+        $coordinates['longitude'] = $obj->results[0]->geometry->location->lng;
+        return $coordinates;
+    }
+
+    private function fetchAllStations(){
+
+        $resultArray = array();
+        $client = new Client();
+
+        for($i=1;$i<18;$i++)
+        {
+            if($i<10)
+            {
+                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD0'.$i.'.js', [
+    //                'auth' => ['user', 'pass']
+                ]);
+            }else{
+                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD'.$i.'.js', [
+    //                'auth' => ['user', 'pass']
+                ]);
+            }
+
+            $item = $result->getBody();
+
+            array_push($resultArray, $item);
+        }
+
+        $stationsInCSV = $this->convertPageToCsv($resultArray);
+        #print_r( $stationsInCSV);
+
+        for($i=0; $i<count($stationsInCSV); $i++)
+        {
+            //echo "$stationsInCSV[$i][0]";
+            #$resultArray[$i] = str_getcsv($stationsInCSV[$i], ";");
+            /*$string=implode("",$resultArray[$i]);
+            $newArray = explode(",", $string);
+            print_r($newArray);*/
+
+            $lines = explode("\n", $stationsInCSV[$i]);
+            $array = array();
+            
+            foreach ($lines as $line) {
+                $array = str_getcsv($line, ",", "\n");
+                #print_r( $array);
+
+                if(isset($array[0]) && isset($array[2]) && isset($array[3])){
+                    #echo "$array[$i][0]";
+                    $station = array('id' => "$array[0]", 'latitude' => "$array[2]", 'longitude' => "$array[3]");
+                    echo "ID: ".$station['id']." STATION LATITUDE: ".$station['latitude']." STATION LONGITUDE: ".$station['longitude'];
+                    array_push( $this->allStations, $station);
+                   # echo "depois do push";
+
+                }
+                
+            }
+
+            
+           
+            
+            /*foreach($this->allStations as $key=>$value){
+                echo $key;
+            }*/
+            #print_r($this->allStations);
+        }
+
+    }
+
+    private function searchStations($latitudeOrigin, $longitudeOrigin)
+    {
+        
+        foreach ($this->allStations as $value) {
+            print_r($value);
+        }
     }
 
     private function askLocation()
@@ -110,27 +213,26 @@ function showPosition(position) {
         $districts = ['Aveiro', 'Beja', 'Braga', 'Bragança', 'Castelo Branco', 'Coimbra', 'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre', 'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'];
        // $array = str_getcsv($csv, ';');
         //var_dump($array);
-        $data = array_map("str_getcsv", preg_split('/\r*\n+|\r+|;/', $csv));
+        $data = array_map("str_getcsv", preg_split('/\r*\n+|\r+|\n+|;/', $csv));
         array_pop($data);
        // print_r( $data[0]);
         foreach($data as $value){
-           printf("Posto: %s, Latitude: %s, Longitude: %s, Image: %s <br>", $value[0], $value[2], $value[3], $value[4] );
+           # $station['id'] = $value[0];
+            #$station['latitude'] = $value[2];
+            #$station['longitude'] = $value[3];
+            printf("Posto: %s, Latitude: %s, Longitude: %s, Image: %s <br>", $value[0], $value[2], $value[3], $value[4] );
+            #array_push($this->allStations, $station);
         }
-        //print_r($data);
         
-        //print_r($data);
-        //print_r($csv);
-        /*foreach ($array as $key => $value) {
-            echo "$key => $value<br>";  
-        }*/
     }
 
     private function convertPageToCsv($stationData)
     {
         
-        //$stationData = str_replace(";","\r\n",$stationData); #substitui o ; por paragrafo
-        $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace(";","\n",$stationData); #substitui o ; por paragrafo
+        
         $stationData = preg_replace("/fAD[0-9][0-9]\(/","",$stationData); #remove as funcoes javascript
+        $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("{","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("fAdicionaPontoGM(","",$stationData); #remove as funcoes javascript
         $stationData = str_replace(",urlImagens+",", ",$stationData); #remove as funcoes javascript

@@ -15,7 +15,13 @@
     return view('welcome');
 });*/
 
-Route::get('/', 'LandingController@index');
+#Route::get('/', 'LandingController@index');
+#Route::post('/', 'LandingController@index');
+
+Route::get('/',
+  ['as' => 'contact', 'uses' => 'LandingController@index']);
+Route::post('/', 
+  ['as' => 'search_station', 'uses' => 'LandingController@index']);
 
 Route::get('/fetch', 'LandingController@fetchData');
 Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
