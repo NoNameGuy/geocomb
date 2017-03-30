@@ -71,8 +71,9 @@
          
         {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
 
-        {!! Form::label('input', 'Location', ['class' => 'col-lg-2 control-label'] )  !!}
-          <input type="text" name="location"/>
+        
+          <input type="text" name="location" placeholder="Current Location" />
+          <input type="text" name="radius" placeholder="Radius: 5km" />
           
           {!! Form::submit("Pesquisar")  !!}
         {!! Form::close()  !!}

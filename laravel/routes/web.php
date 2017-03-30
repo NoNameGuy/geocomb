@@ -22,6 +22,9 @@ Route::get('/',
   ['as' => 'contact', 'uses' => 'LandingController@index']);
 Route::post('/', 
   ['as' => 'search_station', 'uses' => 'LandingController@index']);
+Route::post('/', 
+  ['as' => 'current_location', 'uses' => 'LandingController@index']);
+
 
 Route::get('/fetch', 'LandingController@fetchData');
 Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');

@@ -26,7 +26,7 @@ class LandingController extends BaseController
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $allStations = array();
     private $fiveClosestStations = array();
-
+    private $districts = ['Aveiro', 'Beja', 'Braga', 'Bragança', 'Castelo Branco', 'Coimbra', 'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre', 'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'];
     /**
      * Show a list of all of the application's districts.
      *
@@ -38,19 +38,27 @@ class LandingController extends BaseController
         
         $districts = DB::table('District')->orderBy('name')->get();
 
-        $this->askLocation();
+        
+        #$this->askLocation();
 
-        //print_r($_POST);
         
         if (array_key_exists('location', $_POST)) {
-            #echo addslashes($_POST['location']);
             $this->fetchAllStations();
             $coordinates = array();
             $coordinates = $this->getCoordinatesByPlace(addslashes($_POST['location']));
+            if ( array_key_exists('radius', $_POST)) {
+                $this->searchStations($coordinates["latitude"], $coordinates["longitude"], $_POST['radius']);
+            } else {
+                $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
+            }
+            
             #print_r($coordinates);
-            #echo $coordinates["latitude"]. $coordinates["longitude"];
-            $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
+            
+            
+            #$this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
         }
+
+        $this->fetchStationData();
 
         return View('landing_page', ['districts' => $districts]);
     }
@@ -114,11 +122,9 @@ class LandingController extends BaseController
                 #print_r( $array);
 
                 if(isset($array[0]) && isset($array[2]) && isset($array[3])){
-                    #echo "$array[$i][0]";
                     $station = array('id' => "$array[0]", 'latitude' => "$array[2]", 'longitude' => "$array[3]");
-                    echo "ID: ".$station['id']." STATION LATITUDE: ".$station['latitude']." STATION LONGITUDE: ".$station['longitude'];
+                    #echo "ID: ".$station['id']." STATION LATITUDE: ".$station['latitude']." STATION LONGITUDE: ".$station['longitude'];
                     array_push( $this->allStations, $station);
-                   # echo "depois do push";
 
                 }
                 
@@ -135,11 +141,11 @@ class LandingController extends BaseController
 
     }
 
-    private function searchStations($latitudeOrigin, $longitudeOrigin)
+    private function searchStations($latitudeOrigin, $longitudeOrigin, $radius=5)
     {
         
         foreach ($this->allStations as $value) {
-            print_r($value);
+            #print_r($value);
         }
     }
 
@@ -161,7 +167,7 @@ function showPosition(position) {
     document.getElementById("longitude").value =position.coords.longitude;
 }
 </script>
-<form id = "geolocation" action="/maps" method="POST" >
+ <form id = "geolocation" action="/maps" method="POST" >
            <!-- {% csrf_token %}-->
             <meta name="csrf-token" content="{{ csrf_token() }}">
         <input type="text" id = "latitude" name="location" value="" />
@@ -169,7 +175,7 @@ function showPosition(position) {
         <input type="submit" />
 
 </form>';
-        echo "$location";
+        #echo "$location";
     }
 
     public function fetchData()
@@ -210,7 +216,6 @@ function showPosition(position) {
 
     private function retrieveData($csv)
     {
-        $districts = ['Aveiro', 'Beja', 'Braga', 'Bragança', 'Castelo Branco', 'Coimbra', 'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre', 'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'];
        // $array = str_getcsv($csv, ';');
         //var_dump($array);
         $data = array_map("str_getcsv", preg_split('/\r*\n+|\r+|\n+|;/', $csv));
@@ -244,49 +249,19 @@ function showPosition(position) {
 
     public function fetchStationData($stationId=165954)
     {
-        $link = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=HTML&nppostocombustivel=$stationId";
-        $link2 = "http://www.precoscombustiveis.dgeg.pt/paginaImprimir.aspx?tipo=PDF&nppostocombustivel=177901&center=39.84721,-8.6033&zoom=15&maptype=roadmap";
+        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA"; 
+        $link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
         
-        /*$guzzle = new GuzzleHttp\Client();
+        #$page = $client->get($link)->getBody();
+        #echo $page->getContents();
+        $guzzle = new GuzzleHttp\Client();
         $request = $guzzle->request('GET', $link);
-
-        $client = new Client(); //GuzzleHttp\Client
-        $resultArray = array();
         $crawler = new Crawler((string) $request->getBody());
-        $result = $crawler->filter('body')->html();
+        $result = $crawler->filter('div .esq ')->html();
+        $simpleDieselPrice = substr($result, 28, 28);
+        $simpleDieselPrice = substr($simpleDieselPrice, 0, 5);
 
-$useragent="Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
-
-        $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,$link);
-curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  #return the result insted of printing it
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);    #allow redirects
-$ret = curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-$status_code = curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
-//curl_setopt($ch, CURLOPT_MAXREDIRS,5);
-$html = curl_exec($ch);*/
-
-        #$page = htmlentities(file_get_contents($last_url));
-
-#phantom    
-  /*      $client = Client::getInstance();
-        $client->getEngine()->setPath();
-
-    
-    $client = Client::getInstance();
-    
-    $request  = $client->getMessageFactory()->createRequest();
-    $response = $client->getMessageFactory()->createResponse();
-    
-    $request->setMethod('GET');
-    $request->setUrl($link);
-    
-    $client->send($request, $response);
-    
-    if($response->getStatus() === 200) {
-        echo $response->getContent();
-    }*/
+     echo "Diesel simples: ".$simpleDieselPrice;
     }
 
     public function receiveGPSCoordinates()
