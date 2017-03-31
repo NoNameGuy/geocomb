@@ -68,13 +68,13 @@
             }
           ?>
 				</select>
-         
+
         {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
 
-        
+
           <input type="text" name="location" placeholder="Current Location" />
           <input type="text" name="radius" placeholder="Radius: 5km" />
-          
+
           {!! Form::submit("Pesquisar")  !!}
         {!! Form::close()  !!}
 

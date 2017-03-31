@@ -256,7 +256,15 @@ function showPosition(position) {
         #$page = $client->get($link)->getBody();
         #echo $page->getContents();
         $guzzle = new GuzzleHttp\Client();
-        $request = $guzzle->request('GET', $link);
+        $request = $guzzle->request('GET', $link, [
+          'headers' => [
+                'User-Agent' =>  'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0',
+                'Accept'      => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Referrer'    => 'http://www.precoscombustiveis.dgeg.pt/pagina.aspx?screenwidth=1600&mlkid=wpor0pm0vgxqu4uu2plotf45&menucb=1',
+            ],
+            'debug' => false,
+        ]);
+
         $crawler = new Crawler((string) $request->getBody());
         $result = $crawler->filter('div .esq ')->text();
 
