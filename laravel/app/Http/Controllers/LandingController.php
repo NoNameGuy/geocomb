@@ -35,13 +35,13 @@ class LandingController extends BaseController
     public function index()
     {
         $districts = array();
-        
+
         $districts = DB::table('District')->orderBy('name')->get();
 
-        
+
         #$this->askLocation();
 
-        
+
         if (array_key_exists('location', $_POST)) {
             $this->fetchAllStations();
             $coordinates = array();
@@ -51,10 +51,10 @@ class LandingController extends BaseController
             } else {
                 $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
             }
-            
+
             #print_r($coordinates);
-            
-            
+
+
             #$this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
         }
 
@@ -66,12 +66,12 @@ class LandingController extends BaseController
     private function getCoordinatesByPlace($address)
     {
         $address = str_replace(" ", "+", $address);#google maps api uses plus instead of spaces
-        
+
         $link = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$this->apiKey";
 
         $client = new GuzzleHttp\Client();
         $json = $client->get($link)->getBody();
-        
+
         $obj = json_decode($json); //converts json to object
         #echo $obj->results[0]->geometry->location->lat;
 
@@ -116,7 +116,7 @@ class LandingController extends BaseController
 
             $lines = explode("\n", $stationsInCSV[$i]);
             $array = array();
-            
+
             foreach ($lines as $line) {
                 $array = str_getcsv($line, ",", "\n");
                 #print_r( $array);
@@ -127,12 +127,12 @@ class LandingController extends BaseController
                     array_push( $this->allStations, $station);
 
                 }
-                
+
             }
 
-            
-           
-            
+
+
+
             /*foreach($this->allStations as $key=>$value){
                 echo $key;
             }*/
@@ -143,7 +143,7 @@ class LandingController extends BaseController
 
     private function searchStations($latitudeOrigin, $longitudeOrigin, $radius=5)
     {
-        
+
         foreach ($this->allStations as $value) {
             #print_r($value);
         }
@@ -228,14 +228,14 @@ function showPosition(position) {
             printf("Posto: %s, Latitude: %s, Longitude: %s, Image: %s <br>", $value[0], $value[2], $value[3], $value[4] );
             #array_push($this->allStations, $station);
         }
-        
+
     }
 
     private function convertPageToCsv($stationData)
     {
-        
+
         $stationData = str_replace(";","\n",$stationData); #substitui o ; por paragrafo
-        
+
         $stationData = preg_replace("/fAD[0-9][0-9]\(/","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("{","",$stationData); #remove as funcoes javascript
@@ -247,21 +247,23 @@ function showPosition(position) {
         return $stationData;
     }
 
-    public function fetchStationData($stationId=165954)
+    public function fetchStationData($stationId=181192)
     {
-        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA"; 
+        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
+        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
         $link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
-        
+
         #$page = $client->get($link)->getBody();
         #echo $page->getContents();
         $guzzle = new GuzzleHttp\Client();
         $request = $guzzle->request('GET', $link);
         $crawler = new Crawler((string) $request->getBody());
-        $result = $crawler->filter('div .esq ')->html();
+        $result = $crawler->filter('div .esq ')->text();
+
         $simpleDieselPrice = substr($result, 28, 28);
         $simpleDieselPrice = substr($simpleDieselPrice, 0, 5);
 
-     echo "Diesel simples: ".$simpleDieselPrice;
+     echo "Diesel simples: ".$result;
     }
 
     public function receiveGPSCoordinates()
@@ -278,13 +280,13 @@ function showPosition(position) {
         echo $iframe;
 
         $link = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=39.7360689,-8.8473024&destinations=40.508489,-8.668739&key=$apiKey";
-        
+
         $client = new GuzzleHttp\Client();
         $json = $client->get($link)->getBody();
-        
+
         echo "$json<br><br>";
 
-        
+
         $obj = json_decode($json); //converts json to object
         echo $obj->rows[0]->elements[0]->distance->text;
     }
