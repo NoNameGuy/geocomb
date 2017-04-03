@@ -247,7 +247,7 @@ function showPosition(position) {
         return $stationData;
     }
 
-    public function fetchStationData($stationId=181192)
+    public function fetchStationData($stationId=186815)
     {
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
@@ -297,6 +297,40 @@ function showPosition(position) {
 
         $obj = json_decode($json); //converts json to object
         echo $obj->rows[0]->elements[0]->distance->text;
+    }
+
+    public function fetchStationID()
+    {
+      $html = array("../public/files/Gasoleo.html", "../public/files/Gasoleo98.html", "../public/files/GasoleoColorido.html", "../public/files/GasoleoEspecial.html",
+        "/public/files/gasoleoSimples.html", "../public/files/Gasolina95.html", "../public/files/GasolinaEspecial95.html", "../public/files/GasolinaEspecial98.html",
+        "../public/files/GasolinaSimples95.html", "../public/files/GNCkg.html", "../public/files/GNC.m3.html", "../public/files/GNL.html", "../public/files/GPLAuto.html");
+
+        foreach ($html as $value) {
+
+          $doc = new \DOMDocument();
+          libxml_use_internal_errors(true);
+
+
+          $doc->loadHTMLFile($value); // loads your HTML
+
+          $xpath = new \DOMXPath($doc);
+
+          $classname = "divIcon";
+          $result = $xpath->query("//*[contains(@class, '$classname')]");
+
+
+            foreach ($result as $i => $stationID) {
+              $htmlString = $doc->saveHTML($result->item($i));
+              $stringCode = htmlentities($htmlString);
+              #echo $stringCode;
+              $stationID = preg_match("/\d{6}/", $stringCode, $matches); #ENCONTRA TODOS OS NUMEROS DE ID COM 6 DIGITOS!
+
+              $uniqueMatch = array_unique($matches);
+              print_r($uniqueMatch);
+              echo "<br>";
+            }
+
+          }
     }
 
 }

@@ -53,6 +53,7 @@
 			<a href="{{action('LandingController@fetchData')}}">Fetch data Aveiro</a>
 			<a href="{{action('LandingController@fetchStationData')}}">Fetch data 165954 station</a>
 			<a href="{{action('LandingController@mapsApi')}}">Maps Api</a>
+			<a href="{{action('LandingController@fetchStationID')}}">STATION_ID</a>
 
 			<hr>
 

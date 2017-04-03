@@ -20,9 +20,9 @@
 
 Route::get('/',
   ['as' => 'contact', 'uses' => 'LandingController@index']);
-Route::post('/', 
+Route::post('/',
   ['as' => 'search_station', 'uses' => 'LandingController@index']);
-Route::post('/', 
+Route::post('/',
   ['as' => 'current_location', 'uses' => 'LandingController@index']);
 
 
@@ -30,5 +30,6 @@ Route::get('/fetch', 'LandingController@fetchData');
 Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 Route::get('/maps', 'LandingController@mapsApi');
+Route::get('/fetchId', 'LandingController@fetchStationID');
 
 Route::post('/maps', 'LandingController@receiveGPSCoordinates');
