@@ -247,31 +247,27 @@ function showPosition(position) {
         return $stationData;
     }
 
-    public function fetchStationData($stationId=186815)
+    public function fetchStationData()
     {
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
-        $link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
+        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
 
-        #$page = $client->get($link)->getBody();
-        #echo $page->getContents();
-        $guzzle = new GuzzleHttp\Client();
-        $request = $guzzle->request('GET', $link, [
-          'headers' => [
-                'User-Agent' =>  'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0',
-                'Accept'      => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Referrer'    => 'http://www.precoscombustiveis.dgeg.pt/pagina.aspx?screenwidth=1600&mlkid=wpor0pm0vgxqu4uu2plotf45&menucb=1',
-            ],
-            'debug' => false,
-        ]);
 
-        $crawler = new Crawler((string) $request->getBody());
-        $result = $crawler->filter('div .esq ')->text();
+        foreach ($this->fetchStationID() as $value) {
+          # code...
+          $link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha='.$value.'&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
+          $guzzle = new GuzzleHttp\Client();
 
-        $simpleDieselPrice = substr($result, 28, 28);
-        $simpleDieselPrice = substr($simpleDieselPrice, 0, 5);
+          $request = $guzzle->request('GET', $link);
+          
+          $crawler = new Crawler((string) $request->getBody());
 
-     echo "Diesel simples: ".$result;
+          $result = $crawler->filter('div .esq ')->count();
+
+          echo $result;
+
+        }
     }
 
     public function receiveGPSCoordinates()
@@ -305,6 +301,8 @@ function showPosition(position) {
         "/public/files/gasoleoSimples.html", "../public/files/Gasolina95.html", "../public/files/GasolinaEspecial95.html", "../public/files/GasolinaEspecial98.html",
         "../public/files/GasolinaSimples95.html", "../public/files/GNCkg.html", "../public/files/GNC.m3.html", "../public/files/GNL.html", "../public/files/GPLAuto.html");
 
+$uniqueMatch1 = array();
+
         foreach ($html as $value) {
 
           $doc = new \DOMDocument();
@@ -325,12 +323,14 @@ function showPosition(position) {
               #echo $stringCode;
               $stationID = preg_match("/\d{6}/", $stringCode, $matches); #ENCONTRA TODOS OS NUMEROS DE ID COM 6 DIGITOS!
 
-              $uniqueMatch = array_unique($matches);
-              print_r($uniqueMatch);
-              echo "<br>";
+                            #print_r($uniqueMatch1);
+                            array_push($uniqueMatch1, $matches[0]);
             }
 
           }
+          $matches = array_unique($uniqueMatch1);
+          return $matches;
+          #print_r($uniqueMatch1);
     }
 
 }
