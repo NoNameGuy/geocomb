@@ -18,6 +18,7 @@ class CreateStationTable extends Migration
             $table->string('name');
             $table->string('brand');
             $table->integer('location');
+            $table->integer('district');
             $table->integer('fuel_price');
             $table->integer('services');
             $table->date('last_update');

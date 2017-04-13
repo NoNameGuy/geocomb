@@ -26,7 +26,7 @@ class LandingController extends BaseController
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $allStations = array();
     private $fiveClosestStations = array();
-    private $districts = ['Aveiro', 'Beja', 'Braga', 'Bragança', 'Castelo Branco', 'Coimbra', 'Évora', 'Faro', 'Guarda', 'Leiria', 'Lisboa', 'Portalegre', 'Porto', 'Santarém', 'Setúbal', 'Viana do Castelo', 'Vila Real', 'Viseu'];
+    
     /**
      * Show a list of all of the application's districts.
      *
@@ -57,6 +57,7 @@ class LandingController extends BaseController
 
             #$this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
         }
+
 
         $this->fetchStationData();
 
@@ -114,10 +115,14 @@ class LandingController extends BaseController
             $newArray = explode(",", $string);
             print_r($newArray);*/
 
-            $lines = explode("\n", $stationsInCSV[$i]);
+            #print_r($stationsInCSV[0]);
+            $lines = explode(";", $stationsInCSV[$i]);
+            #$lines = explode("\n", $stationsInCSV[$i]);
             $array = array();
 
             foreach ($lines as $line) {
+                #$data = array_map("str_getcsv", preg_split('/\r\n+|\n+/', $line));
+                #print_r($data);
                 $array = str_getcsv($line, ",", "\n");
                 #print_r( $array);
 
@@ -130,23 +135,78 @@ class LandingController extends BaseController
 
             }
 
-
-
-
-            /*foreach($this->allStations as $key=>$value){
-                echo $key;
-            }*/
-            #print_r($this->allStations);
         }
 
     }
 
+    
     private function searchStations($latitudeOrigin, $longitudeOrigin, $radius=5)
     {
+ //para todos os postos calcular se a distancia é igual ou menor ao raio
+        //se for guardar verificar se é menor que a que esta no array
+        //se for menor que a que esta no array guardar
 
-        foreach ($this->allStations as $value) {
+/*$tempStationsArray = $this->allStations;
+foreach ($tempStationsArray as $key => $value) {
+    
+    $tempStationsArray[$key]["distance"] = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $value["latitude"], $value["longitude"]);
+}*/
+    
+        /*foreach ($this->allStations as $key => $value) {
+            #echo $value['latitude'].$value['longitude'];
+            $latitudeDestination = $value['latitude'];
+            $longitudeDestination = $value['longitude'];
+            
+            //$this->allStations[$key]["distance"] = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination);
+            
+
+            
+
+            /*if ($stationDistance <= $radius) {
+                echo "menor que o raio";
+                if (count($this->fiveClosestStations)<5) {
+                    echo "menor que 5";
+                    array_push($this->fiveClosestStations, $value);
+                    //var_dump($this->fiveClosestStations);
+                } else {  
+                    echo "maior que zero";
+                    foreach ($this->fiveClosestStations as $val) {
+                        //var_dump($val);
+                        if ($this->calculateDistance($latitudeOrigin, $longitudeOrigin, $val['latitude'], $val['longitude'])<=$val){
+                            //array_splice($this->fiveClosestStations, $key, $key, $value);
+
+                        }
+                       //$distance = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $val['latitude'], $val['longitude']);
+                    }
+                }
+                
+            }else {
+                echo "maior que o raio";
+            }*/
+            #echo "distance: ".$distance;
             #print_r($value);
-        }
+        //}*/
+        /*$tempAllStations = $this->allStations;
+asort($tempAllStations);
+var_dump($tempAllStations);*/
+
+        //var_dump($this->allStations);
+
+        /*foreach ($this->fiveClosestStations as $k) {            
+            echo "$k ";
+        }*/
+    }
+
+    private function calculateDistance($latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination)
+    {
+        $earthRadius = 6.371;//km
+
+        $latitudeDifference = $latitudeOrigin-$latitudeDestination;
+        $longitudeDifference = $longitudeOrigin-$longitudeDestination;
+
+        $a = pow(sin($latitudeDifference/2),2) + cos($latitudeOrigin) * cos($latitudeDestination) * pow(sin($longitudeDifference/2), 2);
+        $c = 2 * $a * pow(tan(sqrt($a)*sqrt(1-$a)) ,2);
+        return $earthRadius * $c;
     }
 
     private function askLocation()
@@ -178,6 +238,10 @@ function showPosition(position) {
         #echo "$location";
     }
 
+
+/*
+*   PARA APAGAR
+*/
     public function fetchData()
     {
         $client = new Client(); //GuzzleHttp\Client
@@ -235,7 +299,7 @@ function showPosition(position) {
     {
 
         $stationData = str_replace(";","\n",$stationData); #substitui o ; por paragrafo
-
+        $stationData = preg_replace("/'/", "", $stationData);
         $stationData = preg_replace("/fAD[0-9][0-9]\(/","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("function","",$stationData); #remove as funcoes javascript
         $stationData = str_replace("{","",$stationData); #remove as funcoes javascript
@@ -251,23 +315,28 @@ function showPosition(position) {
     {
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
         #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
-        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
+        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=181911&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
 
 
-        foreach ($this->fetchStationID() as $value) {
+        /*foreach ($this->fetchStationID() as $value) {
           # code...
+                #      sleep(20);
+
           $link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha='.$value.'&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
           $guzzle = new GuzzleHttp\Client();
 
           $request = $guzzle->request('GET', $link);
+
           
           $crawler = new Crawler((string) $request->getBody());
 
-          $result = $crawler->filter('div .esq ')->count();
+          $result = $crawler->filter('div .esq ')->text();
 
           echo $result;
+                      sleep(20);
 
-        }
+
+        }*/
     }
 
     public function receiveGPSCoordinates()
@@ -329,8 +398,10 @@ $uniqueMatch1 = array();
 
           }
           $matches = array_unique($uniqueMatch1);
-          return $matches;
-          #print_r($uniqueMatch1);
+          #return $matches;
+          asort($matches);
+
+        print_r($matches);
     }
 
 }
