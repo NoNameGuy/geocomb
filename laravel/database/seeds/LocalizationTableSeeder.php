@@ -9,17 +9,18 @@ class LocalizationTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(){
     $minLatitude = 36.844;
     $maxLatitude = 42.196;
     $minLongitude = -9.756;
     $maxLongitude = -6.021;
 
+   
+
         for ($i = 0; $i < 10; $i++) {
-            DB::table('Localization')->insert([ //,
-                'latitude' => $this->randomCoordinate($minLatitude, $maxLatitude),
-                'longitude' => $this->randomCoordinate($minLongitude, $maxLongitude)
-            ]);
+            $array = array(['latitude' => $this->randomCoordinate($minLatitude, $maxLatitude),
+                'longitude' => $this->randomCoordinate($minLongitude, $maxLongitude)]);
+            DB::table('Localization')->insert($array);
         }
     }
 

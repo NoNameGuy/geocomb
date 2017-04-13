@@ -4,8 +4,7 @@ use Illuminate\Database\Seeder;
 
 class StationTableSeeder extends Seeder
 {
-	$min = 1;
-	$max = 10;
+	
     /**
      * Run the database seeds.
      *
@@ -29,7 +28,7 @@ class StationTableSeeder extends Seeder
             	'district' => $district,
             	'fuel_price' => $fuel_price,
             	'services' => $services,
-            	'last_update' => "12/04/2017 19:00",
+            	'last_update' => date("Y-m-d H:i:s", strtotime("12/04/2017 19:00")),
             	'schedule' => $schedule
             ]);
 

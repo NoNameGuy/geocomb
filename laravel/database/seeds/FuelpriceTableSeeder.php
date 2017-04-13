@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class FuelpriceTableSeeder extends Seeder
+class FuelPriceTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

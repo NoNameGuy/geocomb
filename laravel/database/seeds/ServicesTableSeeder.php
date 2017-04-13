@@ -28,8 +28,12 @@ class ServicesTableSeeder extends Seeder
 
         }
     }
-    private generateRandomBoolean()
+    private function generateRandomBoolean()
     {
-    	rand(0,1) == 1? return true: return false;
+    	if(rand(0,1) == 1){ 
+    		return true;
+    	}else{
+    		return false;
+    	}
     }
 }

@@ -15,12 +15,12 @@ class CreateScheduleTable extends Migration
     {
         Schema::create('Schedule', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('week_opening');
-            $table->date('week_closing');
-            $table->date('saturday_opening');
-            $table->date('saturday_closing');
-            $table->date('weekend_opening');
-            $table->date('weekend_closing');
+            $table->time('week_opening');
+            $table->time('week_closing');
+            $table->time('saturday_opening');
+            $table->time('saturday_closing');
+            $table->time('sunday_opening');
+            $table->time('sunday_closing');
         });
     }
 
