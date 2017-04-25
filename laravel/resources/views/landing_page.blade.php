@@ -70,6 +70,12 @@
           ?>
 				</select>
 
+				<div id='mapDiv'></div>
+					<script type="text/javascript"
+				src="http://js.sapo.pt/Snippets/Maps.js?lat=39.50&lon=-8.09&zoom=6.5&height=650&width=450&divid=mapDiv">
+					</script>
+
+
         {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
 
 
