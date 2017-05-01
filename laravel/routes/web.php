@@ -32,4 +32,9 @@ Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 Route::get('/maps', 'LandingController@mapsApi');
 Route::get('/fetchId', 'LandingController@fetchStationID');
 
+Route::get('/login', 'Auth\LoginController@index');
+Route::post('/login', 'Auth\LoginController@login');
+Route::get('/register', 'Auth\RegisterController@index');
+Route::post('/register', 'Auth\RegisterController@register');
+
 Route::post('/maps', 'LandingController@receiveGPSCoordinates');

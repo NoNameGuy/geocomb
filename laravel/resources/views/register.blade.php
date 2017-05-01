@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+</head>
+<body>
+	<input type="text" name="user" placeholder="Username">
+	<input type="password" name="password" placeholder="Password">
+	<input type="submit">
+</body>
+</html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>!GeoComb!</title>
@@ -49,56 +61,16 @@
       <p><a href="#">Link</a></p>-->
     </div>
     <div class="col-sm-8 text-left">
-      <h1 class="center">Preço dos Combustiveis</h1>
+      <h1 class="center">Register</h1>
       <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
-			<a href="{{action('LandingController@fetchData')}}">Fetch data Aveiro</a>
-			<a href="{{action('LandingController@fetchStationData')}}">Fetch data 165954 station</a>
-			<a href="{{action('LandingController@mapsApi')}}">Maps Api</a>
-			<a href="{{action('LandingController@fetchStationID')}}">STATION_ID</a>
-
-			<hr>
-
-			<h2 class="center">Pesquisar Postos:</h2>
-		<div class="row">
-			<div class="col-sm-6">
-        <p class="center"> Por Localização :</p>
-				<br>
-				<select>
-					<?php echo "Distritos: ";
-            foreach ($districts as $key => $district) {
-            	echo "<option> $district->name </option>";
-            }
-          ?>
-				</select>
-
-				<div id='mapDiv'></div>
-					<script type="text/javascript"
-				src="http://js.sapo.pt/Snippets/Maps.js?lat=39.50&lon=-8.09&zoom=6.5&height=650&width=450&divid=mapDiv">
-					</script>
-
-
-        {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
-
-
-          <input type="text" name="location" placeholder="Current Location" />
-          <input type="text" name="radius" placeholder="Radius: 5km" />
-
-          {!! Form::submit("Pesquisar")  !!}
-        {!! Form::close()  !!}
-
-			</div>
-			<div class="col-sm-6">
-				<p class="center"> Por Combustível :</p>
-				<br>
-				<select>
-					<?php echo "Distritos: ";
-            foreach ($districts as $key => $district) {
-            	echo "<option> $district->name </option>";
-            }
-          ?>
-				</select>
-				</div>
-			</div>
+      <form method="POST" action="{{ url('/register') }}" autocomplete="on">
+      {{ csrf_field() }}
+        <input type="text" name="name" placeholder="Name"><br>
+  		  <input type="email" name="email" placeholder="Email"><br>
+  		  <input type="password" name="password" placeholder="Password"><br>
+  		  <a href="{{action('Auth\RegisterController@register')}}"><button name="Register">Register</button></a>
+      </form>
+        
     </div>
 
     <div class="col-sm-2 sidenav">

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -35,5 +38,18 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+    }
+
+    public function login(Request $request)
+    {
+        $user = DB::table('Users')->where('email', $request->input('email'))->where('password', $request->input('password'))->first();
+        if ($user) {
+            var_dump($user);
+        }
+    }
+
+    public function index()
+    {
+        return View('login');
     }
 }
