@@ -18,9 +18,13 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            #$table->integer('vehicleid')->nullable()->references('id')->on('Vehicle');
+            $table->integer('vehicleid')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::table('users', function(Blueprint $table){
+            $table->foreign('vehicleid')->references('id')->on('vehicle');
         });
     }
 

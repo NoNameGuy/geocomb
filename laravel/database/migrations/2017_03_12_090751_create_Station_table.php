@@ -13,7 +13,7 @@ class CreateStationTable extends Migration
      */
     public function up()
     {
-        Schema::create('Station', function (Blueprint $table) {
+        Schema::create('station', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('brand');
@@ -33,6 +33,6 @@ class CreateStationTable extends Migration
      */
     public function down()
     {
-        Schema::drop('Station');
+        Schema::drop('station');
     }
 }

@@ -13,7 +13,7 @@ class CreateDistrictTable extends Migration
      */
     public function up()
     {
-        Schema::create('District', function (Blueprint $table) {
+        Schema::create('district', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
         });
@@ -26,6 +26,6 @@ class CreateDistrictTable extends Migration
      */
     public function down()
     {
-        Schema::drop('District');
+        Schema::drop('district');
     }
 }

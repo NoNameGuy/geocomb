@@ -13,7 +13,7 @@ class CreateFuelPriceTable extends Migration
      */
     public function up()
     {
-        Schema::create('Fuel_price', function (Blueprint $table) {
+        Schema::create('fuel_price', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('diesel', 4, 3);
             $table->decimal('diesel_colored', 4, 3);
@@ -38,6 +38,6 @@ class CreateFuelPriceTable extends Migration
      */
     public function down()
     {
-        Schema::drop('Fuel_price');
+        Schema::drop('fuel_price');
     }
 }

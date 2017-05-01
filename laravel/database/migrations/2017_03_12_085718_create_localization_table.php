@@ -13,7 +13,7 @@ class CreateLocalizationTable extends Migration
      */
     public function up()
     {
-        Schema::create('Localization', function (Blueprint $table) {
+        Schema::create('localization', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('latitude', 9, 7);
             $table->decimal('longitude', 9, 7);
@@ -27,6 +27,6 @@ class CreateLocalizationTable extends Migration
      */
     public function down()
     {
-        Schema::drop('Localization');
+        Schema::drop('localization');
     }
 }

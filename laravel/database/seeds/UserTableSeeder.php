@@ -13,6 +13,6 @@ class UserTableSeeder extends Seeder
     {
     	$data = array(["id" => 1, "name" => "Goncalo", "email" => "goncalo@gmail.com", "password" => 123123123],
     		["id" => 2, "name" => "Paulo", "email" => "paulo@gmail.com", "password" => 123123123]);
-        DB::table('Users')->insert($data);
+        DB::table('users')->insert($data);
     }
 }
