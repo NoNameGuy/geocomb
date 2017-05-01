@@ -80,6 +80,33 @@
 			</div>
 			<div class="col-sm-6">
 
+			<div class="checkbox">
+			  <label><input type="checkbox" value="">Gasóleo</label><br>
+				<label><input type="checkbox" value="">Gasóleo Simples</label><br>
+				<label><input type="checkbox" value="">Gasóleo Colorido</label><br>
+				<label><input type="checkbox" value="">Gasóleo Especial</label><br>
+				<br><br>
+				<label><input type="checkbox" value="">Gasolina 95</label><br>
+				<label><input type="checkbox" value="">Gasolina Simples 95</label><br>
+				<label><input type="checkbox" value="">Gasolina Especial 95</label><br>
+				<br><br>
+				<label><input type="checkbox" value="">Gasolina 98</label><br>
+				<label><input type="checkbox" value="">Gasolina Simples 98</label><br>
+				<label><input type="checkbox" value="">Gasolina Especial 98</label><br>
+				<br><br>
+				<label><input type="checkbox" value="">GNC KG</label><br>
+				<label><input type="checkbox" value="">GNC M3</label><br>
+				<label><input type="checkbox" value="">GNL</label><br>
+				<label><input type="checkbox" value="">GPL</label><br>
+				<br>
+				<br>
+			</div>
+
+			<div class="form-group">
+		    <label for="inputdefault">Marca (Opcional): </label>
+		    <input class="form-control" id="inputdefault" type="text">
+		  </div>
+
 			</div>
 		</div>
   </div>
