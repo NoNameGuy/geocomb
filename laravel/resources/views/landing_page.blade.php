@@ -61,45 +61,28 @@
 			<h2 class="center">Pesquisar Postos:</h2>
 		<div class="row">
 			<div class="col-sm-6">
-        <p class="center"> Por Localização :</p>
-				<br>
-				<select>
-					<?php echo "Distritos: ";
-            foreach ($districts as $key => $district) {
-            	echo "<option> $district->name </option>";
-            }
-          ?>
-				</select>
 
-				<div id='mapDiv'></div>
-					<script type="text/javascript"
-				src="http://js.sapo.pt/Snippets/Maps.js?lat=39.50&lon=-8.09&zoom=6.5&height=650&width=450&divid=mapDiv">
+				<div id="map"></div>
+					<script>
+						function initMap() {
+							var pt = {lat: 39.676944, lng:  -8.1425};
+							var map = new google.maps.Map(document.getElementById('map'), {
+								zoom: 7,
+								center: pt
+							});
+						}
+					</script>
+					<script async defer
+					src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap">
 					</script>
 
 
-        {!! Form::open(['url' => '/', 'class' => 'form-horizontal']) !!}
-
-
-          <input type="text" name="location" placeholder="Current Location" />
-          <input type="text" name="radius" placeholder="Radius: 5km" />
-
-          {!! Form::submit("Pesquisar")  !!}
-        {!! Form::close()  !!}
-
 			</div>
 			<div class="col-sm-6">
-				<p class="center"> Por Combustível :</p>
-				<br>
-				<select>
-					<?php echo "Distritos: ";
-            foreach ($districts as $key => $district) {
-            	echo "<option> $district->name </option>";
-            }
-          ?>
-				</select>
-				</div>
+
 			</div>
-    </div>
+		</div>
+  </div>
 
     <div class="col-sm-2 sidenav">
     </div>
