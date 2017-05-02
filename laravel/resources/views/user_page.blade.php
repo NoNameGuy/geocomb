@@ -15,7 +15,7 @@
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	</head>
 					<body><nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -36,6 +36,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{{action('Auth\LoginController@index')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         <li><a href="{{action('Auth\RegisterController@index')}}"><span class="glyphicon glyphicon-log-in"></span> Register</a></li>
+        <li><a href="{{action('Auth\LoginController@logout')}}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -49,15 +50,20 @@
       <p><a href="#">Link</a></p>-->
     </div>
     <div class="col-sm-8 text-left">
-      <h1 class="center">Login</h1>
-      <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
-		<form method="POST" action="{{ url('/login') }}" autocomplete="on">
-			{{ csrf_field() }}
-			<input type="email" name="email" placeholder="Email"><br>
-			<input type="password" name="password" placeholder="Password"><br>
-			<a href="{{action('Auth\LoginController@login')}}"><button name="Login">Login</button></a>
+      <h1 class="center">Welcome {{$name}}</h1>
+      
 
-		</form>
+      <p>Add vehicle</p>
+      <form method="POST" action="{{ url('/add_vehicle') }}" autocomplete="on">
+      {{ csrf_field() }}
+        <input type="text" name="brand" placeholder="Brand"><br>
+        <input type="text" name="model" placeholder="Model"><br>
+        <input type="text" name="color" placeholder="Color"><br>
+        <input type="text" name="fuel" placeholder="Fuel"><br>
+        <input type="number" step="0.1" name="consumption" placeholder="Consumption"><br>
+        <a href="{{action('UserPageController@add')}}"><button name="Add">Add</button></a>
+      </form>
+        
     </div>
 
     <div class="col-sm-2 sidenav">

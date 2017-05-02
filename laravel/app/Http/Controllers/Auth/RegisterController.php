@@ -75,7 +75,7 @@ class RegisterController extends Controller
     {
         echo $request->input("email");
         $data = ['name' => $request->name, 'email' => $request->email, 'password' => $request->password];
-        DB::table('Users')->insert($data);
+        DB::table('users')->insert($data);
         
     }
 

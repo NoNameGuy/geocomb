@@ -1,16 +1,4 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>Login</title>
-</head>
-<body>
-	<input type="text" name="user" placeholder="Username">
-	<input type="password" name="password" placeholder="Password">
-	<input type="submit">
-</body>
-</html>
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>!GeoComb!</title>

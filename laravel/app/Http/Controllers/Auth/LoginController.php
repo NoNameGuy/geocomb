@@ -42,10 +42,16 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $user = DB::table('Users')->where('email', $request->input('email'))->where('password', $request->input('password'))->first();
+        $user = DB::table('users')->where('email', $request->input('email'))->where('password', $request->input('password'))->first();
         if ($user) {
             var_dump($user);
+            return view('user_page', ['name' => $user->name]);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        return view('landing_page');
     }
 
     public function index()

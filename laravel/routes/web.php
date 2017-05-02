@@ -36,5 +36,10 @@ Route::get('/login', 'Auth\LoginController@index');
 Route::post('/login', 'Auth\LoginController@login');
 Route::get('/register', 'Auth\RegisterController@index');
 Route::post('/register', 'Auth\RegisterController@register');
+Route::get('/logout', 'Auth\LoginController@logout');
+
+Route::post('/user_page', 'UserPageController@index');
+Route::post('/add_vehicle', 'UserPageController@add');
+
 
 Route::post('/maps', 'LandingController@receiveGPSCoordinates');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VehicleTable extends Migration
+class CreateVehicleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,9 @@ class VehicleTable extends Migration
             $table->increments('id');
             $table->string('brand');
             $table->string('model');
-            $table->float('fuel_consumption');
+            $table->string('color');
+            $table->string('fuel');
+            $table->float('consumption');
         });
     }
 
