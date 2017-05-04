@@ -36,7 +36,7 @@ class LandingController extends BaseController
     {
         $districts = array();
 
-        $districts = DB::table('District')->orderBy('name')->get();
+        $districts = DB::table('district')->orderBy('name')->get();
 
 
         #$this->askLocation();

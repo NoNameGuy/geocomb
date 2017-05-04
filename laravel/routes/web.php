@@ -38,8 +38,10 @@ Route::get('/register', 'Auth\RegisterController@index');
 Route::post('/register', 'Auth\RegisterController@register');
 Route::get('/logout', 'Auth\LoginController@logout');
 
+Route::get('/user_page', 'UserPageController@index');
 Route::post('/user_page', 'UserPageController@index');
 Route::post('/add_vehicle', 'UserPageController@add');
 
+Auth::routes();
 
 Route::post('/maps', 'LandingController@receiveGPSCoordinates');

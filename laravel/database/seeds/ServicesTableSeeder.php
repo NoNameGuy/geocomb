@@ -17,7 +17,7 @@ class ServicesTableSeeder extends Seeder
     			$booleanArray[$j] = $this->generateRandomBoolean();
     		}
 
-            DB::table('Services')->insert([ 
+            DB::table('services')->insert([ 
             'atm' => $booleanArray[0],
             'wc' => $booleanArray[1],
             'carwash' => $booleanArray[2],

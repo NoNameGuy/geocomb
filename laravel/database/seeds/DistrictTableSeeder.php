@@ -14,7 +14,7 @@ class DistrictTableSeeder extends Seeder
     {
         $data = array(['name' => 'Aveiro'],['name' => 'Beja'],['name' => 'Braga'],['name' => 'Bragança'],['name' => 'Castelo Branco'],['name' => 'Coimbra'],['name' => 'Évora'],['name' => 'Faro'],['name' => 'Guarda'],['name' => 'Leiria'],['name' => 'Lisboa'],['name' => 'Portalegre'],['name' => 'Porto'],['name' => 'Santarém'],['name' => 'Setúbal'],['name' => 'Viana do Castelo' ],['name' => 'Vila Real'],['name' => 'Viseu']);
           
-        DB::table('District')->insert($data);
+        DB::table('district')->insert($data);
         /*
         $data = array([
             'name' => 'Leiria',

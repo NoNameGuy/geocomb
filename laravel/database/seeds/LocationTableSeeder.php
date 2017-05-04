@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class LocalizationTableSeeder extends Seeder
+class LocationTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,7 +20,7 @@ class LocalizationTableSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             $array = array(['latitude' => $this->randomCoordinate($minLatitude, $maxLatitude),
                 'longitude' => $this->randomCoordinate($minLongitude, $maxLongitude)]);
-            DB::table('Localization')->insert($array);
+            DB::table('location')->insert($array);
         }
     }
 

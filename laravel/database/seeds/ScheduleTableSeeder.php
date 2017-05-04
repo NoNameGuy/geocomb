@@ -13,7 +13,7 @@ class ScheduleTableSeeder extends Seeder
     {
     	
         for ($i = 0; $i < 10; $i++) {
-            DB::table('Schedule')->insert([ //,
+            DB::table('schedule')->insert([ //,
                 'week_opening' => date("h:i:s",strtotime("8:00")),#"8:00",
             	'week_closing' => date("h:i:s",strtotime("23:00")),#"23:00",
             	'saturday_opening' => date("h:i:s",strtotime("8:00")),#"8:00",

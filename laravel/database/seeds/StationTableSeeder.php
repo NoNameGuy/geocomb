@@ -21,7 +21,7 @@ class StationTableSeeder extends Seeder
     			$schedule = $this->generateRandomNumber(1,10);
     		}
 
-            DB::table('Station')->insert([ 
+            DB::table('station')->insert([ 
             	'name' => "a$i",
             	'brand' => "galp",
             	'location' => $location,

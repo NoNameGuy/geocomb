@@ -17,7 +17,7 @@ class FuelPriceTableSeeder extends Seeder
             for($j=0;$j<13;$j++){
                 $pricesArray[$j] = $this->randomPrice(1.12, 1.60);
             }
-            DB::table('Fuel_price')->insert([ //,
+            DB::table('fuel_price')->insert([ //,
                 'diesel' => $pricesArray[0],
                 'diesel_colored' => $pricesArray[1],
                 'diesel_special' => $pricesArray[2],

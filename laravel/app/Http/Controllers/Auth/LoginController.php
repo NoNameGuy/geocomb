@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -42,9 +43,9 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $user = DB::table('users')->where('email', $request->input('email'))->where('password', $request->input('password'))->first();
-        if ($user) {
-            var_dump($user);
+        $user = DB::table('users')->where('email', $request->email)->first();
+        if( Hash::check($request->password, $user->password) ) {
+
             return view('user_page', ['name' => $user->name]);
         }
     }
