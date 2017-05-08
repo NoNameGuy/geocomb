@@ -25,12 +25,14 @@ Route::post('/',
 Route::post('/',
   ['as' => 'current_location', 'uses' => 'LandingController@index']);
 
+  Auth::routes();
 
 Route::get('/fetch', 'LandingController@fetchData');
 Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 Route::get('/maps', 'LandingController@mapsApi');
 Route::get('/fetchId', 'LandingController@fetchStationID');
+
 
 Route::get('/login', 'Auth\LoginController@index');
 Route::post('/login', 'Auth\LoginController@login');
@@ -41,7 +43,5 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/user_page', 'UserPageController@index');
 Route::post('/user_page', 'UserPageController@index');
 Route::post('/add_vehicle', 'UserPageController@add');
-
-Auth::routes();
 
 Route::post('/maps', 'LandingController@receiveGPSCoordinates');
