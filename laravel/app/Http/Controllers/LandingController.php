@@ -26,7 +26,7 @@ class LandingController extends BaseController
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $allStations = array();
     private $fiveClosestStations = array();
-
+    
     /**
      * Show a list of all of the application's districts.
      *
@@ -35,13 +35,8 @@ class LandingController extends BaseController
     public function index()
     {
         $districts = array();
-        $districtsName = array();
 
         $districts = DB::table('district')->orderBy('name')->get();
-
-        for ($i=0; $i < $districts->count(); $i++) {
-          array_push($districtsName, $districts[$i]->name);
-        }
 
 
         #$this->askLocation();
@@ -64,7 +59,7 @@ class LandingController extends BaseController
         }
         $this->fetchStationData();
 
-        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName]);
+        return View('landing_page', ['districts' => $districts]);
     }
 
     private function getCoordinatesByPlace($address)
@@ -142,7 +137,7 @@ class LandingController extends BaseController
 
     }
 
-
+    
     private function searchStations($latitudeOrigin, $longitudeOrigin, $radius=5)
     {
  //para todos os postos calcular se a distancia é igual ou menor ao raio
@@ -151,19 +146,19 @@ class LandingController extends BaseController
 
 /*$tempStationsArray = $this->allStations;
 foreach ($tempStationsArray as $key => $value) {
-
+    
     $tempStationsArray[$key]["distance"] = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $value["latitude"], $value["longitude"]);
 }*/
-
+    
         /*foreach ($this->allStations as $key => $value) {
             #echo $value['latitude'].$value['longitude'];
             $latitudeDestination = $value['latitude'];
             $longitudeDestination = $value['longitude'];
-
+            
             //$this->allStations[$key]["distance"] = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination);
+            
 
-
-
+            
 
             /*if ($stationDistance <= $radius) {
                 echo "menor que o raio";
@@ -171,7 +166,7 @@ foreach ($tempStationsArray as $key => $value) {
                     echo "menor que 5";
                     array_push($this->fiveClosestStations, $value);
                     //var_dump($this->fiveClosestStations);
-                } else {
+                } else {  
                     echo "maior que zero";
                     foreach ($this->fiveClosestStations as $val) {
                         //var_dump($val);
@@ -182,7 +177,7 @@ foreach ($tempStationsArray as $key => $value) {
                        //$distance = $this->calculateDistance($latitudeOrigin, $longitudeOrigin, $val['latitude'], $val['longitude']);
                     }
                 }
-
+                
             }else {
                 echo "maior que o raio";
             }*/
@@ -195,7 +190,7 @@ var_dump($tempAllStations);*/
 
         //var_dump($this->allStations);
 
-        /*foreach ($this->fiveClosestStations as $k) {
+        /*foreach ($this->fiveClosestStations as $k) {            
             echo "$k ";
         }*/
     }
@@ -303,7 +298,7 @@ var_dump($tempAllStations);*/
 
           $request = $guzzle->request('GET', $link);
 
-
+          
           $crawler = new Crawler((string) $request->getBody());
 
           $result = $crawler->filter('div .esq ')->text();
