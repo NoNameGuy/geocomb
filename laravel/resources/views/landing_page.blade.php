@@ -34,6 +34,7 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
+	<script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
 
 
 	</head>
@@ -136,8 +137,17 @@
 
 			<div class="form-group">
 		    <label for="inputdefault">Marca (Opcional): </label>
-		    <input class="form-control" id="inputdefault" type="text">
+		    <input class="form-control" id="brand" type="text">
 		  </div>
+			<br>
+			<script>
+			var $input = $(".typeahead");
+			var brandName = <?php echo json_encode($brandsName); ?>
+			$input.typeahead({
+			  source: brandName,
+			  autoSelect: true
+			});
+			</script>
 
 			</div>
 		</div>

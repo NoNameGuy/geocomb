@@ -43,6 +43,14 @@ class LandingController extends BaseController
           array_push($districtsName, $districts[$i]->name);
         }
 
+        $brands = array();
+        $brandsName = array();
+
+        $brands = DB::table('station')->select('brand')->distinct()->get();
+
+        for ($i=0; $i < $brands->count(); $i++) {
+          array_push($brandsName, $brands[$i]->brand);
+        }
 
         #$this->askLocation();
 
@@ -64,7 +72,7 @@ class LandingController extends BaseController
         }
         $this->fetchStationData();
 
-        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName]);
+        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName]);
     }
 
     private function getCoordinatesByPlace($address)
