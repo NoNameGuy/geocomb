@@ -57,8 +57,6 @@ class LandingController extends BaseController
 
             #$this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
         }
-
-
         $this->fetchStationData();
 
         return View('landing_page', ['districts' => $districts]);
@@ -209,34 +207,7 @@ var_dump($tempAllStations);*/
         return $earthRadius * $c;
     }
 
-    private function askLocation()
-    {
-        //echo var_export(unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$_SERVER['REMOTE_ADDR'])));
-
-        $location ='<script>
-                         window.onload = getLocation;
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-}
-function showPosition(position) {
-    document.getElementById("latitude").value =position.coords.latitude;
-    document.getElementById("longitude").value =position.coords.longitude;
-}
-</script>
- <form id = "geolocation" action="/maps" method="POST" >
-           <!-- {% csrf_token %}-->
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-        <input type="text" id = "latitude" name="location" value="" />
-        <input type="text" id = "longitude" name="location" value="" />
-        <input type="submit" />
-
-</form>';
-        #echo "$location";
-    }
+    
 
 
 /*
@@ -339,10 +310,14 @@ function showPosition(position) {
         }*/
     }
 
-    public function receiveGPSCoordinates()
+    public function receiveGPSCoordinates(Request $request)
     {
-        echo '<script> alert("Latitude: "+ latitude+" Longitude: "+longitude );</script>';
+        echo "latitude: ". $request->latitude."<br>";
+        echo "longitude ".$request->longitude;
+
     }
+
+    
 
     public function mapsApi()
     {

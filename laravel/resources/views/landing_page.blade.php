@@ -1,3 +1,26 @@
+<script type="text/javascript">
+	window.onload = getLocation;
+	function getLocation() {
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(showPosition);
+	    } else {
+	        alert("Geolocation is not supported by this browser.");
+	    }
+	}
+	function showPosition(position) {
+	    document.getElementById("latitude").value =position.coords.latitude;
+	    document.getElementById("longitude").value =position.coords.longitude;
+	}
+</script>
+<form method="POST" action="{{ url('/showGpsCoordinates') }}"  >
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="text" id = "latitude" name="latitude" value="" />
+        <input type="text" id = "longitude" name="longitude" value="" />
+        <button type="submit">submit</button>
+        <!--<a href="{{action('LandingController@receiveGPSCoordinates')}}">send</a>
+-->
+</form>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

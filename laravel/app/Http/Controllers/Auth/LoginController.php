@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -45,8 +46,8 @@ class LoginController extends Controller
     {
         $user = DB::table('users')->where('email', $request->email)->first();
         if( Hash::check($request->password, $user->password) ) {
-
-            return view('user_page', ['name' => $user->name]);
+            var_dump(Auth::user());
+            return view('user_page', ['name' => Auth::user()->name]);
         }
     }
 

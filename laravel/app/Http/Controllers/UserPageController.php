@@ -9,7 +9,8 @@ class UserPageController extends Controller
 {
     public function index()
     {
-    	return view('user_page');
+        #$vehicles = DB::
+    	return view('user_page');#, ['vehicles' => $vehicles]);
     }
 
     public function add(Request $request)
