@@ -46,8 +46,8 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $user = DB::table('users')->where('email', $request->email)->first();
-        if(Auth::attempt(['email' => $request->email, 'password' => $user->password])){
-        #if( Hash::check($request->password, $user->password) ) {
+        #if(Auth::attempt(['email' => $request->email, 'password' => $user->password])){
+        if( Hash::check($request->password, $user->password) ) {
             #dd(Auth::user());
             return Redirect('user_page');#, ['name' => Auth::user()->name]);
         }else{
