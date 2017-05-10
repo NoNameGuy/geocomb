@@ -31,13 +31,10 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
-	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
+
 
 	</head>
 					<body><nav class="navbar navbar-inverse">
@@ -67,13 +64,11 @@
 <div class="container-fluid text-center">
   <div class="row content">
     <div class="col-sm-2 sidenav">
-      <!--<p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>-->
+
     </div>
     <div class="col-sm-8 text-left">
       <h1 class="center">Preço dos Combustiveis</h1>
-      <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
+
 			<a href="{{action('LandingController@fetchData')}}">Fetch data Aveiro</a>
 			<a href="{{action('LandingController@fetchStationData')}}">Fetch data 165954 station</a>
 			<a href="{{action('LandingController@mapsApi')}}">Maps Api</a>
@@ -102,7 +97,21 @@
 
 			</div>
 			<div class="col-sm-6">
-
+			<br>
+			<div class="form-group">
+				<label for="inputdefault">Distrito(s): </label>
+				<input class="form-control" id="inputdefault" type="text">
+			</div>
+			<br>
+			<script>
+				$( function() {
+					 var districtsName = <?php echo json_encode($districtsName); ?>
+					//var availableTags = districtsName;
+					$( "#inputdefault" ).autocomplete({
+						source: districtsName
+					});
+				} );
+			</script>
 			<div class="checkbox">
 			  <label><input type="checkbox" value="">Gasóleo</label><br>
 				<label><input type="checkbox" value="">Gasóleo Simples</label><br>
