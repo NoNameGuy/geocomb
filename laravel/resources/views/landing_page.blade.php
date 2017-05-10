@@ -1,26 +1,3 @@
-<script type="text/javascript">
-	window.onload = getLocation;
-	function getLocation() {
-	    if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(showPosition);
-	    } else {
-	        alert("Geolocation is not supported by this browser.");
-	    }
-	}
-	function showPosition(position) {
-	    document.getElementById("latitude").value =position.coords.latitude;
-	    document.getElementById("longitude").value =position.coords.longitude;
-	}
-</script>
-<form method="POST" action="{{ url('/showGpsCoordinates') }}"  >
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="text" id = "latitude" name="latitude" value="" />
-        <input type="text" id = "longitude" name="longitude" value="" />
-        <button type="submit">submit</button>
-        <!--<a href="{{action('LandingController@receiveGPSCoordinates')}}">send</a>
--->
-</form>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,6 +12,7 @@
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
 	<script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
+  <script src="//netsh.pp.ua/upwork-demo/1/js/typeahead.js"></script>
 
 
 	</head>
@@ -137,18 +115,18 @@
 
 			<div class="form-group">
 		    <label for="inputdefault">Marca (Opcional): </label>
-		    <input class="form-control" id="brand" type="text">
+		    <input class="form-control" class="brand" id="brand" type="text">
 		  </div>
 			<br>
 			<script>
-			var $input = $(".typeahead");
-			var brandName = <?php echo json_encode($brandsName); ?>
-			$input.typeahead({
-			  source: brandName,
-			  autoSelect: true
-			});
+				$( function() {
+					 var brandName = <?php echo json_encode($brandsName); ?>
+					//var availableTags = districtsName;
+					$( "#brand" ).autocomplete({
+						source: brandName
+					});
+				} );
 			</script>
-
 			</div>
 		</div>
   </div>
