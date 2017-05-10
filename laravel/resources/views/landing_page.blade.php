@@ -17,8 +17,6 @@
         <input type="text" id = "latitude" name="latitude" value="{{$coordinates->latitude}}" />
         <input type="text" id = "longitude" name="longitude" value="{{$coordinates->longitude}}" />
         <button type="submit">submit</button>
-        <!--<a href="{{action('LandingController@receiveGPSCoordinates')}}">send</a>
--->
 </form>
 
 <!DOCTYPE html>
@@ -143,12 +141,13 @@
 		  </div>
 			<br>
 			<script>
-			var $input = $(".typeahead");
-			var brandName = <?php echo json_encode($brandsName); ?>
-			$input.typeahead({
-			  source: brandName,
-			  autoSelect: true
-			});
+				$( function() {
+					 var brandsName = <?php echo json_encode($brandsName); ?>
+					//var availableTags = districtsName;
+					$( "#brand" ).autocomplete({
+						source: brandsName
+					});
+				} );
 			</script>
 
 			</div>
