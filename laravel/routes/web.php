@@ -44,4 +44,4 @@ Route::get('/user_page', 'UserPageController@index');
 Route::post('/user_page', 'UserPageController@index');
 Route::post('/add_vehicle', 'UserPageController@add');
 
-Route::post('/maps', 'LandingController@receiveGPSCoordinates');
+Route::post('/showGpsCoordinates', 'LandingController@receiveGPSCoordinates');
