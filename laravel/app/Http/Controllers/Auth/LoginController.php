@@ -40,14 +40,18 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+
     }
 
     public function login(Request $request)
     {
         $user = DB::table('users')->where('email', $request->email)->first();
-        if( Hash::check($request->password, $user->password) ) {
-            var_dump(Auth::user());
-            return view('user_page', ['name' => Auth::user()->name]);
+        if(Auth::attempt(['email' => $request->email, 'password' => $user->password])){
+        #if( Hash::check($request->password, $user->password) ) {
+            #dd(Auth::user());
+            return Redirect('user_page');#, ['name' => Auth::user()->name]);
+        }else{
+            echo "not logged in";
         }
     }
 

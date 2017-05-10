@@ -14,8 +14,8 @@
 </script>
 <form method="POST" action="{{ url('/showGpsCoordinates') }}"  >
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="text" id = "latitude" name="latitude" value="" />
-        <input type="text" id = "longitude" name="longitude" value="" />
+        <input type="text" id = "latitude" name="latitude" value="{{$coordinates->latitude}}" />
+        <input type="text" id = "longitude" name="longitude" value="{{$coordinates->longitude}}" />
         <button type="submit">submit</button>
         <!--<a href="{{action('LandingController@receiveGPSCoordinates')}}">send</a>
 -->
@@ -84,9 +84,11 @@
 				<div id="map"></div>
 					<script>
 						function initMap() {
-							var pt = {lat: 39.676944, lng:  -8.1425};
+							var coordinates = {"latitude":{{$coordinates->latitude}}, "longitude":{{$coordinates->longitude}}};
+							//console.log(coordinates);
+							var pt = {lat: coordinates.latitude, lng:  coordinates.longitude};
 							var map = new google.maps.Map(document.getElementById('map'), {
-								zoom: 7,
+								zoom: 10,
 								center: pt
 							});
 						}

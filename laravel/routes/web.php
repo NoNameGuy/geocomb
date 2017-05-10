@@ -25,7 +25,8 @@ Route::post('/',
 Route::post('/',
   ['as' => 'current_location', 'uses' => 'LandingController@index']);
 
-  Auth::routes();
+ Auth::routes();
+Route::get('/', 'LandingController@index');
 
 Route::get('/fetch', 'LandingController@fetchData');
 Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
@@ -38,10 +39,18 @@ Route::get('/login', 'Auth\LoginController@index');
 Route::post('/login', 'Auth\LoginController@login');
 Route::get('/register', 'Auth\RegisterController@index');
 Route::post('/register', 'Auth\RegisterController@register');
-Route::get('/logout', 'Auth\LoginController@logout');
+Route::get('/logout', function(){
+	Auth::logout();
+	
+	return redirect('/');#'Auth\LoginController@logout'
+});
 
-Route::get('/user_page', 'UserPageController@index');
-Route::post('/user_page', 'UserPageController@index');
+Route::group(['middleware' => 'web'], function () {
+	
+	Route::get('/user_page', 'UserPageController@index');
+	Route::post('/user_page', 'UserPageController@index');
+});
 Route::post('/add_vehicle', 'UserPageController@add');
 
 Route::post('/showGpsCoordinates', 'LandingController@receiveGPSCoordinates');
+Route::post('/showGpsCoordinates', 'LandingController@index');

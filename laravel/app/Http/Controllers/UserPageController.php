@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class UserPageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        #$vehicles = DB::
+        #$vehicleId = DB::table('users')->where('email', $request->email)->select('vehicleId')->get();
+        #$vehicles = DB::table('vehicle')->where('vehicleid', $vehicleId)->get();
     	return view('user_page');#, ['vehicles' => $vehicles]);
     }
 

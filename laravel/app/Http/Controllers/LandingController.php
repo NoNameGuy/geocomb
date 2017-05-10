@@ -26,16 +26,27 @@ class LandingController extends BaseController
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $allStations = array();
     private $fiveClosestStations = array();
+    /*private $latitude = null;
+    private $longitude = null;*/
 
     /**
      * Show a list of all of the application's districts.
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $districts = array();
         $districtsName = array();
+        $coordinates = new \stdClass();
+        if(isset($request)){
+            $coordinates->latitude = $request->latitude;
+            $coordinates->longitude = $request->longitude;
+            
+        }else{
+            $coordinates->latitude = 39.676944;
+            $coordinates->longitude = -8.1425;
+        }
 
         $districts = DB::table('district')->orderBy('name')->get();
 
@@ -72,7 +83,7 @@ class LandingController extends BaseController
         }
         $this->fetchStationData();
 
-        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName]);
+        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'coordinates' => $coordinates]);
     }
 
     private function getCoordinatesByPlace($address)
@@ -321,13 +332,6 @@ var_dump($tempAllStations);*/
 
 
         }*/
-    }
-
-    public function receiveGPSCoordinates(Request $request)
-    {
-        echo "latitude: ". $request->latitude."<br>";
-        echo "longitude ".$request->longitude;
-
     }
 
     
