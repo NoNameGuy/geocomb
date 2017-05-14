@@ -15,8 +15,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
 
-#use JonnyW\PhantomJs\Client;
-
 use App\District;
 
 class LandingController extends BaseController
@@ -26,9 +24,6 @@ class LandingController extends BaseController
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $allStations = array();
     private $fiveClosestStations = array();
-    /*private $latitude = null;
-    private $longitude = null;*/
-
     /**
      * Show a list of all of the application's districts.
      *
@@ -42,7 +37,7 @@ class LandingController extends BaseController
         if(isset($request)){
             $coordinates->latitude = $request->latitude;
             $coordinates->longitude = $request->longitude;
-            
+
         }else{
             $coordinates->latitude = 39.676944;
             $coordinates->longitude = -8.1425;
@@ -72,9 +67,6 @@ class LandingController extends BaseController
             $coordinate->longitude = DB::table('location')->where('id', $ids[$i]->location)->select('longitude')->get();
             array_push($coordinatesArray,$coordinate);
         }
-        //dd($coordinatesArray);
-        #$this->askLocation();
-
 
         if (array_key_exists('location', $_POST)) {
             $this->fetchAllStations();
@@ -86,12 +78,7 @@ class LandingController extends BaseController
                 $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
             }
 
-            #print_r($coordinates);
-
-
-            #$this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
         }
-        $this->fetchStationData();
 
         return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'markerCoordinates' => $coordinatesArray]);
     }
@@ -241,48 +228,6 @@ var_dump($tempAllStations);*/
         return $earthRadius * $c;
     }
 
-    
-
-
-/*
-*   PARA APAGAR
-*/
-    public function fetchData()
-    {
-        $client = new Client(); //GuzzleHttp\Client
-        $resultArray = array();
-/*
-        for($i=1;$i<18;$i++)
-        {
-            if($i<10)
-            {
-                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD0'.$i.'.js', [
-    //                'auth' => ['user', 'pass']
-                ]);
-            }else{
-                $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD'.$i.'.js', [
-    //                'auth' => ['user', 'pass']
-                ]);
-            }
-
-            $item = $result->getBody();
-
-            array_push($resultArray, $item);
-        }*/
-        $result = $client->request('GET', 'http://www.precoscombustiveis.dgeg.pt/Mapas/postosPTD01.js', [
-    //                'auth' => ['user', 'pass']
-                ]);
-        $item = $result->getBody();
-        array_push($resultArray, $item);
-        foreach ($resultArray as $key => $value)
-        {
-            $csv = $this->convertPageToCsv($value);
-            $this->retrieveData($csv);
-            //echo "$csv";
-        }
-
-    }
-
     private function retrieveData($csv)
     {
        // $array = str_getcsv($csv, ';');
@@ -318,33 +263,40 @@ var_dump($tempAllStations);*/
 
     public function fetchStationData()
     {
-        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
-        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=$stationId&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
-        #$link = "http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=181911&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA";
+      $stationsIds = $this->fetchStationID();
+      $number=0;
+      $numberOfStations = sizeof($this->fetchStationID());
 
 
-        /*foreach ($this->fetchStationID() as $value) {
+      while ($number < $numberOfStations) {
+
+        if ($number % 9 == 0) {
           # code...
-                #      sleep(20);
+          sleep(60);
+        }
+        foreach ($this->fetchStationID() as $value) {
 
+          #$link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=181911&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
           $link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha='.$value.'&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
           $guzzle = new GuzzleHttp\Client();
 
           $request = $guzzle->request('GET', $link);
 
-
           $crawler = new Crawler((string) $request->getBody());
 
-          $result = $crawler->filter('div .esq ')->text();
+          $result = $crawler->filter('div .infoPrecos.none')->html();
+          $result2 = $crawler->filter('div .infoPostos.invisivel')->html();
+          $result3 = $crawler->filter('mlk')->html();
 
-          echo $result;
-                      sleep(20);
+
+        }
+        $number++;
+      }
 
 
-        }*/
     }
 
-    
+
 
     public function mapsApi()
     {
@@ -403,7 +355,8 @@ $uniqueMatch1 = array();
           #return $matches;
           asort($matches);
 
-        print_r($matches);
+        #print_r($matches);
+        return $matches;
     }
 
 }

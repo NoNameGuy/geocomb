@@ -29,11 +29,7 @@ Auth::routes();
 
 Route::get('/', 'LandingController@index');
 
-Route::get('/fetch', 'LandingController@fetchData');
-Route::get('/fetchStation/{id}', 'LandingController@fetchStationData');
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
-Route::get('/maps', 'LandingController@mapsApi');
-Route::get('/fetchId', 'LandingController@fetchStationID');
 
 
 Route::get('/login', 'Auth\LoginController@index');

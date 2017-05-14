@@ -35,10 +35,7 @@
     <div class="col-sm-8 text-left">
       <h1 class="center">Preço dos Combustiveis</h1>
 
-			<a href="{{action('LandingController@fetchData')}}">Fetch data Aveiro</a>
-			<a href="{{action('LandingController@fetchStationData')}}">Fetch data 165954 station</a>
-			<a href="{{action('LandingController@mapsApi')}}">Maps Api</a>
-			<a href="{{action('LandingController@fetchStationID')}}">STATION_ID</a>
+			<a href="{{action('LandingController@fetchStationData')}}">Fetch data station</a>
 
 			<hr>
 
@@ -51,14 +48,14 @@
 						function initMap(centerCoordinates=null) {
 							var coordinates = {"latitude":{{$centerMapCoordinates->latitude}}, "longitude":{{$centerMapCoordinates->longitude}}};
 							//console.log(coordinates);
-							
+
 							if (centerCoordinates!==null) {
-								
+
 								centerCoordinates=""+centerCoordinates;
 								var commaIndex = centerCoordinates.indexOf(",");
 								coordinates.latitude = parseFloat(centerCoordinates.substr(1, commaIndex-1));
 								coordinates.longitude = parseFloat(centerCoordinates.substr(commaIndex+2, commaIndex+6));
-								
+
 							}
 
 							var pt = {lat: coordinates.latitude, lng:  coordinates.longitude};
@@ -67,7 +64,7 @@
 								center: pt
 							});
 
-							
+
 							myLatLng = {"lat": 39.7495, "lng":-8.8077};
 							var marker = new google.maps.Marker({
 	          					position: myLatLng,
@@ -79,7 +76,7 @@
 				        var address = document.getElementById('inputdefault').value;
 				        geocoder.geocode({'address': address}, function(results, status) {
 				          if (status === 'OK') {
-				            
+
 				            initMap(results[0].geometry.location);
 
 				          } else {
