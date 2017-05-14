@@ -267,7 +267,7 @@ var_dump($tempAllStations);*/
       $number=0;
       $numberOfStations = sizeof($this->fetchStationID());
 
-
+/*
       while ($number < $numberOfStations) {
 
         if ($number % 9 == 0) {
@@ -275,9 +275,9 @@ var_dump($tempAllStations);*/
           sleep(60);
         }
         foreach ($this->fetchStationID() as $value) {
-
-          #$link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=181911&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
-          $link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha='.$value.'&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
+*/
+          $link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha=181911&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
+          #$link = 'http://www.precoscombustiveis.dgeg.pt/wwwbase/raiz/mlkListagemCallback_v11.aspx?linha='.$value.'&fi=7745&geradorid=5372&nivel=2&codigoms=0&codigono=62796281AAAAAAAAAAAAAAAA';
           $guzzle = new GuzzleHttp\Client();
 
           $request = $guzzle->request('GET', $link);
@@ -287,12 +287,16 @@ var_dump($tempAllStations);*/
           $result = $crawler->filter('div .infoPrecos.none')->html();
           $result2 = $crawler->filter('div .infoPostos.invisivel')->html();
           $result3 = $crawler->filter('mlk')->html();
+          $string = strip_tags($result);
+          $diesel = substr( $string, 0, strlen($result)-mb_stripos($string, 9, 0) );
 
+          echo $diesel;
+/*
 
         }
         $number++;
       }
-
+*/
 
     }
 

@@ -33,7 +33,7 @@
 
 
     <div class="col-sm-8 text-left">
-      <h1 class="center">Preço dos Combustiveis</h1>
+      <h1 class="center">Preço dos Combustíveis</h1>
 
 			<a href="{{action('LandingController@fetchStationData')}}">Fetch data station</a>
 
