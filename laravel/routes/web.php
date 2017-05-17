@@ -31,21 +31,20 @@ Route::get('/', 'LandingController@index');
 
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 
-
+/*
 Route::get('/login', 'Auth\LoginController@index');
-Route::post('/login', 'Auth\LoginController@login');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::get('/register', 'Auth\RegisterController@index');
 Route::post('/register', 'Auth\RegisterController@register');
-
-Route::get('/logout', function(){
+*/
+/*Route::get('/logout', function(){
 	Auth::logout();
 
 	return redirect('/');#'Auth\LoginController@logout'
-});
+});*/
 
-Route::group(['middleware' => 'web'], function () {
-
-	Route::get('/user_page', 'UserPageController@index');
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('/user_page', 'UserPageController@index')->name('user_page');
 	Route::post('/user_page', 'UserPageController@index');
 });
 Route::post('/add_vehicle', 'UserPageController@add');

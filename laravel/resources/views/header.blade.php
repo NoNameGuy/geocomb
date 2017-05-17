@@ -32,8 +32,59 @@
         <li><a href="#">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{action('Auth\LoginController@index')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-        <li><a href="{{action('Auth\RegisterController@index')}}"><span class="glyphicon glyphicon-log-in"></span> Register</a></li>
+
+
+
+
+
+
+
+@if (Auth::guest())
+                            <li><a href="{{ route('login') }}">Login</a></li>
+                            <li><a href="{{ route('register') }}">Register</a></li>
+                        @else
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+{{--
+                                        <li><a href="{{route('users.view', [Auth::user()->id])}}"><i class="fa fa-btn fa-user"></i>My Profile</a></li>
+                                        <li><a href="{{route('advertisements.create')}}"><i class="fa fa-btn fa-plus"></i>Create Advertisement</a></li>
+                                        <li><a href="{{route('bids.list')}}"><i class="fa fa-btn fa-credit-card"></i>My Bids</a></li>
+                                        @if (Auth::user()->admin)
+                                        <li><a href="{{route('admin.list')}}"><i class="fa fa-btn fa-briefcase"></i>Admin Page</a></li>
+                                        @endif
+                                        <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+--}}
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
       </ul>
     </div>
   </div>

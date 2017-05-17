@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -30,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user_page';
 
     /**
      * Create a new controller instance.
@@ -39,21 +34,25 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
-
+        $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $request)
+    /*public function login(Request $request)
     {
-        $user = DB::table('users')->where('email', $request->email)->first();
+        $user = new User();
+        $user = User::where('email', $request->email);
+         #echo User::all();
+        //$user = DB::table('users')->where('email', $request->email)->first();
         #if(Auth::attempt(['email' => $request->email, 'password' => $user->password])){
-        if( Hash::check($request->password, $user->password) ) {
-            #dd(Auth::user());
-            return Redirect('user_page');#, ['name' => Auth::user()->name]);
-        }else{
+        #if( Hash::check($request->password, $user->password) ) {
+        if(Auth::login($user)){
+        //if ( Hash::check( $request->password, $user->password) && Auth::attempt(['email' => $request->email])) {
+            // Authentication passed...
+           return redirect()->intended('user_page');
+        } else{
             echo "not logged in";
         }
-    }
+    }*/
 
     public function logout(Request $request)
     {
