@@ -1,6 +1,6 @@
 @include('header')
     <div class="col-sm-8 text-center">
-      <h1 class="center">Welcome, {{--$name--}}</h1>
+      <h1 class="center">Welcome, {{$name}}</h1>
       <br><br>
 
 

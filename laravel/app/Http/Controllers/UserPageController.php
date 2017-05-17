@@ -10,16 +10,10 @@ class UserPageController extends Controller
 {
     public function index(Request $request)
     {
-        
-        $userId = DB::table('users')->where('email', Auth::user()->email)->select('id')->get();
-        
-        $userVehicles = DB::table('vehicles')->where('user_id', $userId[0]->id)->get();
-        echo "user vehicles count".$userVehicles->count();
-        for($i=1; $i<=$userVehicles->count();$i++){
-            var_dump($userVehicles[$i]);
-            $vehicles = DB::table('vehicle')->where('id', $userVehicles[$i]->vehicle_id)->get();
-        }
-    	return view('user_page', ['vehicles' => $vehicles]);
+        $user = Auth::user();
+        $vehicles = DB::table('vehicle')->join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)->get();
+
+    	return view('user_page', ['name'=>$user->name, 'vehicles' => $vehicles]);
     }
 
     public function add(Request $request)
