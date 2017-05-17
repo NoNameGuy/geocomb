@@ -14,6 +14,12 @@
         <a href="{{action('UserPageController@add')}}"><button name="Add">Add</button></a>
       </form>
         
+      <p>My vehicles</p>
+      @foreach( $vehicles as $vehicle)
+        <p>{{$vehicle->brand}}</p>
+        <p>{{$vehicle->model}}</p>
+
+      @endforeach
     </div>
 
 @include('footer')
