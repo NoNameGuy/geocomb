@@ -10,16 +10,51 @@ class LocationTableSeeder extends Seeder
      * @return void
      */
     public function run(){
-    $minLatitude = 36.844;
-    $maxLatitude = 42.196;
-    $minLongitude = -9.756;
-    $maxLongitude = -6.021;
+        $minLatitudeNorth = 40.543;
+        $maxLatitudeNorth = 41.939;
+        $minLongitudeNorth = -8.641;
+        $maxLongitudeNorth = -6.883;
 
+        $minLatitudeCenter = 38.501;
+        $maxLatitudeCenter = 40.543;
+        $minLongitudeCenter = -8.789;
+        $maxLongitudeCenter = -7.075;
+
+        $minLatitudeSouth = 37.169;
+        $maxLatitudeSouth = 38.501;
+        $minLongitudeSouth = -8.756;
+        $maxLongitudeSouth = -7.075;
    
+        $minLatitudeWest = 38.501;
+        $maxLatitudeWest = 39.419;
+        $minLongitudeWest = -9.305;
+        $maxLongitudeWest = -8.756;
 
-        for ($i = 0; $i < 10; $i++) {
-            $array = array(['latitude' => $this->randomCoordinate($minLatitude, $maxLatitude),
-                'longitude' => $this->randomCoordinate($minLongitude, $maxLongitude)]);
+        //North
+        for ($i = 0; $i < 1000; $i++) {
+            $array = array(['latitude' => $this->randomCoordinate($minLatitudeNorth, $maxLatitudeNorth),
+                'longitude' => $this->randomCoordinate($minLongitudeNorth, $maxLongitudeNorth)]);
+            DB::table('location')->insert($array);
+        }
+
+        //Center
+        for ($i = 0; $i < 2000; $i++) {
+            $array = array(['latitude' => $this->randomCoordinate($minLatitudeCenter, $maxLatitudeCenter),
+                'longitude' => $this->randomCoordinate($minLongitudeCenter, $maxLongitudeCenter)]);
+            DB::table('location')->insert($array);
+        }
+
+        //South
+        for ($i = 0; $i < 2000; $i++) {
+            $array = array(['latitude' => $this->randomCoordinate($minLatitudeSouth, $maxLatitudeSouth),
+                'longitude' => $this->randomCoordinate($minLongitudeSouth, $maxLongitudeSouth)]);
+            DB::table('location')->insert($array);
+        }
+
+        //West
+        for ($i = 0; $i < 2000; $i++) {
+            $array = array(['latitude' => $this->randomCoordinate($minLatitudeWest, $maxLatitudeWest),
+                'longitude' => $this->randomCoordinate($minLongitudeWest, $maxLongitudeWest)]);
             DB::table('location')->insert($array);
         }
     }

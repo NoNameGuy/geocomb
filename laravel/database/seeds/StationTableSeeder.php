@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class StationTableSeeder extends Seeder
@@ -12,7 +13,7 @@ class StationTableSeeder extends Seeder
      */
     public function run()
     {
-         for ($i = 0; $i < 10; $i++) {
+         for ($i = 0; $i < DB::table('location')->count(); $i++) {
         	for ($j=0; $j < 5; $j++) { 
     			$location = $this->generateRandomNumber(1,10);
     			$district = $this->generateRandomNumber(1,18);

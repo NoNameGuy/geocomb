@@ -19,7 +19,7 @@ class CreateVehiclesTable extends Migration
             $table->integer('vehicle_id')->unsigned();
         });
 
-        Schema::table('users', function(Blueprint $table){
+        Schema::table('vehicles', function(Blueprint $table){
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('vehicle_id')->references('id')->on('vehicle');
         });
