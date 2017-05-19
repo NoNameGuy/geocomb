@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
+use Illuminate\Support\Facades\Response;
 
 use App\District;
 
@@ -361,6 +362,32 @@ $uniqueMatch1 = array();
 
         #print_r($matches);
         return $matches;
+    }
+
+    public function apiDistricts() {
+        try{
+            $statusCode = 200;
+            $response['districts'] = array();/*[
+              'districts'  => []
+            ];*/
+
+            $districts = District::all();
+//dd($districts);
+            foreach($districts as $district){
+
+                array_push($response['districts'], /*[
+                    'id' => $district->id,*/
+                    //'name' => 
+                    $district->name
+                //]
+                );
+            }
+
+        }catch (Exception $e){
+            $statusCode = 400;
+        }finally{
+            return Response::json($response, $statusCode);
+        }
     }
 
 }

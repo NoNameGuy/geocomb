@@ -1,36 +1,12 @@
 @include('header')
 
-<script type="text/javascript">
 
-	window.onload = getLocation;
-	function getLocation() {
-		if(document.getElementById("latitude").value==="" || document.getElementById("longitude").value===""){
-		    if (navigator.geolocation) {
-		        navigator.geolocation.getCurrentPosition(showPosition);
-		    } else {
-		        alert("Geolocation is not supported by this browser.");
-		    }
-		}
-	}
-	function showPosition(position) {
-	    document.getElementById("latitude").value =position.coords.latitude;
-	    document.getElementById("longitude").value =position.coords.longitude;
-	    submitForm();
-	}
-	function submitForm(){
-		document.getElementById("submit").click();
-
-	}
-</script>
 <form method="POST" action="{{ url('/showGpsCoordinates') }}" style="display: none;" >
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="text" id = "latitude" name="latitude" value="{{$centerMapCoordinates->latitude}}" />
-        <input type="text" id = "longitude" name="longitude" value="{{$centerMapCoordinates->longitude}}" />
-        <button type="submit" id="submit">submit</button>
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <input type="text" id = "latitude" name="latitude" value="{{$centerMapCoordinates->latitude}}" />
+    <input type="text" id = "longitude" name="longitude" value="{{$centerMapCoordinates->longitude}}" />
+    <button type="submit" id="submit">submit</button>
 </form>
-
-
-
 
     <div class="col-sm-8 text-left">
       <h1 class="center">Preço dos Combustíveis</h1>
@@ -44,82 +20,16 @@
 			<div class="col-sm-6">
 
 				<div id="map"></div>
-					<script>
-						function initMap(centerCoordinates=null) {
-							var coordinates = {"latitude":{{$centerMapCoordinates->latitude}}, "longitude":{{$centerMapCoordinates->longitude}}};
-							//console.log(coordinates);
-
-							if (centerCoordinates!==null) {
-
-								centerCoordinates=""+centerCoordinates;
-								var commaIndex = centerCoordinates.indexOf(",");
-								coordinates.latitude = parseFloat(centerCoordinates.substr(1, commaIndex-1));
-								coordinates.longitude = parseFloat(centerCoordinates.substr(commaIndex+2, commaIndex+6));
-
-							}
-
-							var pt = {lat: coordinates.latitude, lng:  coordinates.longitude};
-							var map = new google.maps.Map(document.getElementById('map'), {
-								zoom: 10,
-								center: pt
-							});
-
-
-							myLatLng = {"lat": 39.7495, "lng":-8.8077};
-							var marker = new google.maps.Marker({
-	          					position: myLatLng,
-					        	map: map,
-					          	title: 'Fuel Station'
-					        });
-						}
-						function geocodeAddress(geocoder, resultsMap) {
-				        var address = document.getElementById('inputdefault').value;
-				        geocoder.geocode({'address': address}, function(results, status) {
-				          if (status === 'OK') {
-
-				            initMap(results[0].geometry.location);
-
-				          } else {
-				            alert('Geocode was not successful for the following reason: ' + status);
-				          }
-				        });
-				    	}
-
-				    	$( function() {
-					 var districtsName = <?php echo json_encode($districtsName); ?>
-					//var availableTags = districtsName;
-					$( "#inputdefault" ).autocomplete({
-						source: districtsName
-					});
-
-					var delay = (function(){
-						var timer = 0;
-					  	return function(callback, ms){
-					    	clearTimeout (timer);
-					    	timer = setTimeout(callback, ms);
-					  	};
-					})();
-
-					$("#inputdefault").keyup(function(){
-						delay( function(){
-						var brand = $("#inputdefault").val();
-var geocoder = new google.maps.Geocoder();
-							geocodeAddress(geocoder, map);
-						},1000);
-					});
-				} );
-					</script>
-					<script async defer
-					src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap">
-					</script>
+					
+		
 
 
 			</div>
 			<div class="col-sm-6">
 			<br>
 			<div class="form-group">
-				<label for="inputdefault">Distrito(s): </label>
-				<input class="form-control" id="inputdefault" type="text">
+				<label for="inputdistrict">Distrito(s): </label>
+				<input class="form-control" id="inputdistrict" type="text">
 			</div>
 			<br>
 			<div class="checkbox">
@@ -145,7 +55,7 @@ var geocoder = new google.maps.Geocoder();
 			</div>
 
 			<div class="form-group">
-		    <label for="inputdefault">Marca (Opcional): </label>
+		    <label for="brand">Marca (Opcional): </label>
 		    <input class="form-control" id="brand" type="text">
 		  </div>
 			<br>

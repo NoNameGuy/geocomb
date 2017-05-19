@@ -27,7 +27,8 @@ Route::post('/',
 
 Auth::routes();
 
-Route::get('/', 'LandingController@index');
+Route::get('/', 'LandingController@index')->name('home');
+Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistricts');
 
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 

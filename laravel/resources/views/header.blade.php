@@ -11,8 +11,11 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
-	<script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
-
+  <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
+	<script src="{{asset('js/javascript.js')}}"></script>
+<script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap" >
+          </script>
 
 	</head>
 					<body><nav class="navbar navbar-inverse">
@@ -27,7 +30,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{{action('LandingController@index')}}">Home</a></li>
+        <li class="active"><a href="{{route('home')}}">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
