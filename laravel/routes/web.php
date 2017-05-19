@@ -28,7 +28,6 @@ Route::post('/',
 Auth::routes();
 
 Route::get('/', 'LandingController@index')->name('home');
-Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistricts');
 
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
 
@@ -45,9 +44,12 @@ Route::post('/register', 'Auth\RegisterController@register');
 });*/
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('/user_page', 'UserPageController@index')->name('user_page');
-	Route::post('/user_page', 'UserPageController@index');
+	Route::get('/userpage', 'UserPageController@index')->name('userpage');
+	Route::post('/userpage', 'UserPageController@index');
+	Route::post('/addvehicle', 'UserPageController@add')->name('addvehicle');
 });
-Route::post('/add_vehicle', 'UserPageController@add');
 
 Route::post('/showGpsCoordinates', 'LandingController@index');
+
+//API
+Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistricts');

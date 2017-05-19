@@ -5,7 +5,7 @@
 
 
       <p>Add vehicle</p>
-      <form method="POST" action="{{ url('/add_vehicle') }}" autocomplete="on">
+      <form method="POST" action="{{ route('addvehicle') }}" autocomplete="on">
       {{ csrf_field() }}
         <input type="text" name="brand" placeholder="Brand"><br>
         <input type="text" name="model" placeholder="Model"><br>

@@ -16,7 +16,8 @@ var js = $(document).ready(function(){
 	                response($.map(data["districts"] , function (key, value) {
 	                	//console.log(data["districts"][value]);
 		                return data["districts"][value];
-	            }
+	            }))}
+
 	         });
 		}
 	});
