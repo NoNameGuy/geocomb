@@ -22,6 +22,11 @@ var js = $(document).ready(function(){
 		}
 	});
 
+	$("input[name='fuelType']").change(function(){
+		alert($(this).val());
+	});
+
+
 	function getLocation() {
 
 		if($("#latitude").val()==="" || $("#longitude").val()===""){
@@ -60,7 +65,11 @@ var js = $(document).ready(function(){
 			center: pt
 		});
 
+		placeMarker(map);
+		
+	}
 
+	function placeMarker(map) {
 		var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 		var marker = new google.maps.Marker({
 				position: myLatLng,

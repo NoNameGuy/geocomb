@@ -33,10 +33,10 @@
 			</div>
 			<br>
 			<div class="checkbox">
-			  <label><input type="checkbox" value="">Gasóleo</label><br>
-				<label><input type="checkbox" value="">Gasóleo Simples</label><br>
-				<label><input type="checkbox" value="">Gasóleo Colorido</label><br>
-				<label><input type="checkbox" value="">Gasóleo Especial</label><br>
+			  <label><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>
+				<label><input type="checkbox" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
+				<label><input type="checkbox" name="fuelType" value="diesel_colored">Gasóleo Colorido</label><br>
+				<label><input type="checkbox" name="fuelType" value="diesel_pecial">Gasóleo Especial</label><br>
 				<br><br>
 				<label><input type="checkbox" value="">Gasolina 95</label><br>
 				<label><input type="checkbox" value="">Gasolina Simples 95</label><br>

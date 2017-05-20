@@ -79,8 +79,11 @@
       </div>
 -->
     <div class="col-sm-6">
-      <div class="list-group">
-       <a href="#" class="list-group-item">First item</a>
+      <div class="list-group" id="vehicleList">
+       @foreach($vehicles as $vehicle)
+        <a href="#" class="list-group-item" value="{{$vehicle->id}}">{{$vehicle->brand}} - {{$vehicle->model}}</a>
+       @endforeach
+       <!--<a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
@@ -90,42 +93,63 @@
        <a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
-       <a href="#" class="list-group-item">Second item</a>
-       <a href="#" class="list-group-item">Second item</a>
-       <button type="button" class="btn btn-link btn-lg">Adicionar Veiculo</a>
+       <a href="#" class="list-group-item">Second item</a>-->
+       <button type="button" class="btn btn-link btn-lg" id="addVehicle">Adicionar Veiculo</a>
       </div>
     </div>
 
     <div class="col-sm-6 text-left">
-
+     <form method="POST" action="{{ route('addvehicle') }}" autocomplete="on">
+      {{ csrf_field() }}
+        
       <div class="form-group">
         <label for="inputdefault">Marca: </label>
-        <input class="form-control" id="inputdefault" type="text">
+        <input class="form-control" id="txtBrand" name="brand" type="text">
       </div>
 
       <div class="form-group">
         <label for="inputdefault">Modelo: </label>
-        <input class="form-control" id="inputdefault" type="text">
+        <input class="form-control" id="txtModel"  name="model" type="text">
       </div>
 
       <div class="form-group">
         <label for="inputdefault">Tipo de Combustível: </label>
-        <input class="form-control" id="inputdefault" type="text">
+        <input class="form-control" id="txtFuelType" name="fuel" type="text">
       </div>
 
       <div class="form-group">
         <label for="inputdefault">Consumo(L/100): </label>
-        <input class="form-control" id="inputdefault" type="text">
+        <input class="form-control" id="txtConsumption" type="number" name="consumption" step="0.1">
       </div>
         <div class="center">
 
           <button type="button" class="btn btn-success btn-lg">Editar</button>
-          <button type="button" class="btn btn-success btn-lg">Guardar</button>
+          <button type="submit" class="btn btn-success btn-lg">Guardar</button>
           <button type="button" class="btn btn-danger btn-lg">Remover</button>
 
         </div>
-
+       </form>
     </div>
+    <script type="text/javascript">
+      $(" #vehicleList>a").click(function(){
+       /*{{-- @foreach($vehicles as $vehicle)
+          @if($vehicle->id == $(this).val())
+            $("#txtBrand").val("{{$vehicle->brand}}");  
+            $("#txtModel").val('');  
+            $("#txtFuelType").val('');  
+            $("#txtConsumption").val('');
+          @endif
+        @endforeach--}}*/
+      });
+
+      $("#addVehicle").click(function(){
+        $("#txtBrand").val('');  
+        $("#txtModel").val('');  
+        $("#txtFuelType").val('');  
+        $("#txtConsumption").val('');  
+      });
+      
+    </script>
 
   </div>
 @include('footer')

@@ -17,7 +17,6 @@ class CreateVehicleTable extends Migration
             $table->increments('id');
             $table->string('brand');
             $table->string('model');
-            $table->string('color');
             $table->string('fuel');
             $table->float('consumption');
         });

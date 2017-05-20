@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/user_page';
+    protected $redirectTo = '/userpage';
 
     /**
      * Create a new controller instance.
@@ -54,13 +54,13 @@ class LoginController extends Controller
         }
     }*/
 
-    public function logout(Request $request)
+    /*public function logout(Request $request)
     {
         return view('landing_page');
-    }
+    }*/
 
-    public function index()
+    /*public function index()
     {
         return View('login');
-    }
+    }*/
 }

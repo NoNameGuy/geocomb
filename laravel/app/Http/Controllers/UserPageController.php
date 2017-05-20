@@ -23,7 +23,7 @@ class UserPageController extends Controller
     public function add(Request $request)
     {
 
-    	$data = ['brand' => $request->brand, 'model' => $request->model, 'color' => $request->color, 'fuel' => $request->fuel, 'consumption' => $request->consumption];
+    	$data = ['brand' => $request->brand, 'model' => $request->model, 'fuel' => $request->fuel, 'consumption' => $request->consumption];
         //DB::table('vehicle')->insert($data);
         Vehicle::insert($data);
 
