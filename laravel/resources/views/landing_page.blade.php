@@ -1,7 +1,7 @@
 @include('header')
 
 
-<form method="POST" action="{{ url('/showGpsCoordinates') }}" style="display: none;" >
+<form method="POST" action="{{ url('/') }}" style="display: none;" >
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="text" id = "latitude" name="latitude" value="{{$centerMapCoordinates->latitude}}" />
     <input type="text" id = "longitude" name="longitude" value="{{$centerMapCoordinates->longitude}}" />

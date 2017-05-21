@@ -26,6 +26,32 @@ var js = $(document).ready(function(){
 		alert($(this).val());
 	});
 
+	function initMap() {
+		var coordinates;
+		if($("#latitude").val()!='' && $("#longitude").val()!=''){
+			coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
+		}else{
+		 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+		}
+
+		var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 10,
+			center: pt
+		});
+
+		placeMarker(map);
+		
+	}
+
+	function placeMarker(map) {
+		var myLatLng = {"lat": 39.7495, "lng":-8.8077};
+		var marker = new google.maps.Marker({
+				position: myLatLng,
+        	map: map,
+          	title: 'Fuel Station'
+        });
+	}
 
 	function getLocation() {
 
@@ -46,37 +72,6 @@ var js = $(document).ready(function(){
 		$("#submit").click();
 	}
 	
-
-	function initMap(centerCoordinates=null) {
-		var coordinates = {"latitude": 39.676944, "longitude": -8.1425};
-		//console.log(coordinates);
-		if (centerCoordinates!==null) {
-
-			centerCoordinates=""+centerCoordinates;
-			var commaIndex = centerCoordinates.indexOf(",");
-			coordinates.latitude = parseFloat(centerCoordinates.substr(1, commaIndex-1));
-			coordinates.longitude = parseFloat(centerCoordinates.substr(commaIndex+2, commaIndex+6));
-
-		}
-
-		var pt = {lat: coordinates.latitude, lng:  coordinates.longitude};
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 10,
-			center: pt
-		});
-
-		placeMarker(map);
-		
-	}
-
-	function placeMarker(map) {
-		var myLatLng = {"lat": 39.7495, "lng":-8.8077};
-		var marker = new google.maps.Marker({
-				position: myLatLng,
-        	map: map,
-          	title: 'Fuel Station'
-        });
-	}
 
 	$("#inputdistrict").keyup(function(){
 		//alert($("#inputdistrict").val());
