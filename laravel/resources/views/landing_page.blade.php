@@ -1,7 +1,7 @@
 @include('header')
 
 
-<form method="POST" action="{{ url('/') }}" style="display: none;" >
+<form method="POST" action="{{ route('home') }}" style="display: none;" >
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="text" id = "latitude" name="latitude" value="{{$centerMapCoordinates->latitude}}" />
     <input type="text" id = "longitude" name="longitude" value="{{$centerMapCoordinates->longitude}}" />
@@ -29,34 +29,39 @@
 			<br>
 			<div class="form-group">
 				<label for="inputdistrict">Distrito(s): </label>
-				<input class="form-control" id="inputdistrict" type="text">
+				<input class="form-control" id="inputdistrict" name="district" type="text">
 			</div>
 			<br>
 			<div class="checkbox">
+			<form method="post" action="{{route('home')}}">
+				{{csrf_field()}}
 			  <label><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>
 				<label><input type="checkbox" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
 				<label><input type="checkbox" name="fuelType" value="diesel_colored">Gasóleo Colorido</label><br>
 				<label><input type="checkbox" name="fuelType" value="diesel_pecial">Gasóleo Especial</label><br>
 				<br><br>
-				<label><input type="checkbox" value="">Gasolina 95</label><br>
-				<label><input type="checkbox" value="">Gasolina Simples 95</label><br>
-				<label><input type="checkbox" value="">Gasolina Especial 95</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_95">Gasolina 95</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_simple_95">Gasolina Simples 95</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_special_95">Gasolina Especial 95</label><br>
 				<br><br>
-				<label><input type="checkbox" value="">Gasolina 98</label><br>
-				<label><input type="checkbox" value="">Gasolina Simples 98</label><br>
-				<label><input type="checkbox" value="">Gasolina Especial 98</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_98">Gasolina 98</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_simple_98">Gasolina Simples 98</label><br>
+				<label><input type="checkbox" name="fuelType" value="petrol_special_98">Gasolina Especial 98</label><br>
 				<br><br>
-				<label><input type="checkbox" value="">GNC KG</label><br>
-				<label><input type="checkbox" value="">GNC M3</label><br>
-				<label><input type="checkbox" value="">GNL</label><br>
-				<label><input type="checkbox" value="">GPL</label><br>
+				<label><input type="checkbox" name="fuelType" value="gas_compressed_kg">GNC KG</label><br>
+				<label><input type="checkbox" name="fuelType" value="gas_compressed_m3">GNC M3</label><br>
+				<label><input type="checkbox" name="fuelType" value="gas_liquified">GNL</label><br>
+				<label><input type="checkbox" name="fuelType" value="gpl">GPL</label><br>
 				<br>
 				<br>
+			
 			</div>
 
 			<div class="form-group">
 		    <label for="brand">Marca (Opcional): </label>
-		    <input class="form-control" id="brand" type="text">
+		    <input class="form-control" id="brand" name="brand" type="text">
+		    <button id="landingSearch" type="submit">Search...</button>
+		    </form>
 		  </div>
 			<br>
 			<script>

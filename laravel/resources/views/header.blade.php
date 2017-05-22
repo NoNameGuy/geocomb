@@ -32,7 +32,9 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="{{route('home')}}">Home</a></li>
         <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
+        @if (Auth::user())
+          <li><a href="{{route('userpage')}}">My Area</a></li>
+        @endif
       </ul>
       <ul class="nav navbar-nav navbar-right">
 
@@ -62,9 +64,9 @@
                                         <li><a href="{{route('users.view', [Auth::user()->id])}}"><i class="fa fa-btn fa-user"></i>My Profile</a></li>
                                         <li><a href="{{route('advertisements.create')}}"><i class="fa fa-btn fa-plus"></i>Create Advertisement</a></li>
                                         <li><a href="{{route('bids.list')}}"><i class="fa fa-btn fa-credit-card"></i>My Bids</a></li>
-                                        @if (Auth::user()->admin)
+                                @if (Auth::user()->admin)
                                         <li><a href="{{route('admin.list')}}"><i class="fa fa-btn fa-briefcase"></i>Admin Page</a></li>
-                                        @endif
+                                @endif
                                         <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
 --}}
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

@@ -59,7 +59,7 @@ class LandingController extends BaseController
           array_push($brandsName, $brands[$i]->brand);
         }
 
-        $coordinatesArray = array();
+        /*$coordinatesArray = array();
         $ids = array();
         $coordinate = new \stdClass();
         $ids = DB::table('station')->select('location')->get();
@@ -79,9 +79,20 @@ class LandingController extends BaseController
                 $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
             }
 
-        }
+        }*/
+        $stations = array();
+        $stations = $this->getStations($request);
 
-        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'markerCoordinates' => $coordinatesArray]);
+        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
+    }
+
+    private function getStations(Request $request)
+    {
+        if($request->district!=null && $request->brand && $request->fuelType){
+            $stations = Station::where('district', $request->district);
+            dd($stations);
+            return $stations;
+        }
     }
 
     private function getCoordinatesByPlace($address)

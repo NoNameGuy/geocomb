@@ -81,7 +81,7 @@
     <div class="col-sm-6">
       <div class="list-group" id="vehicleList">
        @foreach($vehicles as $vehicle)
-        <a href="#" class="list-group-item" value="{{$vehicle->id}}">{{$vehicle->brand}} - {{$vehicle->model}}</a>
+        <a href="#" class="list-group-item {{Auth::user()->preferredVehicle==$vehicle->vehicle_id ? 'active': ''}}" value="{{$vehicle->id}}" onclick="var brand={{$vehicle->brand}}, {{$vehicle->model}}, {{$vehicle->fuel}}, {{$vehicle->consumption}}, {{Auth::user()->preferredVehicle==$vehicle->id? 1 : 0}};updateVehiclePage(brand)">{{$vehicle->brand}} - {{$vehicle->model}}</a>
        @endforeach
        <!--<a href="#" class="list-group-item">Second item</a>
        <a href="#" class="list-group-item">Second item</a>
@@ -103,23 +103,27 @@
       {{ csrf_field() }}
         
       <div class="form-group">
-        <label for="inputdefault">Marca: </label>
+        <label for="brand">Marca: </label>
         <input class="form-control" id="txtBrand" name="brand" type="text">
       </div>
 
       <div class="form-group">
-        <label for="inputdefault">Modelo: </label>
+        <label for="model">Modelo: </label>
         <input class="form-control" id="txtModel"  name="model" type="text">
       </div>
 
       <div class="form-group">
-        <label for="inputdefault">Tipo de Combustível: </label>
+        <label for="fuel">Tipo de Combustível: </label>
         <input class="form-control" id="txtFuelType" name="fuel" type="text">
       </div>
 
       <div class="form-group">
-        <label for="inputdefault">Consumo(L/100): </label>
+        <label for="consumption">Consumo(L/100): </label>
         <input class="form-control" id="txtConsumption" type="number" name="consumption" step="0.1">
+      </div>
+      <div class="form-group">
+        <label for="favoriteVehicle">Preferred Vehicle </label>
+        <input type="checkbox" name="favoriteVehicle">
       </div>
         <div class="center">
 

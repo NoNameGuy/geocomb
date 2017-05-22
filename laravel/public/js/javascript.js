@@ -101,5 +101,13 @@ var js = $(document).ready(function(){
         });
 	}
 
+	/*$('#vehicleList>a').click(function(){
+alert("updateVehiclePage");
+	});*/
+	function updateVehiclePage(brand, model, fuel, consumption, preferred){
+		alert("updateVehiclePage");
+	}
+
 	window.initMap = initMap;
+	window.updateVehiclePage = updateVehiclePage;
 });
