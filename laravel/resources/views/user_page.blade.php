@@ -10,17 +10,17 @@
       </div>
 
       <script>
-        $('#percurso').click(function() {
-           $('#divVeiculos').hide();
-           $('#divInfo').hide();
-          $('#divPercurso').toggle('slow', function() {
-          // Animation complete.
-          });
-        });
         $('#veiculos').click(function() {
           $('#divPercurso').hide();
           $('#divInfo').hide();
           $('#divVeiculos').toggle('slow', function() {
+          // Animation complete.
+          });
+        });
+        $('#percurso').click(function() {
+           $('#divVeiculos').hide();
+           $('#divInfo').hide();
+          $('#divPercurso').toggle('slow', function() {
           // Animation complete.
           });
         });
@@ -34,7 +34,7 @@
       </script>
 
       <br><br><br>
-
+<!--
       <div id="divPercurso">
         <div id="map" class="col-sm-6"></div>
         <script>
@@ -79,14 +79,15 @@
           </div>
         </div>
       </div>
-
-<div id="divVeiculos" style="display:none">
+-->
+<div id="divVeiculos">
     <div class="col-sm-6">
       <div class="list-group" id="vehicleList">
+       @if($vehicles)
        @foreach($vehicles as $vehicle)
-        <a href="#" class="list-group-item {{Auth::user()->preferredVehicle==$vehicle->vehicle_id ? 'active': ''}}" value="{{$vehicle->id}}" onclick="var brand={{$vehicle->brand}}, {{$vehicle->model}}, {{$vehicle->fuel}}, {{$vehicle->consumption}}, {{Auth::user()->preferredVehicle==$vehicle->id? 1 : 0}};updateVehiclePage(brand)">{{$vehicle->brand}} - {{$vehicle->model}}</a>
+        <a href="{{ route('editVehicle',$vehicle->id)}}"class="list-group-item {{Auth::user()->preferredVehicle==$vehicle->vehicle_id ? 'active': ''}}" value="{{$vehicle->id}}" onclick="var brand={{$vehicle->brand}}, {{$vehicle->model}}, {{$vehicle->fuel}}, {{$vehicle->consumption}}, {{Auth::user()->preferredVehicle==$vehicle->id? 1 : 0}};updateVehiclePage(brand)">{{$vehicle->brand}} - {{$vehicle->model}}</a>
        @endforeach
-
+      @endif
       </div>
     </div>
 
