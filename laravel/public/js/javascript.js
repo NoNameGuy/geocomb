@@ -69,7 +69,7 @@ var js = $(document).ready(function(){
 	    submitForm();
 	}
 	function submitForm(){
-		$("#submit").click();
+		$("#landingHiddenSubmit").click();
 	}
 	
 
@@ -101,9 +101,24 @@ var js = $(document).ready(function(){
         });
 	}
 
-	/*$('#vehicleList>a').click(function(){
-alert("updateVehiclePage");
-	});*/
+	$('#landingSearch').click(function(){
+alert("landing clicked");
+		$.ajax({
+            url: "api/stations",
+            type: "GET",
+            dataType: "json",
+            //delay: 50,
+            data: request,
+             
+            success: function (data) {
+                response($.map(data["districts"] , function (key, value) {
+                	//console.log(data["districts"][value]);
+	                return data["districts"][value];
+            }))}
+
+         });
+	});
+
 	function updateVehiclePage(brand, model, fuel, consumption, preferred){
 		alert("updateVehiclePage");
 	}

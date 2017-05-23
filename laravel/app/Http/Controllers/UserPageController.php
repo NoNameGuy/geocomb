@@ -35,8 +35,10 @@ class UserPageController extends Controller
         /*$vehicle = DB::table('vehicle')->orderBy('id', 'desc')->first();
         $data2 = ['user_id'=>Auth::user()->id, 'vehicle_id'=>$vehicle->id];
         DB::table('vehicles')->insert($data2);*/
-        $vehiclesId = Vehicle::orderBy('id', 'desc')->first();
-        User::where('id', Auth::user()->id)->update(['preferredVehicle' => $vehiclesId->id]);
+        if ($request->favoriteVehicle) {
+            $vehiclesId = Vehicle::orderBy('id', 'desc')->first();
+            User::where('id', Auth::user()->id)->update(['preferredVehicle' => $vehiclesId->id]);
+        }
         //$vehiclesId = DB::table('vehicle')->orderBy('id', 'desc')->first();
         //DB::table('users')->where('email', Auth::user()->email)->update(['vehiclesid' => $vehiclesId->id]);
         return redirect('userpage');
