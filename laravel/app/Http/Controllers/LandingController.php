@@ -84,6 +84,7 @@ class LandingController extends BaseController
 
         $stations = array();
         $stations = $this->getStations($request->district, $request->brand, $request->fuelType);
+
         //$this->apiStations($stations);
 
         return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
@@ -91,15 +92,20 @@ class LandingController extends BaseController
 
     private function getStations($district, $brand, $fuelType)
     {
+        $stations=null;
         if($district!=null && $brand!=null && $fuelType!=null){
-            $stations = Station::join('district', 'station.district', 'district.id')
-                ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
-                ->where('district.name','like', "%$district%")
-                ->where('station.brand','like', "%$brand%")
-                ->where("fuel_price.$fuelType",'!=', null)
-                ->get();
-            return $stations;
+          $stations = Station::join('district', 'station.district', 'district.id')
+              ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
+              ->where('district.name','like', "%$district%")
+              ->where('station.brand','like', "%$brand%")
+              ->where("fuel_price.$fuelType",'!=', null)
+              ->orderBy("fuel_price.$fuelType", "asc")
+              ->select('station.name as stationName', "fuel_price.$fuelType as fuelPrice")
+              ->take(5)
+              ->get();
         }
+        return $stations;
+
     }
 
     private function getCoordinatesByPlace($address)
@@ -395,7 +401,7 @@ $uniqueMatch1 = array();
 
                 array_push($response['districts'], /*[
                     'id' => $district->id,*/
-                    //'name' => 
+                    //'name' =>
                     $district->name
                 //]
                 );
@@ -428,7 +434,7 @@ $uniqueMatch1 = array();
 
                 array_push($response["stations"], /*[
                     'id' => $district->id,*/
-                    //'name' => 
+                    //'name' =>
                 //]
                     json_encode(["stationName" => $station->stationName,
                     "stationBrand" => $station->stationBrand,

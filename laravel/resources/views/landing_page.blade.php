@@ -25,7 +25,7 @@
 		<div class="col-sm-6">
 			@if(!isset($stations))
 			<br>
-			<!--<form method="post" action="{{route('home')}}">-->
+			<form method="post" action="{{route('home')}}">
 				{{csrf_field()}}
 				<div class="form-group">
 					<label for="inputdistrict">Distrito(s): </label>
@@ -61,7 +61,7 @@
 					<input class="form-control" id="brand" name="brand" type="text">
 					<button id="landingSearch" type="submit">Search...</button>
 				</div>
-			<!--</form>-->
+			</form>
 			<br>
 			<script>
 				$( function() {
@@ -74,6 +74,14 @@
 			</script>
 
 	@else
+	<form method="post" action="{{route('home')}}">
+		{{csrf_field()}}
+		<input type="hidden" name="district" value="">
+		<input type="hidden" name="brand" value="">
+		<button id="landingBack">Back</button>
+	</form>
+	<p>Mais baratas</p>
+	
 	{{$stations}}
 
 	@endif

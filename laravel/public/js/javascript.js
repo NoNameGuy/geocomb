@@ -11,7 +11,7 @@ var js = $(document).ready(function(){
 	            dataType: "json",
 	            //delay: 50,
 	            data: request,
-	             
+
 	            success: function (data) {
 	                response($.map(data["districts"] , function (key, value) {
 	                	//console.log(data["districts"][value]);
@@ -46,7 +46,7 @@ var js = $(document).ready(function(){
 
 		var stations = getStations();
 		placeMarker(map);
-		
+
 	}
 
 	function placeMarker(map) {
@@ -69,11 +69,11 @@ var js = $(document).ready(function(){
             dataType: "json",
             //delay: 50,
             //data: data,
-            
+
             success: function(data) {
             	var d = JSON.parse(data);
         		console.log("success: "+d);
-            	
+
        // return results;
     		},
            /* success: function (data) {
@@ -89,7 +89,7 @@ var js = $(document).ready(function(){
             }
 
          });
-         
+
 	}
 
 	function getLocation() {
@@ -110,7 +110,7 @@ var js = $(document).ready(function(){
 	function submitForm(){
 		$("#landingHiddenSubmit").click();
 	}
-	
+
 
 	$("#inputdistrict").keyup(function(){
 		//alert($("#inputdistrict").val());
@@ -119,6 +119,13 @@ var js = $(document).ready(function(){
 			var geocoder = new google.maps.Geocoder();
 			geocodeAddress(geocoder, map);
 		},1000);
+	});
+
+	$("#landingBack").click(function(){
+		$("#inputdistrict").val('');
+		$("#brand").val('');
+		$("#landingFuelType>input[name='fuelType']").prop('checked', false);
+		$("#landingSearch").click();
 	});
 
 	var delay = (function(){
@@ -150,7 +157,7 @@ var js = $(document).ready(function(){
             dataType: "json",
             //delay: 50,
             //data: request,
-             
+
             success: function (data) {
                 response($.map(data["districts"] , function (key, value) {
                 	//console.log(data["districts"][value]);
