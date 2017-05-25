@@ -32,7 +32,7 @@
 					<input class="form-control" id="inputdistrict" name="district" type="text">
 				</div>
 				<br>
-				<div class="checkbox">
+				<div class="checkbox" id="landingFuelType">
 
 					<label><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>
 					<label><input type="checkbox" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>

@@ -26,12 +26,16 @@ var js = $(document).ready(function(){
 		alert($(this).val());
 	});
 
-	function initMap() {
-		var coordinates;
-		if($("#latitude").val()!='' && $("#longitude").val()!=''){
-			coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
+	function initMap(location) {
+		var coordinates = {"latitude": null, "longitude": null};
+		if(location!=null){
+			coordinates = {"latitude": location.latitude, "longitude": location.longitude};
 		}else{
-		 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+			if($("#latitude").val()!='' && $("#longitude").val()!=''){
+				coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
+			}else{
+			 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+			}
 		}
 
 		var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
@@ -40,6 +44,7 @@ var js = $(document).ready(function(){
 			center: pt
 		});
 
+		var stations = getStations();
 		placeMarker(map);
 		
 	}
@@ -51,6 +56,40 @@ var js = $(document).ready(function(){
         	map: map,
           	title: 'Fuel Station'
         });
+	}
+
+	function getStations(){
+		var district=$("#inputdistrict").val();
+		var fuelType=$("#landingFuelType>input[name='fuelType']").val();
+		var brand=$("#brand").val();
+		console.log("antes do ajax");
+		$.ajax({
+            url: "api/stations/"+district+"/"+brand+"/"+fuelType,
+            type: "GET",
+            dataType: "json",
+            //delay: 50,
+            //data: data,
+            
+            success: function(data) {
+            	var d = JSON.parse(data);
+        		console.log("success: "+d);
+            	
+       // return results;
+    		},
+           /* success: function (data) {
+            	console.table(data["stations"]);
+                $.map(data["stations"] , function (key, value) {
+                	//console.log(data["districts"][value]);
+                	console.log(" key "+key+" value: "+value);
+	                //return data["stations"][value];
+	        //}
+            })},*/
+            error: function (textStatus, errorThrown) {
+                console.log("Error getting the station data")
+            }
+
+         });
+         
 	}
 
 	function getLocation() {
@@ -92,9 +131,12 @@ var js = $(document).ready(function(){
 
 	function geocodeAddress(geocoder, resultsMap) {
         var address = $('#inputdistrict').val();
+        var location = { 'latitude':null, 'longitude':null};
         geocoder.geocode({'address': address}, function(results, status) {
           if (status === 'OK') {
-            initMap(results[0].geometry.location);
+          	location.latitude = results[0].geometry.location.lat();
+          	location.longitude = results[0].geometry.location.lng();
+            initMap(location);
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
           }
@@ -102,13 +144,12 @@ var js = $(document).ready(function(){
 	}
 
 	$('#landingSearch').click(function(){
-alert("landing clicked");
-		$.ajax({
+		/*$.ajax({
             url: "api/stations",
             type: "GET",
             dataType: "json",
             //delay: 50,
-            data: request,
+            //data: request,
              
             success: function (data) {
                 response($.map(data["districts"] , function (key, value) {
@@ -116,7 +157,8 @@ alert("landing clicked");
 	                return data["districts"][value];
             }))}
 
-         });
+         });*/
+         initMap();
 	});
 
 	function updateVehiclePage(brand, model, fuel, consumption, preferred){

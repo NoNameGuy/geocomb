@@ -411,25 +411,34 @@ $uniqueMatch1 = array();
     public function apiStations($district, $brand, $fuelType) {
         try{
             $statusCode = 200;
-            $response['stations'] = array();/*[
+            $response['stations'] = array();
+            /*[
               'districts'  => []
             ];*/
             $stations = Station::join('district', 'station.district', 'district.id')
                 ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
+                ->join('location', 'station.location', 'location.id')
                 ->where('district.name','like', "%$district%")
                 ->where('station.brand','like', "%$brand%")
                 ->where("fuel_price.$fuelType",'!=', null)
+                ->select('station.name as stationName', 'station.brand as stationBrand', 'district.name as districtName', 'location.latitude as latitude', 'location.longitude as longitude')
                 ->get();
 //dd($stations);
             foreach($stations as $station){
 
-                array_push($response['stations'], /*[
+                array_push($response["stations"], /*[
                     'id' => $district->id,*/
                     //'name' => 
-                    $station->name
                 //]
+                    json_encode(["stationName" => $station->stationName,
+                    "stationBrand" => $station->stationBrand,
+                    "districtName" => $station->districtName,
+                    "latitude" => $station->latitude,
+                    "longitude" => $station->longitude
+                    ])
                 );
             }
+            //dd($response);
 
         }catch (Exception $e){
             $statusCode = 400;
