@@ -81,7 +81,7 @@
 		<button id="landingBack">Back</button>
 	</form>
 	<p>Mais baratas</p>
-	
+
 	{{$stations}}
 
 	@endif

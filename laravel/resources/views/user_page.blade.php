@@ -122,7 +122,7 @@
 
           <button type="submit" class="btn btn-primary btn-lg">Adicionar</button>
           <button type="button" class="btn btn-success btn-lg">Editar</button>
-          <button type="button" class="btn btn-danger btn-lg">Remover</button>
+          <button type="button" class="btn btn-danger btn-lg" formaction="{{--route('deletevehicle',$v->id)--}}">Remover</button>
 
         </div>
        </form>

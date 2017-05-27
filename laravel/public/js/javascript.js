@@ -63,6 +63,7 @@ var js = $(document).ready(function(){
 		var fuelType=$("#landingFuelType>input[name='fuelType']").val();
 		var brand=$("#brand").val();
 		console.log("antes do ajax");
+
 		$.ajax({
             url: "api/stations/"+district+"/"+brand+"/"+fuelType,
             type: "GET",
@@ -71,8 +72,7 @@ var js = $(document).ready(function(){
             //data: data,
 
             success: function(data) {
-            	var d = JSON.parse(data);
-        		console.log("success: "+d);
+        		console.log("success: "+data["stations"]);
 
        // return results;
     		},
@@ -94,18 +94,30 @@ var js = $(document).ready(function(){
 
 	function getLocation() {
 
-		if($("#latitude").val()==="" || $("#longitude").val()===""){
-		    if (navigator.geolocation) {
-		        navigator.geolocation.getCurrentPosition(showPosition);
-		    } else {
-		        alert("Geolocation is not supported by this browser.");
-		    }
+		if (($('#latitude').val()==='' || $('#longitude').val()==='') && localStorage.getItem("latitude")!==null && localStorage.getItem("longitude")!==null) {
+			$('#latitude').val(localStorage.getItem("latitude"));
+			$('#longitude').val(localStorage.getItem("longitude"));
+
+		}else{
+			if($("#latitude").val()==="" || $("#longitude").val()===""){
+			    if (navigator.geolocation) {
+			        navigator.geolocation.getCurrentPosition(showPosition);
+			    } else {
+			        alert("Geolocation is not supported by this browser.");
+			    }
+			}
 		}
 	}
+
 	function showPosition(position) {
-		$("#latitude").val(position.coords.latitude);
-		$("#longitude").val(position.coords.longitude);
-	    submitForm();
+
+
+			$("#latitude").val(position.coords.latitude);
+			$("#longitude").val(position.coords.longitude);
+			localStorage.setItem("latitude", position.coords.latitude);
+			localStorage.setItem("longitude", position.coords.longitude);
+		    submitForm();
+
 	}
 	function submitForm(){
 		$("#landingHiddenSubmit").click();
