@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use Mail;
+
 class RegisterController extends Controller
 {
     /*
@@ -74,11 +76,41 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        echo $request->input("email");
-        $data = ['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password)];
-        DB::table('users')->insert($data);
-        return View('landing_page');
-        
+
+      $input = $request->all();
+      $validator = $this->validator($input);
+
+      if($validator->passes()){
+        $user = $this->create($input)->toArray();
+        $user['link'] = str_random(30);
+
+        DB::table('user_activations')->insert(['id_user'=>$user['id'], 'token'=>$user['link']]);
+
+        Mail::send('emails.activation', $user, function($message) use ($user){
+          $message->to($user['email']);
+          $message->subject('GeoComb - Activation Code');
+        });
+        return redirect()->to('login')->with('success',"Foi enviado um email de confimação para a sua conta");
+      }
+
+      return back()->with('errors', $validator->errors());
+
+    }
+
+    public function userActivation($token)
+    {
+      $check = DB::table('user_activations')->where('token', $token)->first();
+      if(!is_null($check)){
+        $user = USER::find($check->id_user);
+        if($user->is_activated == 1){
+          return redirect()->to('login')->with('success', "Já logado.");
+        }
+        $user->update(['is_activated' => 1]);
+        DB::table('user_activations')->where('token',$token)->delete();
+        return redirect()->to('login')->with('success', "Utilizador Activado");
+      }
+      return redirect()->to('login')->with('warning', "Token Inválido");
+
     }
 
     public function index()

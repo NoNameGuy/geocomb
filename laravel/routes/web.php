@@ -27,6 +27,8 @@ Route::post('/',
 
 Auth::routes();
 
+Route::get('/user/activation/{token}', 'Auth\RegisterController@userActivation');
+
 Route::get('/', 'LandingController@index')->name('home');
 
 Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar

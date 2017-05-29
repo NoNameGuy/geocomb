@@ -12,8 +12,7 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-    	$data = array(["id" => 1, "name" => "Goncalo", "email" => "goncalo@gmail.com", "password" => Hash::make(123123123)],
-    		["id" => 2, "name" => "Paulo", "email" => "paulo@gmail.com", "password" => Hash::make(123123123)]);
+    	$data = array(["id" => 1, "name" => "Gestor", "email" => "gestor@gmail.com", "password" => Hash::make(123123123), "is_activated" => 1]);
         DB::table('users')->insert($data);
     }
 }
