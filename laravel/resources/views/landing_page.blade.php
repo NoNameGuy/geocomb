@@ -18,9 +18,7 @@
 	<h2 class="center">Pesquisar Postos:</h2>
 	<div class="row">
 		<!--Div esquerda-->
-		<div class="col-sm-6">
-			<div id="map"></div>
-		</div>
+		@include('map')
 		<!--Div direita-->
 		<div class="col-sm-6">
 			@if(!isset($stations))

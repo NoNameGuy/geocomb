@@ -26,71 +26,96 @@ var js = $(document).ready(function(){
 		alert($(this).val());
 	});
 
-	function initMap(location) {
-		var coordinates = {"latitude": null, "longitude": null};
-		if(location!=null){
-			coordinates = {"latitude": location.latitude, "longitude": location.longitude};
-		}else{
-			if($("#latitude").val()!='' && $("#longitude").val()!=''){
-				coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
-			}else{
-			 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
-			}
-		}
 
-		var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 10,
-			center: pt
+
+
+	$("#landingSearch").click(function(){
+		localStorage.setItem("district", $("#inputdistrict").val());
+		localStorage.setItem("brand", $("#brand").val());
+		var fuel = [];
+		$("#landingFuelType input:checked").each(function(){
+			fuel.push($(this).val());
 		});
-
-		var stations = getStations();
-		placeMarker(map);
-
-	}
-
-	function placeMarker(map) {
-		var myLatLng = {"lat": 39.7495, "lng":-8.8077};
-		var marker = new google.maps.Marker({
-				position: myLatLng,
-        	map: map,
-          	title: 'Fuel Station'
-        });
-	}
+		localStorage.setItem("fuelType", fuel);
+	});
 
 	function getStations(){
-		var district=$("#inputdistrict").val();
+		if(localStorage.getItem("district")===null || localStorage.getItem("brand")===null || localStorage.getItem("fuelType")===null){
+			/*localStorage.setItem("district", $("#inputdistrict").val());
+			localStorage.setItem("brand", $("#brand").val());
+			localStorage.setItem("fuelType", $("#landingFuelType>input[name='fuelType']").val());*/
+			alert("Please fill the data");
+		}else {
+			var fuelType=new Array();
+			var district=localStorage.getItem("district");
+			var brand=localStorage.getItem("brand");
+			fuelType.push(localStorage.getItem("fuelType"));
+		/*var district=$("#inputdistrict").val();
 		var fuelType=$("#landingFuelType>input[name='fuelType']").val();
-		var brand=$("#brand").val();
-		console.log("antes do ajax");
+		var brand=$("#brand").val();*/
+		var stationsData;
 
 		$.ajax({
-            url: "api/stations/"+district+"/"+brand+"/"+fuelType,
+						async: false,
+            url: "api/stations/"+district+"/"+brand+"/"+fuelType[0],
             type: "GET",
             dataType: "json",
-            //delay: 50,
-            //data: data,
+						success: function (data) {
+							stationsData = data["stations"];
+							console.table(stationsData);
+						},
 
-            success: function(data) {
-        		console.log("success: "+data["stations"]);
-
-       // return results;
-    		},
-           /* success: function (data) {
-            	console.table(data["stations"]);
-                $.map(data["stations"] , function (key, value) {
-                	//console.log(data["districts"][value]);
-                	console.log(" key "+key+" value: "+value);
-	                //return data["stations"][value];
-	        //}
-            })},*/
             error: function (textStatus, errorThrown) {
                 console.log("Error getting the station data")
             }
 
          });
 
+			 }
+			 console.log(stationsData);
+			 return stationsData;
+
 	}
+
+		function initMap(location) {
+			var coordinates = {"latitude": null, "longitude": null};
+			if(location!=null){
+				coordinates = {"latitude": location.latitude, "longitude": location.longitude};
+			}else{
+				if($("#latitude").val()!='' && $("#longitude").val()!=''){
+					coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
+				}else{
+				 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+				}
+			}
+
+			var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 10,
+				center: pt
+			});
+
+			var markers=new Array();
+			markers.push(getStations());
+				//console.log(markers);
+				placeMarker(map, markers);
+
+
+		}
+
+		function placeMarker(map, markers) {
+			var myLatLng = {"lat": 39.7495, "lng":-8.8077};
+			markers.forEach(function(marker){
+				for (var i = 0; i < marker.length; i++) {
+					console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
+					new google.maps.Marker({
+							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
+			        	map: map,
+			          	title: 'Fuel Station'
+			        });
+				}
+			});
+		}
 
 	function getLocation() {
 

@@ -12,7 +12,6 @@
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
   <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
-	<script src="{{asset('js/javascript.js')}}"></script>
 <script async defer
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap" >
           </script>
@@ -75,7 +74,7 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif 
+                        @endif
 
 
 
@@ -89,7 +88,7 @@
 
 
 
-      
+
       </ul>
     </div>
   </div>

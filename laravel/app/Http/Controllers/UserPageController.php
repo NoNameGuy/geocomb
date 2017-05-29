@@ -21,9 +21,9 @@ class UserPageController extends Controller
             ->where('users.email', $user->email)
             ->get();
 
+        $planRoute = true;
 
-
-    	return view('user_page', ['name'=>$user->name, 'vehicles' => $vehicles]);
+    	return view('user_page', ['name'=>$user->name, 'vehicles' => $vehicles, 'planRoute' => $planRoute]);
     }
 
     public function add(Request $request)

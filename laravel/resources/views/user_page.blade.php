@@ -34,6 +34,9 @@
       </script>
 
       <br><br><br>
+      @if($planRoute)
+        @include('map')
+      @endif
 <!--
       <div id="divPercurso">
         <div id="map" class="col-sm-6"></div>
