@@ -93,7 +93,7 @@ class LandingController extends BaseController
     private function getStations($district, $brand, $fuelType)
     {
         $stations=null;
-        if($district!=null && $brand!=null && $fuelType!=null){
+        if($district!=null && $brand!='all' && $fuelType!=null){
           $stations = Station::join('district', 'station.district', 'district.id')
               ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
               ->join('location', 'station.location', 'location.id')
@@ -101,7 +101,19 @@ class LandingController extends BaseController
               ->where('station.brand','like', "%$brand%")
               ->where("fuel_price.$fuelType",'!=', null)
               ->orderBy("fuel_price.$fuelType", "asc")
-              ->select('station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude")
+              ->select('station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
+              ->take(5)
+              ->get();
+        }
+        if($district!=null && $brand=='all' && $fuelType!=null){
+          $stations = Station::join('district', 'station.district', 'district.id')
+              ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
+              ->join('location', 'station.location', 'location.id')
+              ->join('services', 'station.services', 'services.id')
+              ->where('district.name','like', "%$district%")
+              ->where("fuel_price.$fuelType",'!=', null)
+              ->orderBy("fuel_price.$fuelType", "asc")
+              ->select('station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
               ->take(5)
               ->get();
         }
@@ -419,19 +431,8 @@ $uniqueMatch1 = array();
         try{
             $statusCode = 200;
             $response['stations'] = array();
-            /*[
-              'districts'  => []
-            ];*/
             $stations = $this->getStations($district, $brand, $fuelType);
-            /*$stations = Station::join('district', 'station.district', 'district.id')
-                ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
-                ->join('location', 'station.location', 'location.id')
-                ->where('district.name','like', "%$district%")
-                ->where('station.brand','like', "%$brand%")
-                ->where("fuel_price.$fuelType",'!=', null)
-                ->select('station.name as stationName', 'station.brand as stationBrand', 'district.name as districtName', 'location.latitude as latitude', 'location.longitude as longitude')
-                ->get();*/
-//dd($stations);
+
             foreach($stations as $station){
               //echo "$station";
                 $data =["stationName" => $station->stationName,

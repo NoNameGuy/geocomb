@@ -44,7 +44,7 @@ var js = $(document).ready(function(){
 			/*localStorage.setItem("district", $("#inputdistrict").val());
 			localStorage.setItem("brand", $("#brand").val());
 			localStorage.setItem("fuelType", $("#landingFuelType>input[name='fuelType']").val());*/
-			alert("Please fill the data");
+			//alert("Please fill the data");
 		}else {
 			var fuelType=new Array();
 			var district=localStorage.getItem("district");
@@ -54,15 +54,21 @@ var js = $(document).ready(function(){
 		var fuelType=$("#landingFuelType>input[name='fuelType']").val();
 		var brand=$("#brand").val();*/
 		var stationsData;
-
+		var link = null;
+		if(brand===undefined || brand===''){
+			link= "api/stations/"+district+"/all/"+fuelType[0];
+		}else{
+			link= "api/stations/"+district+"/"+brand+"/"+fuelType[0];
+		}
+		console.log(link);
 		$.ajax({
 						async: false,
-            url: "api/stations/"+district+"/"+brand+"/"+fuelType[0],
+						url: link,
             type: "GET",
             dataType: "json",
 						success: function (data) {
 							stationsData = data["stations"];
-							console.table(stationsData);
+							//console.table(stationsData);
 						},
 
             error: function (textStatus, errorThrown) {
@@ -72,7 +78,7 @@ var js = $(document).ready(function(){
          });
 
 			 }
-			 console.log(stationsData);
+			 //console.table(stationsData);
 			 return stationsData;
 
 	}
@@ -98,7 +104,7 @@ var js = $(document).ready(function(){
 			var markers=new Array();
 			markers.push(getStations());
 				//console.log(markers);
-				placeMarker(map, markers);
+			placeMarker(map, markers);
 
 
 		}
@@ -111,7 +117,7 @@ var js = $(document).ready(function(){
 					new google.maps.Marker({
 							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
 			        	map: map,
-			          	title: 'Fuel Station'
+			          	title: marker[i].stationName
 			        });
 				}
 			});
