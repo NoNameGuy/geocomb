@@ -170,26 +170,29 @@
 
     </div>
 
+<form id="form-change-password" role="form" method="POST" action="{{ route('editPass') }}" novalidate class="form-horizontal">
     <div class="col-sm-6">
 
       <div class="form-group">
-        <label>Password Antiga: </label>
-        <input class="form-control" id="txtName" name="name" type="text">
+        <label for="current-password" class="col-sm-4 control-label">Password Antiga: </label>
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="password" class="form-control" id="current-password" name="current-password" placeholder="Password">
       </div>
 
       <div class="form-group">
-        <label>Password Nova: </label>
-        <input class="form-control" id="txtEmail" name="email" type="text">
+        <label for="password" class="col-sm-4 control-label">Password Nova: </label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Nova Password">
       </div>
 
       <div class="form-group">
-        <label>Confirmar Nova Password: </label>
-        <input class="form-control" id="txtEmail" name="email" type="text">
+        <label for="password_confirmation" class="col-sm-4 control-label">Confirmar Password</label>
+        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirmar Password">
       </div>
 
-      <a href="#" class="btn btn-success">Alterar Password</a>
+      <button type="submit" class="btn btn-danger">Alterar Password</a>
 
     </div>
+  </form>
   </div>
 
   </div>
