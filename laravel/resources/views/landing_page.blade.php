@@ -18,7 +18,10 @@
 	<h2 class="center">Pesquisar Postos:</h2>
 	<div class="row">
 		<!--Div esquerda-->
-		@include('map')
+		<div class="col-sm-6">
+		  <div id="map" style="width: 500px;height: 500px;"></div>
+		</div>
+
 		<!--Div direita-->
 		<div class="col-sm-6">
 			@if(!isset($stations))
@@ -88,5 +91,7 @@
 		</div>
 	</div>
 </div>
-
+<script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap" >
+          </script>
 @include('footer')

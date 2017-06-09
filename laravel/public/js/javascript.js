@@ -83,9 +83,10 @@ var js = $(document).ready(function(){
 
 	}
 
-		function initMap(location) {
+
+		function initMap(location=null) {
 			var coordinates = {"latitude": null, "longitude": null};
-			if(location!=null){
+			if(location!==null){
 				coordinates = {"latitude": location.latitude, "longitude": location.longitude};
 			}else{
 				if($("#latitude").val()!='' && $("#longitude").val()!=''){
@@ -109,11 +110,12 @@ var js = $(document).ready(function(){
 
 		}
 
+
 		function placeMarker(map, markers) {
 			var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 			markers.forEach(function(marker){
 				for (var i = 0; i < marker.length; i++) {
-					console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
+					//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
 					new google.maps.Marker({
 							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
 			        	map: map,
@@ -215,6 +217,107 @@ var js = $(document).ready(function(){
 		alert("updateVehiclePage");
 	}
 
+	//User Page
+
+	function initMapUP() {
+		var coordinates = {"latitude": null, "longitude": null};
+
+				coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+
+
+		var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
+		var directionsService = new google.maps.DirectionsService;
+		var directionsDisplay = new google.maps.DirectionsRenderer;
+
+		var mapUP = new google.maps.Map(document.getElementById('mapUP'), {
+			zoom: 10,
+			center: pt
+		});
+		directionsDisplay.setMap(mapUP);
+
+
+
+
+		$("#upSearch").click(function(){
+				var coordinates = getCoordinates();
+				/*console.table(coordinates.origin);
+				console.table(coordinates.destination);*/
+				
+				calculateAndDisplayRoute(directionsService, directionsDisplay);
+		});
+
+
+	}
+
+	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        var waypts = [];
+        /*var checkboxArray = document.getElementById('waypoints');
+        for (var i = 0; i < checkboxArray.length; i++) {
+          if (checkboxArray.options[i].selected) {
+            waypts.push({
+              location: checkboxArray[i].value,
+              stopover: true
+            });
+          }
+        }*/
+
+				//waypts.push({location: "Leiria",stopover: true}, {location: "Lisboa",stopover: true});
+
+        directionsService.route({
+          origin: "Leiria",
+          destination: "Lisboa",
+          waypoints: waypts,
+          optimizeWaypoints: true,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+						console.table(response);
+            directionsDisplay.setDirections(response);
+            var route = response.routes[0];
+            /*var summaryPanel = document.getElementById('directions-panel');
+            summaryPanel.innerHTML = '';
+            // For each route, display summary information.
+            for (var i = 0; i < route.legs.length; i++) {
+              var routeSegment = i + 1;
+              summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+                  '</b><br>';
+              summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+              summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+              summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+            }*/
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+
+
+	function getCoordinates(){
+		var origin = $("#upOrigin").val();
+		var destination = $("#upDestination").val();
+		var key = "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s";
+		var coordinates = {origin: {latitude:null, longitude:null},destination: {latitude:null, longitude:null} };
+
+		$.ajax({
+			dataType: "json",
+			url: "https://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&key="+key,
+			success: function(data){
+				coordinates.origin.latitude = data.results[0].geometry.location.lat;
+				coordinates.origin.longitude = data.results[0].geometry.location.lng;
+			}
+		});
+		$.ajax({
+			dataType: "json",
+			url: "https://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&key="+key,
+			success: function(data){
+				coordinates.destination.latitude = data.results[0].geometry.location.lat;
+				coordinates.destination.longitude = data.results[0].geometry.location.lng;
+			}
+		});
+		return coordinates;
+	}
+
 	window.initMap = initMap;
+	window.initMapUP = initMapUP;
 	window.updateVehiclePage = updateVehiclePage;
 });

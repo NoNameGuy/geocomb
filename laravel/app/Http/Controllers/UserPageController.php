@@ -16,6 +16,8 @@ use Hash;
 
 class UserPageController extends Controller
 {
+
+    private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -114,5 +116,48 @@ class UserPageController extends Controller
           return redirect()->to('/');
         }
       }
+
+      public function postTripData(Request $request)
+      {
+        $origin = $request->upOrigin;
+        $destination = $request->upDestination;
+        //https://maps.googleapis.com/maps/api/geocode/json?&latlng=39.6012569,-9.0700634
+        $linkOrigin = "https://maps.googleapis.com/maps/api/geocode/json?address=$origin&key=$this->apiKey";
+        $linkDestination = "https://maps.googleapis.com/maps/api/geocode/json?address=$destination&key=$this->apiKey";
+        $arrayOrigin = json_decode(file_get_contents($linkOrigin, true), true);
+        $arrayDestination = json_decode(file_get_contents($linkDestination, true), true);
+
+        $originDistrict = $arrayOrigin['results'][0]['address_components'][1]['long_name'];
+        $destinationDistrict = $arrayDestination['results'][0]['address_components'][1]['long_name'];
+
+        $originDistrict = trim(str_replace('District', '', $originDistrict));
+        $destinationDistrict = trim(str_replace('District', '', $destinationDistrict));
+
+        $query = Station::join('district', 'station.district', 'district.id')
+          ->join('location', 'station.district', 'location.id');
+        //->where(function ($query) {
+          if(strcmp($originDistrict,"Lisbon")==0 && strcmp($destinationDistrict,"Lisbon")!=0){
+            $query->where('district.name', 'like', "%Lisboa%");
+              $query->orWhere('district.name', 'like', "%$destinationDistrict%");
+          }else{
+            if (strcmp($originDistrict, "Lisbon")!=0 && strcmp($destinationDistrict, "Lisbon")==0) {
+              $query->where('district.name', 'like', "%$originDistrict%");
+              $query->orWhere('district.name', 'like', "%Lisboa%");
+            }else{
+              if (strcmp($originDistrict, "Lisbon")==0 && strcmp($destinationDistrict, "Lisbon")==0) {
+                $query->where('district.name', 'like', "%Lisboa%");
+              }else{
+                $query->where('district.name', 'like', "%$originDistrict%");
+                $query->orWhere('district.name', 'like', "%$destinationDistrict%");
+              }
+            }
+          }
+        //});
+        //dd($query);
+        $data = $query->get();
+        echo $data;
+        //print_r( $array['results']);
+      }
+
 
 }

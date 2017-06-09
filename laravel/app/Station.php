@@ -15,5 +15,10 @@ class Station extends Model
     protected $fillable = [
         'name', 'brand', 'location', 'fuel_price', 'services', 'last_update', 'schedule'
     ];
-    
+
+		public function phone()
+    {
+        return $this->hasOne('App\District');
+    }
+
 }

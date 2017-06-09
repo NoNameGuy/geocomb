@@ -34,13 +34,11 @@
       </script>
 
       <br><br><br>
-      @if($planRoute)
-        @include('map')
-      @endif
-<!--
+
+
       <div id="divPercurso">
-        <div id="map" class="col-sm-6"></div>
-        <script>
+        <div id="mapUP" class="col-sm-6" style="width: 300px;height: 500px;"></div>
+        <!--<script>
             function initMap() {
               var centerPortugal = {lat: 39.676944, lng: -8.1425};
               var map = new google.maps.Map(document.getElementById('map'), {
@@ -52,17 +50,18 @@
           <script async defer
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMap">
           </script>
-
+-->
         <div class="col-sm-6 text-left">
-
+          <form method="post" action="{{route('sendTripData')}}">
+            {{csrf_field()}}
           <div class="form-group">
     				<label for="inputdefault">Inicio: </label>
-    				<input class="form-control" id="inputdefault" type="text">
+    				<input class="form-control" id="upOrigin" name="upOrigin" type="text">
     			</div>
 
           <div class="form-group">
     				<label for="inputdefault">Destino: </label>
-    				<input class="form-control" id="inputdefault" type="text">
+    				<input class="form-control" id="upDestination" name="upDestination" type="text">
     			</div>
 
           <div class="dropdown">
@@ -74,15 +73,20 @@
               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>
             </ul>
           </div>
+          <input type="checkbox" name="highway" id="upHighway">Autoestrada</input>
+          <label>Autonomia (km):<input type="number" name="autonomyKm" ></label><br>
+          <label>Autonomia (l):<input type="number" name="autonomyL" ></label>
+          <label>Consumo (l/km):<input type="number" name="consumption" ></label>
+
 <br><br>
           <div class="center">
 
-            <button type="button" class="btn btn-primary btn-lg">Pesquisar</button>
-
+            <button type="submit" id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
+          </form>
           </div>
         </div>
       </div>
--->
+
 <div id="divVeiculos">
     <div class="col-sm-6">
       <div class="list-group" id="vehicleList">
@@ -196,4 +200,7 @@
   </div>
 
   </div>
+  <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMapUP" >
+            </script>
 @include('footer')

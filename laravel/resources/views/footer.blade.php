@@ -8,5 +8,7 @@
 </footer>
 
 </body>
+
+
 <script src="{{asset('js/javascript.js')}}"></script>
 </html>
