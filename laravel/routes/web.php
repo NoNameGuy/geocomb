@@ -31,7 +31,7 @@ Route::get('/user/activation/{token}', 'Auth\RegisterController@userActivation')
 
 Route::get('/', 'LandingController@index')->name('home');
 
-Route::get('/fetchStation', 'LandingController@fetchStationData');#para apagar
+Route::get('/fetchStation', 'LandingController@getJsonOpenMaps');
 
 /*
 Route::get('/login', 'Auth\LoginController@index');

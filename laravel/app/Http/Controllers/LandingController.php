@@ -15,9 +15,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 use App\District;
 use App\Station;
+use File;
+use \RecursiveIteratorIterator;
+use \RecursiveArrayIterator;
+
+
 
 class LandingController extends BaseController
 {
@@ -454,6 +460,17 @@ $uniqueMatch1 = array();
         }finally{
             return Response::json($response, $statusCode);
         }
+    }
+
+    public function getJsonOpenMaps()
+    {
+      $file = File::get('../public/files/export.json');
+      $contents = file_get_contents('../public/files/export.json',true);
+
+      $json = json_decode($contents, true);
+
+      print_r( $json['elements'][0]);
+
     }
 
 }
