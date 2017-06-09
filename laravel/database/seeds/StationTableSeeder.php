@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 
 class StationTableSeeder extends Seeder
 {
-	
+
     /**
      * Run the database seeds.
      *
@@ -14,7 +14,8 @@ class StationTableSeeder extends Seeder
     public function run()
     {
          for ($i = 0; $i < DB::table('location')->count(); $i++) {
-        	for ($j=0; $j < 5; $j++) { 
+        	for ($j=0; $j < 5; $j++) {
+					$brand = $this->randomBrand();
     			$location = $this->generateRandomNumber(1,10);
     			$district = $this->generateRandomNumber(1,18);
     			$fuel_price = $this->generateRandomNumber(1,10);
@@ -22,9 +23,9 @@ class StationTableSeeder extends Seeder
     			$schedule = $this->generateRandomNumber(1,10);
     		}
 
-            DB::table('station')->insert([ 
+            DB::table('station')->insert([
             	'name' => "a$i",
-            	'brand' => "galp",
+            	'brand' => $brand,
             	'location' => $location,
             	'district' => $district,
             	'fuel_price' => $fuel_price,
@@ -41,5 +42,14 @@ class StationTableSeeder extends Seeder
     {
     	return ($min + lcg_value()*(abs($max - $min)));
     }
+
+		private function randomBrand()
+		{
+			# code...
+			$var = file_get_contents('public/files/brand.txt'); //Take the contents from the file to the variable
+			$result = explode(',',$var); //Split it by ','
+			return $result[array_rand($result)]; //Return a random entry from the array.
+		}
+
 
 }

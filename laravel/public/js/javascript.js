@@ -105,22 +105,25 @@ var js = $(document).ready(function(){
 			var markers=new Array();
 			markers.push(getStations());
 				//console.log(markers);
+			//label: labels[labelIndex++ % labels.length],
 			placeMarker(map, markers);
-
 
 		}
 
 
 		function placeMarker(map, markers) {
 			var myLatLng = {"lat": 39.7495, "lng":-8.8077};
+			var labels = '12345';
+			var labelIndex = 0;
 			markers.forEach(function(marker){
 				for (var i = 0; i < marker.length; i++) {
 					//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
 					new google.maps.Marker({
 							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
-			        	map: map,
-			          	title: marker[i].stationName
-			        });
+							label: labels[labelIndex++ % labels.length],
+			        map: map,
+			        title: marker[i].stationName
+			      });
 				}
 			});
 		}

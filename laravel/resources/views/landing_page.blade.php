@@ -11,7 +11,7 @@
 <div class="col-sm-8 text-left">
 	<h1 class="center">Preço dos Combustíveis</h1>
 
-	<a href="{{action('LandingController@fetchStationData')}}">Fetch data station</a>
+	<a href="{{action('LandingController@getJsonOpenMaps')}}">Fetch data station</a>
 
 	<hr>
 
@@ -81,12 +81,22 @@
 		<input type="hidden" name="brand" value="">
 		<button id="landingBack">Back</button>
 	</form>
-	<p>Mais baratas ()</p>
-	@foreach($stations as $station)
-		Nome: {{$station->stationName}}<br>
-		Preço: {{$station->fuelPrice}}<br>
-		Services: {{$station->services}}<br>
-	@endforeach
+	<h3 class="text-center">Mais baratas ()</h3>
+	<div class="form-group">
+		@foreach($stations as $key=>$station)
+		<div class="well well-lg">
+			<label for="nome">Nome: </label>
+			{{$station->stationName}}<br>
+			<label for="nome">Preço: </label>
+			{{$station->fuelPrice}}
+			<button type="button" class="btn btn-link" style="float:right">Detalhes</button>
+			<img src="../../files/{{$key+1}}.jpg" style="float:right"></img>
+			<br>
+			<label for="nome">Serviços: </label>
+			{{$station->services}}<br>
+		</div>
+		@endforeach
+	</div>
 	@endif
 		</div>
 	</div>

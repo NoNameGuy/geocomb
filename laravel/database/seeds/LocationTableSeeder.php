@@ -24,12 +24,13 @@ class LocationTableSeeder extends Seeder
         $maxLatitudeSouth = 38.501;
         $minLongitudeSouth = -8.756;
         $maxLongitudeSouth = -7.075;
-   
+
         $minLatitudeWest = 38.501;
         $maxLatitudeWest = 39.419;
         $minLongitudeWest = -9.305;
         $maxLongitudeWest = -8.756;
 
+      /*
         //North
         for ($i = 0; $i < 1000; $i++) {
             $array = array(['latitude' => $this->randomCoordinate($minLatitudeNorth, $maxLatitudeNorth),
@@ -57,9 +58,28 @@ class LocationTableSeeder extends Seeder
                 'longitude' => $this->randomCoordinate($minLongitudeWest, $maxLongitudeWest)]);
             DB::table('location')->insert($array);
         }
-    }
+        */
+        $file = File::get('public/files/export.json');
+        $contents = file_get_contents('public/files/export.json',true);
 
+        $json = json_decode($contents, true);
+
+        for ($i=0; $i < 8500; $i++) {
+
+          if (isset($json['elements'][$i]['lat']) && isset($json['elements'][$i]['lon'])) {
+
+            $array = array(['latitude' => $json['elements'][$i]['lat'],
+            'longitude' => $json['elements'][$i]['lon']]);
+
+            DB::table('location')->insert($array);
+          }
+
+        }
+
+    }
+/*
     private function randomCoordinate ($min,$max) {
         return ($min + lcg_value()*(abs($max - $min)));
     }
+    */
 }
