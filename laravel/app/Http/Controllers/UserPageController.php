@@ -13,6 +13,7 @@ use App\Station;
 
 use Validator;
 use Hash;
+use Illuminate\Support\Facades\Response;
 
 class UserPageController extends Controller
 {
@@ -119,45 +120,96 @@ class UserPageController extends Controller
 
       public function postTripData(Request $request)
       {
+        $autonomyKm = $request->autonomyKm;
         $origin = $request->upOrigin;
         $destination = $request->upDestination;
-        //https://maps.googleapis.com/maps/api/geocode/json?&latlng=39.6012569,-9.0700634
-        $linkOrigin = "https://maps.googleapis.com/maps/api/geocode/json?address=$origin&key=$this->apiKey";
-        $linkDestination = "https://maps.googleapis.com/maps/api/geocode/json?address=$destination&key=$this->apiKey";
-        $arrayOrigin = json_decode(file_get_contents($linkOrigin, true), true);
-        $arrayDestination = json_decode(file_get_contents($linkDestination, true), true);
 
-        $originDistrict = $arrayOrigin['results'][0]['address_components'][1]['long_name'];
-        $destinationDistrict = $arrayDestination['results'][0]['address_components'][1]['long_name'];
 
-        $originDistrict = trim(str_replace('District', '', $originDistrict));
-        $destinationDistrict = trim(str_replace('District', '', $destinationDistrict));
 
-        $query = Station::join('district', 'station.district', 'district.id')
-          ->join('location', 'station.district', 'location.id');
-        //->where(function ($query) {
-          if(strcmp($originDistrict,"Lisbon")==0 && strcmp($destinationDistrict,"Lisbon")!=0){
-            $query->where('district.name', 'like', "%Lisboa%");
-              $query->orWhere('district.name', 'like', "%$destinationDistrict%");
-          }else{
-            if (strcmp($originDistrict, "Lisbon")!=0 && strcmp($destinationDistrict, "Lisbon")==0) {
-              $query->where('district.name', 'like', "%$originDistrict%");
-              $query->orWhere('district.name', 'like', "%Lisboa%");
-            }else{
-              if (strcmp($originDistrict, "Lisbon")==0 && strcmp($destinationDistrict, "Lisbon")==0) {
-                $query->where('district.name', 'like', "%Lisboa%");
-              }else{
-                $query->where('district.name', 'like', "%$originDistrict%");
-                $query->orWhere('district.name', 'like', "%$destinationDistrict%");
-              }
-            }
-          }
-        //});
-        //dd($query);
-        $data = $query->get();
-        echo $data;
-        //print_r( $array['results']);
+        $user = Auth::user();
+        $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)->get();
+
+
+        return view('user_page', ['name'=>$user->name, 'stations' => $data, 'vehicles' => $vehicles]);
       }
 
+      public function apiStations($origin, $destination, $autonomyKm) {
+
+          try{
+              $statusCode = 200;
+              $response['stations'] = array();
+
+
+              $linkOrigin = "https://maps.googleapis.com/maps/api/geocode/json?address=$origin&key=$this->apiKey";
+              $linkDestination = "https://maps.googleapis.com/maps/api/geocode/json?address=$destination&key=$this->apiKey";
+              $arrayOrigin = json_decode(file_get_contents($linkOrigin, true), true);
+              $arrayDestination = json_decode(file_get_contents($linkDestination, true), true);
+
+              $originDistrict = $arrayOrigin['results'][0]['address_components'][1]['long_name'];
+              $destinationDistrict = $arrayDestination['results'][0]['address_components'][1]['long_name'];
+
+              $latitudeOrigin = $arrayOrigin['results'][0]['geometry']['location']['lat'];
+              $longitudeOrigin = $arrayOrigin['results'][0]['geometry']['location']['lng'];
+
+              $originDistrict = trim(str_replace('District', '', $originDistrict));
+              $destinationDistrict = trim(str_replace('District', '', $destinationDistrict));
+
+              $query = Station::join('district', 'station.district', 'district.id')
+                ->join('location', 'station.district', 'location.id');
+
+                if(strcmp($originDistrict,"Lisbon")==0 && strcmp($destinationDistrict,"Lisbon")!=0){
+                  $query->where('district.name', 'like', "%Lisboa%");
+                    $query->orWhere('district.name', 'like', "%$destinationDistrict%");
+                }else{
+                  if (strcmp($originDistrict, "Lisbon")!=0 && strcmp($destinationDistrict, "Lisbon")==0) {
+                    $query->where('district.name', 'like', "%$originDistrict%");
+                    $query->orWhere('district.name', 'like', "%Lisboa%");
+                  }else{
+                    if (strcmp($originDistrict, "Lisbon")==0 && strcmp($destinationDistrict, "Lisbon")==0) {
+                      $query->where('district.name', 'like', "%Lisboa%");
+                    }else{
+                      $query->where('district.name', 'like', "%$originDistrict%");
+                      $query->orWhere('district.name', 'like', "%$destinationDistrict%");
+                    }
+                  }
+                }
+              $query->select("station.id as stationId", "station.name as stationName", "district.name as districtName", "station.brand as brand", "latitude", "longitude");
+              $data = $query->get();
+              foreach ($data as $key => $value) {
+                //echo "$key -> $value->latitude";
+                $latitudeDestination = $value->latitude;
+                $longitudeDestination = $value->longitude;
+                $earthRadius = 6.371;//km
+
+                $latitudeDifference = $latitudeOrigin-$latitudeDestination;
+                $longitudeDifference = $longitudeOrigin-$longitudeDestination;
+
+                $a = pow(sin($latitudeDifference/2),2) + cos($latitudeOrigin) * cos($latitudeDestination) * pow(sin($longitudeDifference/2), 2);
+                $c = 2 * $a * pow(tan(sqrt($a)*sqrt(1-$a)) ,2);
+                $result = $earthRadius * $c;
+                $data[$key]['distance'] = $result;
+
+
+
+                $array =["stationName" => $value->stationName,
+                  "stationBrand" => $value->brand,
+                  "districtName" => $value->districtName,
+                  "latitude" => $value->latitude,
+                  "longitude" => $value->longitude
+                ];
+                array_push($response["stations"], $array /*[
+                    'id' => $district->id,*/
+                    //'name' =>
+                //]
+                );
+              }
+
+
+          }catch (Exception $e){
+              $statusCode = 400;
+          }finally{
+              return Response::json($response, $statusCode);
+          }
+      }
 
 }

@@ -1,6 +1,7 @@
 "use strict";
 var js = $(document).ready(function(){
 
+	var waypts = [];
 	getLocation();
 
 	$("#inputdistrict").autocomplete({
@@ -104,28 +105,26 @@ var js = $(document).ready(function(){
 
 			var markers=new Array();
 			markers.push(getStations());
-				//console.log(markers);
-			//label: labels[labelIndex++ % labels.length],
-			placeMarker(map, markers);
 
-		}
-
-
-		function placeMarker(map, markers) {
 			var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 			var labels = '12345';
 			var labelIndex = 0;
+
 			markers.forEach(function(marker){
 				for (var i = 0; i < marker.length; i++) {
 					//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
 					new google.maps.Marker({
 							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
 							label: labels[labelIndex++ % labels.length],
-			        map: map,
-			        title: marker[i].stationName
-			      });
-				}
+							map: map,
+							title: marker[i].stationName
+						});
+
+
+					}
+
 			});
+
 		}
 
 	function getLocation() {
@@ -240,20 +239,54 @@ var js = $(document).ready(function(){
 
 
 
+		var markers=new Array();
 
 		$("#upSearch").click(function(){
 				var coordinates = getCoordinates();
 				/*console.table(coordinates.origin);
 				console.table(coordinates.destination);*/
-				
-				calculateAndDisplayRoute(directionsService, directionsDisplay);
-		});
 
+				calculateAndDisplayRoute(directionsService, directionsDisplay);
+				markers.push(getStationsUP());
+
+				var myLatLng = {"lat": 39.7495, "lng":-8.8077};
+				var labels = '12345';
+				var labelIndex = 0;
+
+				markers.forEach(function(marker){
+					for (var i = 0; i < marker.length; i++) {
+						//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
+						var marker = new google.maps.Marker({
+								position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
+								label: labels[labelIndex++ % labels.length],
+								map: mapUP,
+								title: marker[i].stationName
+							});
+
+
+						};
+
+
+						marker.addListener('dblclick', function() {
+							alert("double click"+ marker.position);
+							waypts.push({
+								location:marker.position,
+								stopover: true
+							});
+							calculateAndDisplayRoute(directionsService, directionsDisplay);
+						});
+
+
+
+				});
+
+				//placeMarker(mapUP, markers);
+			});
 
 	}
 
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        var waypts = [];
+
         /*var checkboxArray = document.getElementById('waypoints');
         for (var i = 0; i < checkboxArray.length; i++) {
           if (checkboxArray.options[i].selected) {
@@ -267,8 +300,8 @@ var js = $(document).ready(function(){
 				//waypts.push({location: "Leiria",stopover: true}, {location: "Lisboa",stopover: true});
 
         directionsService.route({
-          origin: "Leiria",
-          destination: "Lisboa",
+          origin: $("#upOrigin").val(),
+          destination: $("#upDestination").val(),
           waypoints: waypts,
           optimizeWaypoints: true,
           travelMode: 'DRIVING'
@@ -319,6 +352,34 @@ var js = $(document).ready(function(){
 		});
 		return coordinates;
 	}
+
+function getStationsUP(){
+	var origin = $("#upOrigin").val();
+	var destination = $("#upDestination").val();
+	var autonomy = $("#upAutonomyKm").val();
+	var link= "api/stationsup/"+origin+"/"+destination+"/"+autonomy;
+	var stationsData =null;
+//console.log(link);
+$.ajax({
+				async: false,
+				url: link,
+				type: "GET",
+				dataType: "json",
+				success: function (data) {
+					stationsData = data["stations"];
+					//console.table(stationsData);
+				},
+
+				error: function (textStatus, errorThrown) {
+						console.log("Error getting the station data")
+				}
+
+		 });
+
+	 //console.table(stationsData);
+	 return stationsData;
+
+}
 
 	window.initMap = initMap;
 	window.initMapUP = initMapUP;

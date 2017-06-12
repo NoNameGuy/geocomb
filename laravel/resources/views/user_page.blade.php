@@ -52,7 +52,7 @@
           </script>
 -->
         <div class="col-sm-6 text-left">
-          <form method="post" action="{{route('sendTripData')}}">
+
             {{csrf_field()}}
           <div class="form-group">
     				<label for="inputdefault">Inicio: </label>
@@ -74,15 +74,15 @@
             </ul>
           </div>
           <input type="checkbox" name="highway" id="upHighway">Autoestrada</input>
-          <label>Autonomia (km):<input type="number" name="autonomyKm" ></label><br>
-          <label>Autonomia (l):<input type="number" name="autonomyL" ></label>
-          <label>Consumo (l/km):<input type="number" name="consumption" ></label>
+          <label>Autonomia (km):<input type="number" name="upAutonomyKm" id="upAutonomyKm"></label><br>
+          <label>Autonomia (l):<input type="number" name="upAutonomyL" id="upAutonomyL"></label>
+          <label>Consumo (l/km):<input type="number" name="upConsumption" id="upConsumption"></label>
 
 <br><br>
           <div class="center">
 
-            <button type="submit" id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
-          </form>
+            <button  id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
+
           </div>
         </div>
       </div>
