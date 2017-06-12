@@ -87,7 +87,7 @@
         </div>
       </div>
 
-<div id="divVeiculos">
+<div id="divVeiculos" style="display:none">
     <div class="col-sm-6">
       <div class="list-group" id="vehicleList">
        @if($vehicles)

@@ -41,7 +41,12 @@ class LandingController extends BaseController
     {
         $districts = array();
         $districtsName = array();
+
+        $brands = array();
+        $brandsName = array();
+
         $coordinates = new \stdClass();
+
         if(isset($request)){
             $coordinates->latitude = $request->latitude;
             $coordinates->longitude = $request->longitude;
@@ -51,14 +56,11 @@ class LandingController extends BaseController
             $coordinates->longitude = -8.1425;
         }
 
-        $districts = DB::table('district')->orderBy('name')->get();
+        $districts = DB::table('district')->select('name')->distinct()->get();
 
         for ($i=0; $i < $districts->count(); $i++) {
           array_push($districtsName, $districts[$i]->name);
         }
-
-        $brands = array();
-        $brandsName = array();
 
         $brands = DB::table('station')->select('brand')->distinct()->get();
 
@@ -66,32 +68,8 @@ class LandingController extends BaseController
           array_push($brandsName, $brands[$i]->brand);
         }
 
-        /*$coordinatesArray = array();
-        $ids = array();
-        $coordinate = new \stdClass();
-        $ids = DB::table('station')->select('location')->get();
-        for ($i=0;$i<count($ids);$i++) {
-            $coordinate->latitude = DB::table('location')->where('id', $ids[$i]->location)->select('latitude')->get();
-            $coordinate->longitude = DB::table('location')->where('id', $ids[$i]->location)->select('longitude')->get();
-            array_push($coordinatesArray,$coordinate);
-        }
-
-        if (array_key_exists('location', $_POST)) {
-            $this->fetchAllStations();
-            $coordinates = array();
-            $coordinates = $this->getCoordinatesByPlace(addslashes($_POST['location']));
-            if ( array_key_exists('radius', $_POST)) {
-                $this->searchStations($coordinates["latitude"], $coordinates["longitude"], $_POST['radius']);
-            } else {
-                $this->searchStations($coordinates["latitude"], $coordinates["longitude"]);
-            }
-
-        }*/
-
         $stations = array();
         $stations = $this->getStations($request->district, $request->brand, $request->fuelType);
-
-        //$this->apiStations($stations);
 
         return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
     }
