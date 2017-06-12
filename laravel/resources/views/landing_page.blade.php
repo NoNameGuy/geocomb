@@ -16,6 +16,7 @@
 	<hr>
 
 	<h2 class="center">Pesquisar Postos:</h2>
+	<br><br><br>
 	<div class="row">
 		<!--Div esquerda-->
 		<div class="col-sm-6">
@@ -29,50 +30,47 @@
 			<form method="post" action="{{route('home')}}">
 				{{csrf_field()}}
 				<div class="form-group">
-					<label for="inputdistrict">Distrito(s): </label>
-					<input class="form-control" id="inputdistrict" name="district" type="text">
+					<label for="district">Distrito(s): </label>
+					<input class="form-control" id="district" name="district" type="text">
 				</div>
 				<br>
 				<div class="checkbox" id="landingFuelType">
+					<div class="form-group">
+						<label style="font-weight:bold">Tipo de Combustível (Escolha 1): </label>
+					</div>
 
-					<label><input type="radio" name="fuelType" value="diesel">Gasóleo</label><br>
-					<label><input type="radio" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
-					<label><input type="radio" name="fuelType" value="diesel_colored">Gasóleo Colorido</label><br>
-					<label><input type="radio" name="fuelType" value="diesel_special">Gasóleo Especial</label><br>
-					<br><br>
-					<label><input type="radio" name="fuelType" value="petrol_95">Gasolina 95</label><br>
-					<label><input type="radio" name="fuelType" value="petrol_simple_95">Gasolina Simples 95</label><br>
-					<label><input type="radio" name="fuelType" value="petrol_special_95">Gasolina Especial 95</label><br>
-					<br><br>
-					<label><input type="radio" name="fuelType" value="petrol_98">Gasolina 98</label><br>
-					<label><input type="radio" name="fuelType" value="petrol_simple_98">Gasolina Simples 98</label><br>
-					<label><input type="radio" name="fuelType" value="petrol_special_98">Gasolina Especial 98</label><br>
-					<br><br>
-					<label><input type="radio" name="fuelType" value="gas_natural_compressed_kg">GNC KG</label><br>
-					<label><input type="radio" name="fuelType" value="gas_natural_compressed_m3">GNC M3</label><br>
-					<label><input type="radio" name="fuelType" value="gas_natural_liquified">GNL</label><br>
-					<label><input type="radio" name="fuelType" value="gpl">GPL</label><br>
-					<br>
-					<br>
-
+					<div class="col-sm-4">
+						<label><input type="radio" name="fuelType" value="diesel">Gasóleo</label><br>
+						<label><input type="radio" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
+						<label><input type="radio" name="fuelType" value="diesel_colored">Gasóleo Colorido</label><br>
+						<label><input type="radio" name="fuelType" value="diesel_special">Gasóleo Especial</label><br>
+						<br><br>
+						<label><input type="radio" name="fuelType" value="petrol_95">Gasolina 95</label><br>
+						<label><input type="radio" name="fuelType" value="petrol_simple_95">Gasolina Simples 95</label><br>
+						<label><input type="radio" name="fuelType" value="petrol_special_95">Gasolina Especial 95</label><br>
+						<br><br>
+					</div>
+					<div class="col-sm-8">
+						<label><input type="radio" name="fuelType" value="gas_natural_compressed_kg">GNC KG</label><br>
+						<label><input type="radio" name="fuelType" value="gas_natural_compressed_m3">GNC M3</label><br>
+						<label><input type="radio" name="fuelType" value="gas_natural_liquified">GNL</label><br>
+						<label><input type="radio" name="fuelType" value="gpl">GPL</label><br>
+						<br><br>
+						<label><input type="radio" name="fuelType" value="petrol_98">Gasolina 98</label><br>
+						<label><input type="radio" name="fuelType" value="petrol_simple_98">Gasolina Simples 98</label><br>
+						<label><input type="radio" name="fuelType" value="petrol_special_98">Gasolina Especial 98</label><br>
+						<br><br>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="brand">Marca (Opcional): </label>
 					<input class="form-control" id="brand" name="brand" type="text">
-					<button id="landingSearch" type="submit">Search...</button>
+					<br>
 				</div>
+				<button id="landingSearch" type="submit">Search</button>
+
 			</form>
-			<br>
-			<script>
-				$( function() {
-					var brandsName = <?php echo json_encode($brandsName); ?>
-					//var availableTags = districtsName;
-					$( "#brand" ).autocomplete({
-						source: brandsName
-					});
-				} );
-			</script>
 
 	@else
 	<form method="post" action="{{route('home')}}">
@@ -87,6 +85,8 @@
 		<div class="well well-lg">
 			<label for="nome">Nome: </label>
 			{{$station->stationName}}<br>
+			<label for="nome">Marca: </label>
+			{{$station->stationBrand}}<br>
 			<label for="nome">Preço: </label>
 			{{$station->fuelPrice}}
 			<button type="button" class="btn btn-link" style="float:right">Detalhes</button>
