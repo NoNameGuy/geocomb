@@ -26,10 +26,11 @@ var js = $(document).ready(function(){
 	}
 	});
 
+var array2;
 	$("#brand").autocomplete({
 		source: function(request, response){
-			if (array){
-				response($.ui.autocomplete.filter(array, request.term));
+			if (array2){
+				response($.ui.autocomplete.filter(array2, request.term));
 			}else{
 			$.ajax({
 							url: "api/brands",
@@ -39,7 +40,7 @@ var js = $(document).ready(function(){
 							data: request.term,
 
 							success: function (data) {
-									response(array = $.map(data["brands"] , function (key, value) {
+									response(array2 = $.map(data["brands"] , function (key, value) {
 										return data["brands"][value];
 							}))}
 

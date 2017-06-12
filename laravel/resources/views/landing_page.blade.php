@@ -85,6 +85,8 @@
 		<div class="well well-lg">
 			<label for="nome">Nome: </label>
 			{{$station->stationName}}<br>
+			<label for="nome">Marca: </label>
+			{{$station->stationBrand}}<br>
 			<label for="nome">Preço: </label>
 			{{$station->fuelPrice}}
 			<button type="button" class="btn btn-link" style="float:right">Detalhes</button>
