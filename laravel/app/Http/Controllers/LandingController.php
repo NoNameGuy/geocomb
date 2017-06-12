@@ -71,7 +71,7 @@ class LandingController extends BaseController
         $stations = array();
         $stations = $this->getStations($request->district, $request->brand, $request->fuelType);
 
-        return View('landing_page', ['districts' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
+        return View('landing_page', ['district' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
     }
 
     private function getStations($district, $brand, $fuelType)
@@ -384,23 +384,39 @@ $uniqueMatch1 = array();
         #print_r($matches);
         return $matches;
     }
+
 //API
     public function apiDistricts() {
         try{
             $statusCode = 200;
-            $response['districts'] = array();/*[
-              'districts'  => []
-            ];*/
+            $response['districts'] = array();
 
             $districts = District::all();
-//dd($districts);
             foreach($districts as $district){
 
-                array_push($response['districts'], /*[
-                    'id' => $district->id,*/
-                    //'name' =>
+                array_push($response['districts'],
+
                     $district->name
-                //]
+                );
+            }
+
+        }catch (Exception $e){
+            $statusCode = 400;
+        }finally{
+            return Response::json($response, $statusCode);
+        }
+    }
+    public function apiBrands() {
+        try{
+            $statusCode = 200;
+            $response['brands'] = array();
+
+            $brands = Station::select('brand')->distinct()->get();
+            foreach($brands as $brand){
+
+                array_push($response['brands'],
+
+                    $brand->brand
                 );
             }
 

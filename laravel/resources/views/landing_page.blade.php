@@ -30,19 +30,8 @@
 			<form method="post" action="{{route('home')}}">
 				{{csrf_field()}}
 				<div class="form-group">
-					<label for="districts">Distrito(s): </label>
-					<input class="form-control" id="districts" name="districts" type="text">
-
-					<script>
-						$( function() {
-							var districtsName = <?php echo json_encode($districtsName); ?>
-
-							$( "#districts" ).autocomplete({
-								source: districtsName
-							});
-						} );
-					</script>
-
+					<label for="district">Distrito(s): </label>
+					<input class="form-control" id="district" name="district" type="text">
 				</div>
 				<br>
 				<div class="checkbox" id="landingFuelType">
@@ -77,20 +66,11 @@
 				<div class="form-group">
 					<label for="brand">Marca (Opcional): </label>
 					<input class="form-control" id="brand" name="brand" type="text">
-					<button id="landingSearch" type="submit">Search</button>
+					<br>
 				</div>
+				<button id="landingSearch" type="submit">Search</button>
+
 			</form>
-
-			<br>
-			<script>
-				$( function() {
-					var brandsName = <?php echo json_encode($brandsName); ?>
-
-					$( "#brand" ).autocomplete({
-						source: brandsName
-					});
-				} );
-			</script>
 
 	@else
 	<form method="post" action="{{route('home')}}">

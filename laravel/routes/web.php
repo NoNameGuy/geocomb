@@ -55,6 +55,7 @@ Route::post('/showGpsCoordinates', 'LandingController@index');
 
 //API
 Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistricts');
+Route::get('/api/brands', 'LandingController@apiBrands')->name('apibrands');
 Route::get('/api/stations/{district}/{brand}/{fuelType}', 'LandingController@apiStations')->name('apistations');
 Route::get('/userpage/edit/{id}', 'UserPageController@edit')->name('editVehicle');
 Route::post('/userpage', 'UserPageController@postTripData')->name('sendTripData');

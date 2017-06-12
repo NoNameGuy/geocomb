@@ -3,23 +3,49 @@ var js = $(document).ready(function(){
 
 	getLocation();
 
-	$("#inputdistrict").autocomplete({
+	var array;
+	$("#district").autocomplete({
 		source: function(request, response){
+			if (array){
+				response($.ui.autocomplete.filter(array, request.term));
+			}else{
 			$.ajax({
 	            url: "api/districts",
 	            type: "GET",
 	            dataType: "json",
 	            //delay: 50,
-	            data: request,
+	            data: request.term,
 
 	            success: function (data) {
-	                response($.map(data["districts"] , function (key, value) {
-	                	//console.log(data["districts"][value]);
+	                response(array = $.map(data["districts"] , function (key, value) {
 		                return data["districts"][value];
 	            }))}
 
 	         });
 		}
+	}
+	});
+
+	$("#brand").autocomplete({
+		source: function(request, response){
+			if (array){
+				response($.ui.autocomplete.filter(array, request.term));
+			}else{
+			$.ajax({
+							url: "api/brands",
+							type: "GET",
+							dataType: "json",
+							//delay: 50,
+							data: request.term,
+
+							success: function (data) {
+									response(array = $.map(data["brands"] , function (key, value) {
+										return data["brands"][value];
+							}))}
+
+					 });
+		}
+	}
 	});
 
 	$("input[name='fuelType']").change(function(){
@@ -30,7 +56,7 @@ var js = $(document).ready(function(){
 
 
 	$("#landingSearch").click(function(){
-		localStorage.setItem("district", $("#inputdistrict").val());
+		localStorage.setItem("district", $("#district").val());
 		localStorage.setItem("brand", $("#brand").val());
 		var fuel = [];
 		$("#landingFuelType input:checked").each(function(){
@@ -41,7 +67,7 @@ var js = $(document).ready(function(){
 
 	function getStations(){
 		if(localStorage.getItem("district")===null || localStorage.getItem("brand")===null || localStorage.getItem("fuelType")===null){
-			/*localStorage.setItem("district", $("#inputdistrict").val());
+			/*localStorage.setItem("district", $("#district").val());
 			localStorage.setItem("brand", $("#brand").val());
 			localStorage.setItem("fuelType", $("#landingFuelType>input[name='fuelType']").val());*/
 			//alert("Please fill the data");
@@ -50,7 +76,7 @@ var js = $(document).ready(function(){
 			var district=localStorage.getItem("district");
 			var brand=localStorage.getItem("brand");
 			fuelType.push(localStorage.getItem("fuelType"));
-		/*var district=$("#inputdistrict").val();
+		/*var district=$("#district").val();
 		var fuelType=$("#landingFuelType>input[name='fuelType']").val();
 		var brand=$("#brand").val();*/
 		var stationsData;
@@ -160,17 +186,17 @@ var js = $(document).ready(function(){
 	}
 
 
-	$("#inputdistrict").keyup(function(){
-		//alert($("#inputdistrict").val());
+	$("#district").keyup(function(){
+		//alert($("#district").val());
 		delay( function(){
-			var brand = $("#inputdistrict").val();
+			var brand = $("#district").val();
 			var geocoder = new google.maps.Geocoder();
 			geocodeAddress(geocoder, map);
 		},1000);
 	});
 
 	$("#landingBack").click(function(){
-		$("#inputdistrict").val('');
+		$("#district").val('');
 		$("#brand").val('');
 		$("#landingFuelType>input[name='fuelType']").prop('checked', false);
 		$("#landingSearch").click();
@@ -185,7 +211,7 @@ var js = $(document).ready(function(){
 	})();
 
 	function geocodeAddress(geocoder, resultsMap) {
-        var address = $('#inputdistrict').val();
+        var address = $('#district').val();
         var location = { 'latitude':null, 'longitude':null};
         geocoder.geocode({'address': address}, function(results, status) {
           if (status === 'OK') {
@@ -245,7 +271,7 @@ var js = $(document).ready(function(){
 				var coordinates = getCoordinates();
 				/*console.table(coordinates.origin);
 				console.table(coordinates.destination);*/
-				
+
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 		});
 
