@@ -269,9 +269,22 @@ var array2;
 		var markers=new Array();
 
 		$("#upSearch").click(function(){
+			var autonomykm = $("#upAutonomyKm").val();
+			var autonomyl = $("#upAutonomyL").val();
+			var consumption = $("#upConsumption").val();
+			if((autonomykm==='' && autonomyl==='')||(autonomykm!=='' && autonomyl!=='' || consumption!=='') || (autonomyl!=='' && autonomykm!=='' && consumption==='') || (autonomyl!=='' && autonomyl==='' && consumption!=='')){
+				alert("Preencha apenas a autonomia em km ou a autonomia em litros e o consumo");
+			}else{
 				var coordinates = getCoordinates();
 				/*console.table(coordinates.origin);
 				console.table(coordinates.destination);*/
+
+				if($("#upAutonomyKm").val()!==''){
+					localStorage.setItem("autonomy", $("#upAutonomyKm").val());
+				} else {
+					var autonomy = $("#upAutonomyL").val()*100/$("#upConsumption").val();
+					localStorage.setItem("autonomy", autonomy);
+				}
 
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 				markers.push(getStationsUP());
@@ -306,7 +319,7 @@ var array2;
 
 
 				});
-
+			}
 				//placeMarker(mapUP, markers);
 			});
 
@@ -383,7 +396,7 @@ var array2;
 function getStationsUP(){
 	var origin = $("#upOrigin").val();
 	var destination = $("#upDestination").val();
-	var autonomy = $("#upAutonomyKm").val();
+	var autonomy = localStorage.getItem("autonomy");
 	var link= "api/stationsup/"+origin+"/"+destination+"/"+autonomy;
 	var stationsData =null;
 //console.log(link);
