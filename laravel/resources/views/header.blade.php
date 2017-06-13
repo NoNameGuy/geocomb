@@ -30,7 +30,7 @@
         <li class="active"><a href="{{route('home')}}">Home</a></li>
         <li><a href="#">About</a></li>
         @if (Auth::user())
-          <li><a href="{{route('userpage')}}">My Area</a></li>
+          <li><a href="{{route('planRoute')}}">My Area</a></li>
         @endif
       </ul>
       <ul class="nav navbar-nav navbar-right">

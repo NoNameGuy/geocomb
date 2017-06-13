@@ -63,3 +63,9 @@ Route::get('/userpage/edit/{id}', 'UserPageController@edit')->name('editVehicle'
 Route::post('/userpage', 'UserPageController@postTripData')->name('sendTripData');
 
 Route::post('/userpage/editPass', 'UserPageController@postCredentials')->name('editPass');
+
+Route::get('/userpage', 'UserPageController@index')->name('planRoute');
+Route::get('/userpage/vehicles', 'UserPageController@getVehicles')->name('manageVehicles');
+Route::get('/userpage/info', 'UserPageController@getInfo')->name('manageInfo');
+
+Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');

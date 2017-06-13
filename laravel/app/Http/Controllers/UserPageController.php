@@ -29,7 +29,7 @@ class UserPageController extends Controller
 
         $planRoute = true;
 
-    	return view('user_page', ['name'=>$user->name, 'vehicles' => $vehicles, 'planRoute' => $planRoute]);
+    	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'planRoute' => $planRoute]);
     }
 
     public function add(Request $request)
@@ -53,13 +53,20 @@ class UserPageController extends Controller
 
     }
 
-    public function edit($id)
+    public function editVehicle($id=null)
     {
+
       $user = Auth::user();
-      $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)->get();
-      $vehicle=Vehicle::where('id', $id)->get();
+
+      $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
+        ->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)
+        ->select('brand','model', 'vehicle.id as vehicle_id')->get();
+
+      $selectedVehicle=Vehicle::where('id', $id)->first();
+
       $preferredVehicle = User::where('id', Auth::user()->id)->get();
-      return view('user_page', ['name'=>$user->name, 'vehicle' => $vehicle, 'vehicles' => $vehicles]);
+
+      return view('manageVehicles', ['name'=>$user->name, 'selectedVehicle' => $selectedVehicle, 'vehicles' => $vehicles]);
 
     }
 
@@ -210,6 +217,34 @@ class UserPageController extends Controller
           }finally{
               return Response::json($response, $statusCode);
           }
+      }
+
+      public function getVehicles()
+      {
+        # code...
+        $user = Auth::user();
+        $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
+            ->join('users', 'users.id', 'vehicles.user_id')
+            ->where('users.email', $user->email)
+            ->get();
+
+
+          return view('manageVehicles', ['name'=>$user->name, 'vehicles' => $vehicles]);
+
+      }
+
+      public function getInfo()
+      {
+        # code...
+        $user = Auth::user();
+        $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
+            ->join('users', 'users.id', 'vehicles.user_id')
+            ->where('users.email', $user->email)
+            ->get();
+
+
+          return view('manageInfo', ['name'=>$user->name, 'vehicles' => $vehicles]);
+
       }
 
 }
