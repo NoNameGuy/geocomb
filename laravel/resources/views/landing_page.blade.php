@@ -11,7 +11,7 @@
 <div class="col-sm-8 text-left">
 	<h1 class="center">Preço dos Combustíveis</h1>
 
-	<a href="{{action('LandingController@getJsonOpenMaps')}}">Fetch data station</a>
+	<!--<a href="{{action('LandingController@getJsonOpenMaps')}}">Fetch data station</a>-->
 
 	<hr>
 
@@ -68,7 +68,7 @@
 					<input class="form-control" id="brand" name="brand" type="text">
 					<br>
 				</div>
-				<button id="landingSearch" type="submit">Search</button>
+				<button class="btn btn-success" id="landingSearch" type="submit">Search</button>
 
 			</form>
 
@@ -77,7 +77,7 @@
 		{{csrf_field()}}
 		<input type="hidden" name="district" value="">
 		<input type="hidden" name="brand" value="">
-		<button id="landingBack">Back</button>
+		<button class="btn btn-success" id="landingBack">Back</button>
 	</form>
 	<h3 class="text-center">Mais baratas ()</h3>
 	<div class="form-group">

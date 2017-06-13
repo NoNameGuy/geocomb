@@ -51,7 +51,7 @@ var array2;
 	});
 
 	$("input[name='fuelType']").change(function(){
-		alert($(this).val());
+		//alert($(this).val());
 	});
 
 

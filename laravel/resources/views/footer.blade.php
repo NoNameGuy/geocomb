@@ -4,7 +4,7 @@
 </div>
 
 <footer class="container-fluid text-center">
-  <p>Footer Text</p>
+  <p>GeoComb - Combustíveis ao Mais Baixo Preço - © 2017</p>
 </footer>
 
 </body>
