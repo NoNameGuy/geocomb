@@ -70,6 +70,24 @@ class UserPageController extends Controller
 
     }
 
+    public function editInfo()
+    {
+      # code...
+      $user = Auth::user();
+
+
+      return view('manageInfo', 'user'->$user);
+    }
+
+    public function saveInfo(Request $request, $id)
+    {
+      # code...
+      $data = ['name'=>$request->name, 'email'=>$request->email];
+      User::where('id', $id)->update($data);
+      return redirect(route('manageInfo'));
+
+    }
+
     public function saveVehicle(Request $request, $id)
     {
       //$id2 = ['id'=>$request->id];

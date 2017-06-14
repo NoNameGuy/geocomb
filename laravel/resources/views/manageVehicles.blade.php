@@ -35,7 +35,6 @@
     <form method="POST" action="{{ route('postEditVehicle',$selectedVehicle->id) }}">
     @endif
       {{ csrf_field() }}
-      <input type="hidden" value="@if(isset($selectedVehicle)){{$selectedVehicle->id}}@endif">
 
       <div class="form-group">
         <label for="brand">Marca: </label>
