@@ -70,6 +70,15 @@ class UserPageController extends Controller
 
     }
 
+    public function saveVehicle(Request $request)
+    {
+      $id2 = ['id'=>$request->id];
+      $data = ['brand'=>$request->brand, 'model'=>$request->model, 'fuel'=>$request->fuel, 'consumption'=>$request->consumption];
+      Vehicle::where($id2)->update($data);
+
+      dd($id2);
+    }
+
       public function remove(Request $request)
       {
           Auth::user()->vehicles()->where('id', $request->$data)->delete();

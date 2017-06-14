@@ -49,6 +49,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/userpage', 'UserPageController@index')->name('userpage');
 	Route::post('/userpage', 'UserPageController@index');
 	Route::post('/addvehicle', 'UserPageController@add')->name('addvehicle');
+
+  Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');
+  Route::post('/userpage/vehicles/edit', 'UserPageController@saveVehicle')->name('postEditVehicle');
 });
 
 Route::post('/showGpsCoordinates', 'LandingController@index');
@@ -59,7 +62,6 @@ Route::get('/api/brands', 'LandingController@apiBrands')->name('apibrands');
 Route::get('/api/stations/{district}/{brand}/{fuelType}', 'LandingController@apiStations')->name('apistations');
 Route::get('/api/stationsup/{origin}/{destination}/{autonomy}', 'UserPageController@apiStations')->name('apistationsup');
 
-Route::get('/userpage/edit/{id}', 'UserPageController@edit')->name('editVehicle');
 Route::post('/userpage', 'UserPageController@postTripData')->name('sendTripData');
 
 Route::post('/userpage/editPass', 'UserPageController@postCredentials')->name('editPass');
@@ -67,5 +69,3 @@ Route::post('/userpage/editPass', 'UserPageController@postCredentials')->name('e
 Route::get('/userpage', 'UserPageController@index')->name('planRoute');
 Route::get('/userpage/vehicles', 'UserPageController@getVehicles')->name('manageVehicles');
 Route::get('/userpage/info', 'UserPageController@getInfo')->name('manageInfo');
-
-Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');

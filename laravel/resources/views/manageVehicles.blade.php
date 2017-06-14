@@ -29,8 +29,13 @@
     </div>
 
     <div class="col-sm-6 text-left">
+    @if(Request::url() == 'http://geocomb.app/userpage/vehicles')
      <form method="POST" action="{{ route('addvehicle') }}">
+    @else
+    <form method="POST" action="{{ route('postEditVehicle') }}">
+    @endif
       {{ csrf_field() }}
+      <input type="hidden" value="@if(isset($selectedVehicle)){{$selectedVehicle->id}}@endif">
 
       <div class="form-group">
         <label for="brand">Marca: </label>
