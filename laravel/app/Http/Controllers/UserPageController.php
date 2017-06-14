@@ -70,13 +70,14 @@ class UserPageController extends Controller
 
     }
 
-    public function saveVehicle(Request $request)
+    public function saveVehicle(Request $request, $id)
     {
-      $id2 = ['id'=>$request->id];
+      //$id2 = ['id'=>$request->id];
       $data = ['brand'=>$request->brand, 'model'=>$request->model, 'fuel'=>$request->fuel, 'consumption'=>$request->consumption];
-      Vehicle::where($id2)->update($data);
+      Vehicle::where('id', $id)->update($data);
 
-      dd($id2);
+      //dd($id2);
+      return redirect(route('manageVehicles'));
     }
 
       public function remove(Request $request)

@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/addvehicle', 'UserPageController@add')->name('addvehicle');
 
   Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');
-  Route::post('/userpage/vehicles/edit', 'UserPageController@saveVehicle')->name('postEditVehicle');
+  Route::post('/userpage/vehicles/edit/{vehicleid}', 'UserPageController@saveVehicle')->name('postEditVehicle');
 });
 
 Route::post('/showGpsCoordinates', 'LandingController@index');

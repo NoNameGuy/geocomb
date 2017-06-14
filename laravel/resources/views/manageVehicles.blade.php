@@ -32,7 +32,7 @@
     @if(Request::url() == 'http://geocomb.app/userpage/vehicles')
      <form method="POST" action="{{ route('addvehicle') }}">
     @else
-    <form method="POST" action="{{ route('postEditVehicle') }}">
+    <form method="POST" action="{{ route('postEditVehicle',$selectedVehicle->id) }}">
     @endif
       {{ csrf_field() }}
       <input type="hidden" value="@if(isset($selectedVehicle)){{$selectedVehicle->id}}@endif">
