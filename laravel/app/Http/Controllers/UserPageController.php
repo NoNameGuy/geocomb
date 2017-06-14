@@ -80,6 +80,13 @@ class UserPageController extends Controller
       return redirect(route('manageVehicles'));
     }
 
+    public function removeVehicle($id){
+      Vehicles::where('user_id', Auth::user()->id)
+        ->where('vehicle_id', $id)
+        ->delete();
+      return redirect(route('manageVehicles'));
+    }
+
       public function remove(Request $request)
       {
           Auth::user()->vehicles()->where('id', $request->$data)->delete();

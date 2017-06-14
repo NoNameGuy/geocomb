@@ -20,7 +20,7 @@
         <li class="list-group-item {{Auth::user()->preferredVehicle==$vehicle->vehicle_id ? 'active': ''}}"
             value="{{$vehicle->vehicle_id}}">{{$vehicle->brand}} - {{$vehicle->model}}
           <a class="btn btn-success" href="{{ route('editVehicle',$vehicle->vehicle_id)}}">Editar</a>
-          <a class="btn btn-danger">Remover</a>
+          <a class="btn btn-danger" href="{{ route('removeVehicle',$vehicle->vehicle_id)}}">Remover</a>
         </li>
        @endforeach
        </ul>
