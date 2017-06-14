@@ -89,7 +89,7 @@
 			{{$station->stationBrand}}<br>
 			<label for="nome">Preço: </label>
 			{{$station->fuelPrice}}
-			<button type="button" class="btn btn-link" style="float:right">Detalhes</button>
+			<!--<button type="button" class="btn btn-link" style="float:right">Detalhes</button>-->
 			<img src="../../files/{{$key+1}}.jpg" style="float:right"></img>
 			<br>
 			<label for="nome">Serviços: </label>

@@ -13,20 +13,24 @@
 
   <div id="divInfo">
     <div class="col-sm-6">
+      <form method="POST" action="{{route('postInfo', Auth::user()->id)}}">
+        <div class="form-group">
+          {{ csrf_field() }}
 
-      <div class="form-group">
-        <label>Nome: </label>
-        <input class="form-control" id="txtName" name="name" type="text">
-      </div>
+          <label>Nome: </label>
+          <input class="form-control" id="txtName" name="name" type="text"
+          value="@if(isset($user)){{$user->name}}@endif">
+        </div>
 
-      <div class="form-group">
-        <label>Email: </label>
-        <input class="form-control" id="txtEmail" name="email" type="text">
-      </div>
+        <div class="form-group">
+          <label>Email: </label>
+          <input class="form-control" id="txtEmail" name="email" type="text"
+          value="@if(isset($user)){{$user->email}}@endif">
+        </div>
 
-      <a href="#" class="btn btn-success">Guardar Alterações</a>
-
-    </div>
+        <button type="submit" class="btn btn-success">Guardar Alterações</a>
+</form>
+  </div>
 
 <form id="form-change-password" role="form" method="POST" action="{{ route('editPass') }}" novalidate class="form-horizontal">
     <div class="col-sm-6">

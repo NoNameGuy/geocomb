@@ -53,6 +53,8 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');
   Route::post('/userpage/vehicles/edit/{vehicleid}', 'UserPageController@saveVehicle')->name('postEditVehicle');
 
+  Route::get('/userpage/info/edit/{id}', 'UserPageController@editInfo')->name('editInfo');
+  Route::post('/userpage/info/edit/{id}', 'UserPageController@saveInfo')->name('postInfo');
 
   Route::post('/userpage', 'UserPageController@postTripData')->name('sendTripData');
 
