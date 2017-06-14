@@ -28,7 +28,16 @@
 -->
   <div class="col-sm-6 text-left">
 
-      {{csrf_field()}}
+      <form method="post" action="{{route('selectVehicle')}}">
+        {{csrf_field()}}
+        <select name="upSelectVehicle" onchange="this.form.submit()" >
+          @if(isset($vehicles))
+            @foreach($vehicles as $vehicle)
+              <option value="{{$vehicle->vehicleId}}" @if(isset($vehicleData) && $vehicle->vehicleId==$vehicleData->id ) selected @endif>{{$vehicle->brand}} {{$vehicle->model}}</option>
+            @endforeach
+          @endif
+        </select>
+      </form>
     <div class="form-group">
       <label for="inputdefault">Inicio: </label>
       <input class="form-control" id="upOrigin" name="upOrigin" type="text">
@@ -39,19 +48,13 @@
       <input class="form-control" id="upDestination" name="upDestination" type="text">
     </div>
 
-    <div class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Veiculos
-      <span class="caret"></span></button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">HTML</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CSS</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>
-      </ul>
+
+
     </div>
-    <input type="checkbox" name="highway" id="upHighway">Autoestrada</input>
     <label>Autonomia (km):<input type="number" name="upAutonomyKm" id="upAutonomyKm"></label><br>
+    <p>Ou</p>
     <label>Autonomia (l):<input type="number" name="upAutonomyL" id="upAutonomyL"></label>
-    <label>Consumo (l/km):<input type="number" name="upConsumption" id="upConsumption"></label>
+    <label>Consumo (l/km):<input type="number" name="upConsumption" id="upConsumption" value="@if(isset($vehicleData)){{$vehicleData->consumption}}@endif"></label>
 
 <br><br>
     <div class="center">

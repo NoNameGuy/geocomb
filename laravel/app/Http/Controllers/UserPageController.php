@@ -25,11 +25,14 @@ class UserPageController extends Controller
         $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
             ->join('users', 'users.id', 'vehicles.user_id')
             ->where('users.email', $user->email)
+            ->select('vehicle.id as vehicleId', 'brand', 'model')
             ->get();
 
-        $planRoute = true;
+        $vehicleData = null;
+        $vehicleData = Vehicle::where('id', $request->upSelectVehicle)
+          ->first();
 
-    	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'planRoute' => $planRoute]);
+    	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData]);
     }
 
     public function add(Request $request)
@@ -49,7 +52,7 @@ class UserPageController extends Controller
           User::where('id', Auth::user()->id)->update(['preferredVehicle' => $vehiclesId->id]);
         }
 
-        return redirect('userpage');
+        return redirect(route('manageVehicles'));
 
     }
 
@@ -65,8 +68,9 @@ class UserPageController extends Controller
       $selectedVehicle=Vehicle::where('id', $id)->first();
 
       $preferredVehicle = User::where('id', Auth::user()->id)->get();
+      $fuelTypes = DB::select('DESCRIBE fuel_price');
 
-      return view('manageVehicles', ['name'=>$user->name, 'selectedVehicle' => $selectedVehicle, 'vehicles' => $vehicles]);
+      return view('manageVehicles', ['name'=>$user->name, 'selectedVehicle' => $selectedVehicle, 'vehicles' => $vehicles, 'fuelTypes'=>$fuelTypes]);
 
     }
 
@@ -84,6 +88,7 @@ class UserPageController extends Controller
       Vehicles::where('user_id', Auth::user()->id)
         ->where('vehicle_id', $id)
         ->delete();
+
       return redirect(route('manageVehicles'));
     }
 
@@ -245,8 +250,9 @@ class UserPageController extends Controller
             ->where('users.email', $user->email)
             ->get();
 
+        $fuelTypes = DB::select('DESCRIBE fuel_price');
 
-          return view('manageVehicles', ['name'=>$user->name, 'vehicles' => $vehicles]);
+        return view('manageVehicles', ['name'=>$user->name, 'vehicles' => $vehicles,'fuelTypes' => $fuelTypes]);
 
       }
 

@@ -51,8 +51,13 @@
 
       <div class="form-group">
         <label for="fuel">Tipo de Combustível: </label>
-        <input class="form-control" id="txtFuelType" name="fuel" type="text"
-        value="@if(isset($selectedVehicle)){{$selectedVehicle->fuel}}@endif">
+        <select class="form-control" id="txtFuelType" name="fuel">
+          @if(isset($fuelTypes))
+            @for($i=1;$i<count($fuelTypes); $i++)
+              <option value="{{$fuelTypes[$i]->Field}}" @if(isset($selectedVehicle) && $selectedVehicle->fuel==$fuelTypes[$i]->Field) selected @endif>{{$fuelTypes[$i]->Field}}</option>
+            @endfor
+          @endif
+        </select>
       </div>
 
       <div class="form-group">
