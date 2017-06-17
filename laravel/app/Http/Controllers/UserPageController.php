@@ -150,7 +150,8 @@ class UserPageController extends Controller
               $obj_user = User::find($user_id);
               $obj_user->password = Hash::make($request_data['password']);;
               $obj_user->save();
-              return "ok";
+              return redirect(route('manageInfo'));
+              //return "ok";
             }
             else
             {
@@ -161,8 +162,9 @@ class UserPageController extends Controller
         }
         else
         {
-          return redirect()->to('/');
+        //return redirect()->to('/');
         }
+
       }
 
       public function postTripData(Request $request)

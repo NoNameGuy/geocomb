@@ -14,14 +14,14 @@ class StationTableSeeder extends Seeder
     public function run()
     {
          for ($i = 0; $i < DB::table('location')->count(); $i++) {
-        	for ($j=0; $j < 5; $j++) {
+        	//for ($j=0; $j < 5; $j++) {
 					$brand = $this->randomBrand();
-    			$location = $this->generateRandomNumber(1,10);
-    			$district = $this->generateRandomNumber(1,18);
+    			$location = $i+1;//$this->generateRandomNumber(1,10);
+    			$district = $this->associateDistrict($i+1);
     			$fuel_price = $this->generateRandomNumber(1,10);
     			$services = $this->generateRandomNumber(1,10);
     			$schedule = $this->generateRandomNumber(1,10);
-    		}
+    		//}
 
             DB::table('station')->insert([
             	'name' => "a$i",
@@ -36,6 +36,30 @@ class StationTableSeeder extends Seeder
 
 
         }
+    }
+
+    public function associateDistrict($id)
+    {
+      $location = DB::table('location')->where('id', $id)->first();
+      $link = "http://maps.google.com/maps/api/geocode/json?address=$location->latitude,$location->longitude";
+      $data = file_get_contents($link);
+      $json = json_decode($data, true);
+      if(isset($json['results'][0]['address_components'][1]['long_name'])){
+          $districtString = $json['results'][0]['address_components'][1]['long_name'];
+          $districtName = trim(str_replace('district', '', $districtString)); //Distrito em texto
+
+          if($districtName=='Lisbon'){
+            $district = DB::table('district')->where('name', 'like', "Lisboa")->first();
+          }else{
+            $district = DB::table('district')->where('name', 'like', "%$districtName%")->first();
+          }
+          if(isset($district)){
+            return $district->id;
+          }else{
+            $districtId = DB::table('district')->insertGetId(['name'=>$districtName]);
+            return $districtId;
+          }
+      }return 1;
     }
 
     private function generateRandomNumber($min, $max)
