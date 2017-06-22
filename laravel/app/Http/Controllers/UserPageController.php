@@ -10,6 +10,8 @@ use App\Vehicle;
 use App\Vehicles;
 use App\User;
 use App\Station;
+use App\Fuel;
+use App\Fuels;
 
 use Validator;
 use Hash;
@@ -37,14 +39,22 @@ class UserPageController extends Controller
 
     public function add(Request $request)
     {
+      //$fuels =$request->upFuelType;
 
-    	$data = ['brand' => $request->brand, 'model' => $request->model, 'fuel' => $request->fuel, 'consumption' => $request->consumption];
+
+    	$data = ['brand' => $request->brand, 'model' => $request->model, 'consumption' => $request->consumption];
 
         Vehicle::insert($data);
 
         $vehicle = Vehicle::orderBy('id', 'desc')->first();
         $vehicles = ['user_id'=>Auth::user()->id, 'vehicle_id'=>$vehicle->id];
-        Vehicles::insert($vehicles);
+        $vehicleId = Vehicles::insertGetId($vehicles);
+
+
+      foreach($request->upFuelType as $fuel){
+          $currentFuel = Fuel::where('name', 'like', "%$fuel%")->select('id')->first();
+          Fuels::insert(['vehicle_id'=>$vehicleId, 'fuel_id'=>$currentFuel->id]);
+        }
 
 
         $vehiclesId = Vehicle::orderBy('id', 'desc')->first();
@@ -65,18 +75,24 @@ class UserPageController extends Controller
         ->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)
         ->select('brand','model', 'vehicle.id as vehicle_id')->get();
 
-      $selectedVehicle=Vehicle::where('id', $id)->first();
+      $selectedVehicle=Vehicle::where('vehicle.id', $id)
+          ->first();
+      $vehicleFuels = Fuel::join('fuels', 'fuels.fuel_id', 'fuel.id')
+          ->where('fuels.vehicle_id', $id)
+          ->select('fuel.name as name')
+          ->get();
+
+      $allFuels = Fuel::all();
 
       $preferredVehicle = User::where('id', Auth::user()->id)->get();
       $fuelTypes = DB::select('DESCRIBE fuel_price');
 
-      return view('manageVehicles', ['name'=>$user->name, 'selectedVehicle' => $selectedVehicle, 'vehicles' => $vehicles, 'fuelTypes'=>$fuelTypes]);
+      return view('manageVehicles', ['name'=>$user->name, 'selectedVehicle' => $selectedVehicle, 'vehicleFuels' => $vehicleFuels, 'allFuels' => $allFuels,'vehicles' => $vehicles, 'fuelTypes'=>$fuelTypes]);
 
     }
 
     public function editInfo()
     {
-      # code...
       $user = Auth::user();
 
 
@@ -85,7 +101,6 @@ class UserPageController extends Controller
 
     public function saveInfo(Request $request, $id)
     {
-      # code...
       $data = ['name'=>$request->name, 'email'=>$request->email];
       User::where('id', $id)->update($data);
       return redirect(route('manageInfo'));
@@ -95,10 +110,13 @@ class UserPageController extends Controller
     public function saveVehicle(Request $request, $id)
     {
       //$id2 = ['id'=>$request->id];
-      $data = ['brand'=>$request->brand, 'model'=>$request->model, 'fuel'=>$request->fuel, 'consumption'=>$request->consumption];
+      $data = ['brand'=>$request->brand, 'model'=>$request->model, 'consumption'=>$request->consumption];
       Vehicle::where('id', $id)->update($data);
-
-      //dd($id2);
+      Fuels::where('vehicle_id', $id)->delete();
+      foreach($request->upFuelType as $fuel){
+        $currentFuel = Fuel::where('name', 'like', "%$fuel%")->select('id')->first();
+        Fuels::insert(['vehicle_id'=>$id, 'fuel_id'=>$currentFuel->id]);
+      }
       return redirect(route('manageVehicles'));
     }
 
@@ -162,7 +180,7 @@ class UserPageController extends Controller
         }
         else
         {
-        //return redirect()->to('/');
+        return redirect()->to('/');
         }
 
       }
@@ -263,7 +281,6 @@ class UserPageController extends Controller
 
       public function getVehicles()
       {
-        # code...
         $user = Auth::user();
         $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
             ->join('users', 'users.id', 'vehicles.user_id')
@@ -272,13 +289,15 @@ class UserPageController extends Controller
 
         $fuelTypes = DB::select('DESCRIBE fuel_price');
 
-        return view('manageVehicles', ['name'=>$user->name, 'vehicles' => $vehicles,'fuelTypes' => $fuelTypes]);
+
+        $allFuels = Fuel::all();
+
+        return view('manageVehicles', ['name'=>$user->name, 'vehicles' => $vehicles, 'allFuels'=> $allFuels,'fuelTypes' => $fuelTypes]);
 
       }
 
       public function getInfo()
       {
-        # code...
         $user = Auth::user();
         $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
             ->join('users', 'users.id', 'vehicles.user_id')

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVehicleTable extends Migration
+class CreateFuelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateVehicleTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicle', function (Blueprint $table) {
+        Schema::create('fuel', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('brand');
-            $table->string('model');
-            $table->float('consumption');
+            $table->string('name');
         });
     }
 
@@ -28,6 +26,6 @@ class CreateVehicleTable extends Migration
      */
     public function down()
     {
-        Schema::drop('vehicle');
+        Schema::dropIfExists('fuel');
     }
 }

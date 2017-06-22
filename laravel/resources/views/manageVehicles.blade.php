@@ -50,36 +50,17 @@
 
       <div class="form-group">
         <label for="fuel">Tipo de Combustível: </label>
-        <div class="col-sm-4">
-          <label><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>
-          <label><input type="checkbox" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
-          <label><input type="checkbox" name="fuelType" value="diesel_colored">Gasóleo Colorido</label><br>
-          <label><input type="checkbox" name="fuelType" value="diesel_special">Gasóleo Especial</label><br>
-          <br><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_95">Gasolina 95</label><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_simple_95">Gasolina Simples 95</label><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_special_95">Gasolina Especial 95</label><br>
-          <br><br>
-        </div>
-        <div class="col-sm-8">
-          <label><input type="checkbox" name="fuelType" value="gas_natural_compressed_kg">GNC KG</label><br>
-          <label><input type="checkbox" name="fuelType" value="gas_natural_compressed_m3">GNC M3</label><br>
-          <label><input type="checkbox" name="fuelType" value="gas_natural_liquified">GNL</label><br>
-          <label><input type="checkbox" name="fuelType" value="gpl">GPL</label><br>
-          <br><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_98">Gasolina 98</label><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_simple_98">Gasolina Simples 98</label><br>
-          <label><input type="checkbox" name="fuelType" value="petrol_special_98">Gasolina Especial 98</label><br>
-          <br><br>
-        </div>
-        <select class="form-control" id="txtFuelType" name="fuel">
-          @if(isset($fuelTypes))
-            @for($i=1;$i<count($fuelTypes); $i++)
-              <option value="{{$fuelTypes[$i]->Field}}" @if(isset($selectedVehicle) && $selectedVehicle->fuel==$fuelTypes[$i]->Field) selected @endif>{{$fuelTypes[$i]->Field}}</option>
-            @endfor
-          @endif
-        </select>
+        @if(isset($allFuels))
+          @foreach($allFuels as $fuel)
+            <label>{{$fuel->name}}<input type="checkbox" name="upFuelType[]" value="{{$fuel->name}}"
+@if(isset($vehicleFuels))
+@foreach($vehicleFuels as $vFuel)
+@if($fuel->name==$vFuel->name) checked @endif
+@endforeach @endif     ></label>
+          @endforeach
+        @endif
       </div>
+
 
       <div class="form-group">
         <label for="consumption">Consumo(L/100): </label>
@@ -97,26 +78,6 @@
         </div>
        </form>
     </div>
-    <script type="text/javascript">
-      $(" #vehicleList>a").click(function(){
-       /*{{-- @foreach($vehicles as $vehicle)
-          @if($vehicle->id == $(this).val())
-            $("#txtBrand").val("{{$vehicle->brand}}");
-            $("#txtModel").val('');
-            $("#txtFuelType").val('');
-            $("#txtConsumption").val('');
-          @endif
-        @endforeach--}}*/
-      });
-
-      $("#addVehicle").click(function(){
-        $("#txtBrand").val('');
-        $("#txtModel").val('');
-        $("#txtFuelType").val('');
-        $("#txtConsumption").val('');
-      });
-
-    </script>
 
   </div>
 

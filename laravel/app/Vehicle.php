@@ -8,4 +8,8 @@ class Vehicle extends Model
 {
     protected $table = 'vehicle';
     public $timestamps = false;
+    public function fuels()
+    {
+        return $this->hasMany('App\Fuels');
+    }
 }
