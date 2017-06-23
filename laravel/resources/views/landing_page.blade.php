@@ -31,13 +31,19 @@
 				{{csrf_field()}}
 				<div class="form-group">
 					<label for="district">Distrito(s): </label>
-					<input class="form-control" id="district" name="district" type="text">
+					<input class="form-control" id="district" name="district" type="text" @if(Auth::user() && isset($location)) value="$location" @endif>
 				</div>
 				<br>
 				<div class="checkbox" id="landingFuelType">
 					<div class="form-group">
 						<label style="font-weight:bold">Tipo de Combustível (Escolha 1): </label>
 					</div>
+
+					@if($fuels)
+						@foreach($fuels as $fuel)
+							<label><input type="checkbox" name="fuelType" value="{{$fuel->name}}">{{$fuel->name}}</label><br>
+						@endforeach
+					@endif
 
 					<div class="col-sm-4">
 						<label><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>

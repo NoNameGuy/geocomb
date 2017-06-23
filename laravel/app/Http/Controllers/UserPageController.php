@@ -222,11 +222,11 @@ class UserPageController extends Controller
               $destinationDistrict = trim(str_replace('District', '', $destinationDistrict));
 
               $query = Station::join('district', 'station.district', 'district.id')
-                ->join('location', 'station.district', 'location.id');
+                ->join('location', 'station.location', 'location.id');
 
                 if(strcmp($originDistrict,"Lisbon")==0 && strcmp($destinationDistrict,"Lisbon")!=0){
                   $query->where('district.name', 'like', "%Lisboa%");
-                    $query->orWhere('district.name', 'like', "%$destinationDistrict%");
+                  $query->orWhere('district.name', 'like', "%$destinationDistrict%");
                 }else{
                   if (strcmp($originDistrict, "Lisbon")!=0 && strcmp($destinationDistrict, "Lisbon")==0) {
                     $query->where('district.name', 'like', "%$originDistrict%");
@@ -246,7 +246,7 @@ class UserPageController extends Controller
                 //echo "$key -> $value->latitude";
                 $latitudeDestination = $value->latitude;
                 $longitudeDestination = $value->longitude;
-                $earthRadius = 6.371;//km
+                $earthRadius = 6371;//km
 
                 $latitudeDifference = $latitudeOrigin-$latitudeDestination;
                 $longitudeDifference = $longitudeOrigin-$longitudeDestination;

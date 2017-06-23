@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 use App\District;
+use App\Fuel;
 use App\Station;
 use File;
 use \RecursiveIteratorIterator;
@@ -71,7 +72,10 @@ class LandingController extends BaseController
         $stations = array();
         $stations = $this->getStations($request->district, $request->brand, $request->fuelType);
 
-        return View('landing_page', ['district' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations]);
+        $fuels = Fuel::select('name')
+            ->get();
+
+        return View('landing_page', ['district' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations, 'fuels' => $fuels]);
     }
 
     private function getStations($district, $brand, $fuelType)
@@ -240,7 +244,7 @@ var_dump($tempAllStations);*/
 
     private function calculateDistance($latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination)
     {
-        $earthRadius = 6.371;//km
+        $earthRadius = 6371;//km
 
         $latitudeDifference = $latitudeOrigin-$latitudeDestination;
         $longitudeDifference = $longitudeOrigin-$longitudeDestination;

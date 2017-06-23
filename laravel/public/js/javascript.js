@@ -4,6 +4,8 @@ var js = $(document).ready(function(){
 	var waypts = [];
 	getLocation();
 
+	$("#district").val(localStorage.getItem("district"));
+
 	var array;
 	$("#district").autocomplete({
 		source: function(request, response){
@@ -49,12 +51,6 @@ var array2;
 		}
 	}
 	});
-
-	$("input[name='fuelType']").change(function(){
-		//alert($(this).val());
-	});
-
-
 
 
 	$("#landingSearch").click(function(){
@@ -178,11 +174,30 @@ var array2;
 			$("#longitude").val(position.coords.longitude);
 			localStorage.setItem("latitude", position.coords.latitude);
 			localStorage.setItem("longitude", position.coords.longitude);
+
+			var link = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.coords.latitude+","+position.coords.longitude;
+			$.ajax({
+							async: false,
+							url: link,
+	            type: "GET",
+	            dataType: "json",
+							success: function (data) {
+								localStorage.setItem("district", data["results"]["0"]["address_components"]["1"]["long_name"]);
+							},
+
+	            error: function (textStatus, errorThrown) {
+	                console.log("Error getting the station data")
+	            }
+
+	         });
+
+
 		    submitForm();
 
 	}
 	function submitForm(){
 		$("#landingHiddenSubmit").click();
+
 	}
 
 
@@ -272,7 +287,9 @@ var array2;
 			var autonomykm = $("#upAutonomyKm").val();
 			var autonomyl = $("#upAutonomyL").val();
 			var consumption = $("#upConsumption").val();
-			if((autonomykm==='' && autonomyl==='')||(autonomykm!=='' && autonomyl!=='' || consumption!=='') || (autonomyl!=='' && autonomykm!=='' && consumption==='') || (autonomyl!=='' && autonomyl==='' && consumption!=='')){
+			//original logic
+			//(autonomykm==='' && autonomyl==='')||(autonomykm!=='' && autonomyl!=='' || consumption!=='') || (autonomyl!=='' && autonomykm!=='' && consumption==='') || (autonomyl!=='' && autonomyl==='' && consumption!=='')
+			if( (autonomykm==='' && autonomyl==='') || (autonomyl!=='' && consumption==='') || (autonomykm!=='' && autonomyl!=='') ){
 				alert("Preencha apenas a autonomia em km ou a autonomia em litros e o consumo");
 			}else{
 				var coordinates = getCoordinates();
@@ -288,11 +305,36 @@ var array2;
 
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 				markers.push(getStationsUP());
-
+				console.table(markers[0][1]);
 				var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 				var labels = '12345';
 				var labelIndex = 0;
+for(var j=0;j<markers[0].length;j++){
 
+			var marker = new google.maps.Marker({
+					position: {"lat": parseFloat(markers[0][j].latitude), "lng": parseFloat(markers[0][j].longitude)},
+					label: labels[labelIndex++ % labels.length],
+					map: mapUP,
+					title: markers[0][j].stationName
+				});
+
+
+
+
+/*
+			markers[0].addListener('dblclick', function() {
+				alert("double click"+ marker.position);
+				waypts.push({
+					location:marker.position,
+					stopover: true
+				});
+				calculateAndDisplayRoute(directionsService, directionsDisplay);
+			});
+*/
+
+
+
+}
 				markers.forEach(function(marker){
 					for (var i = 0; i < marker.length; i++) {
 						//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
@@ -304,10 +346,10 @@ var array2;
 							});
 
 
-						};
+						}
 
-
-						marker.addListener('dblclick', function() {
+/*
+						markers[0].addListener('dblclick', function() {
 							alert("double click"+ marker.position);
 							waypts.push({
 								location:marker.position,
@@ -315,7 +357,7 @@ var array2;
 							});
 							calculateAndDisplayRoute(directionsService, directionsDisplay);
 						});
-
+*/
 
 
 				});
