@@ -309,24 +309,45 @@ var array2;
 				var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 				var labels = '12345';
 				var labelIndex = 0;
-for(var j=0;j<markers[0].length;j++){
+				/*for(var j=0;j<markers[0].length;j++){
 
-			var marker = new google.maps.Marker({
-					position: {"lat": parseFloat(markers[0][j].latitude), "lng": parseFloat(markers[0][j].longitude)},
-					label: labels[labelIndex++ % labels.length],
-					map: mapUP,
-					title: markers[0][j].stationName
+					var marker = new google.maps.Marker({
+							position: {"lat": parseFloat(markers[0][j].latitude), "lng": parseFloat(markers[0][j].longitude)},
+							label: labels[labelIndex++ % labels.length],
+							map: mapUP,
+							title: markers[0][j].stationName
+						});
+
+					/*marker.addListener('dblclick', function() {
+						alert("double click"+ marker.position);
+						waypts.push({
+							location:marker.position,
+							stopover: true
+						});
+					});*/
+
+				//	calculateAndDisplayRoute(directionsService, directionsDisplay);
+				//}
+				markers[0].forEach(function(marker){
+					//console.table(marker);
+					var currentMarker = new google.maps.Marker({
+							position: {"lat": parseFloat(marker.latitude), "lng": parseFloat(marker.longitude)},
+							label: labels[labelIndex++ % labels.length],
+							map: mapUP,
+							title: marker.stationName
+						});
+
+						currentMarker.addListener('dblclick', function() {
+							alert("double click"+ currentMarker.position);
+							waypts.push({
+								location:currentMarker.position,
+								stopover: true
+							});
+							calculateAndDisplayRoute(directionsService, directionsDisplay);
+						});
+
 				});
 
-			marker.addListener('dblclick', function() {
-				alert("double click"+ marker.position);
-				waypts.push({
-					location:marker.position,
-					stopover: true
-				});
-				calculateAndDisplayRoute(directionsService, directionsDisplay);
-			});
-			}
 		}
 	});
 }
@@ -343,7 +364,7 @@ for(var j=0;j<markers[0].length;j++){
           if (status === 'OK') {
             directionsDisplay.setDirections(response);
             var route = response.routes[0];
-						console.table(route);
+						//console.table(route);
           } else {
             window.alert('Directions request failed due to ' + status);
           }
