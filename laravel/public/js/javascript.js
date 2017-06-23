@@ -305,7 +305,7 @@ var array2;
 
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 				markers.push(getStationsUP());
-				console.table(markers[0][1]);
+				//console.table(markers[0][1]);
 				var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 				var labels = '12345';
 				var labelIndex = 0;
@@ -318,11 +318,7 @@ for(var j=0;j<markers[0].length;j++){
 					title: markers[0][j].stationName
 				});
 
-
-
-
-/*
-			markers[0].addListener('dblclick', function() {
+			marker.addListener('dblclick', function() {
 				alert("double click"+ marker.position);
 				waypts.push({
 					location:marker.position,
@@ -330,56 +326,12 @@ for(var j=0;j<markers[0].length;j++){
 				});
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 			});
-*/
-
-
-
-}
-				markers.forEach(function(marker){
-					for (var i = 0; i < marker.length; i++) {
-						//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
-						var marker = new google.maps.Marker({
-								position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
-								label: labels[labelIndex++ % labels.length],
-								map: mapUP,
-								title: marker[i].stationName
-							});
-
-
-						}
-
-/*
-						markers[0].addListener('dblclick', function() {
-							alert("double click"+ marker.position);
-							waypts.push({
-								location:marker.position,
-								stopover: true
-							});
-							calculateAndDisplayRoute(directionsService, directionsDisplay);
-						});
-*/
-
-
-				});
 			}
-				//placeMarker(mapUP, markers);
-			});
-
-	}
+		}
+	});
+}
 
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-
-        /*var checkboxArray = document.getElementById('waypoints');
-        for (var i = 0; i < checkboxArray.length; i++) {
-          if (checkboxArray.options[i].selected) {
-            waypts.push({
-              location: checkboxArray[i].value,
-              stopover: true
-            });
-          }
-        }*/
-
-				//waypts.push({location: "Leiria",stopover: true}, {location: "Lisboa",stopover: true});
 
         directionsService.route({
           origin: $("#upOrigin").val(),
@@ -389,20 +341,9 @@ for(var j=0;j<markers[0].length;j++){
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {
-						console.table(response);
             directionsDisplay.setDirections(response);
             var route = response.routes[0];
-            /*var summaryPanel = document.getElementById('directions-panel');
-            summaryPanel.innerHTML = '';
-            // For each route, display summary information.
-            for (var i = 0; i < route.legs.length; i++) {
-              var routeSegment = i + 1;
-              summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
-                  '</b><br>';
-              summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-              summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-              summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
-            }*/
+						console.table(route);
           } else {
             window.alert('Directions request failed due to ' + status);
           }
