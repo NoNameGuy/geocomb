@@ -159,12 +159,25 @@ $counter = 0;
 
     public function associateDistrict($id)
     {
+      $districts = array("Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra", "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo", "Vila Real", "Viseu");
       $location = Location::where('id', $id)->first();
       $link = "http://maps.google.com/maps/api/geocode/json?address=$location->latitude,$location->longitude";
       $data = file_get_contents($link);
       $json = json_decode($data, true);
-      if(isset($json['results'][0]['address_components'][1]['long_name'])){
-          $districtString = $json['results'][0]['address_components'][1]['long_name'];
+      $districtString = "";
+        foreach ($districts as $district) {
+
+          for($i=0; $i<7;$i++){//6 address components from google api
+            
+            if(isset($json['results'][0]['address_components'][$i]['long_name'])){
+              if(strcmp($json['results'][0]['address_components'][$i]['long_name'], $district)!==0){
+                continue;
+              }else{
+                $districtString = $json['results'][0]['address_components'][$i]['long_name'];
+              }
+            }
+          }
+        }
           $districtName = trim(str_replace('district', '', $districtString)); //Distrito em texto
 
           if($districtName=='Lisbon'){
@@ -178,6 +191,6 @@ $counter = 0;
             $districtId = District::insertGetId(['name'=>$districtName]);
             return $districtId;
           }
-      }return 1;
+    //  return 1;
     }
 }
