@@ -5,9 +5,12 @@ use App\Station;
 use App\Location;
 use App\FuelPrice;
 use App\District;
+use App\User;
 
 class AllTableSeeder extends Seeder
 {
+    private $keys = array("AIzaSyAHkz73a9x-GmDi6-TrRKdmnrPEHZE2SFs", "AIzaSyAlJB4WvHqzbe2lmydazxqQsho3aqPSVQw", "AIzaSyDs4W6IghtD3Wom6EZ_nxM934CR3vLqtTs", "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s");
+
     /**
      * Run the database seeds.
      *
@@ -15,6 +18,7 @@ class AllTableSeeder extends Seeder
      */
     public function run()
     {
+
       $all = array();
       array_push($all, file_get_contents('public/files/Postos-Alves-Bandeira.geojson'));
       array_push($all, file_get_contents('public/files/Postos-BP.geojson'));
@@ -33,7 +37,7 @@ class AllTableSeeder extends Seeder
       array_push($all, file_get_contents('public/files/Postos-Total.geojson'));
 
 
-$counter = 0;
+      $counter = 0;
       foreach ($all as $station) {
         $object = json_decode($station);
 
@@ -113,43 +117,11 @@ $counter = 0;
             Station::insert(['name' => $name[2][0], 'brand' => $brand[2][0], 'location' => $locationId, 'district' => $districtId,'fuel_price' => $priceId, 'services' => 0, 'last_update' => new DateTime("now"),'schedule' => 0]);
 
 
-
-
-
-
-
-
-
-
         }
       }
-      //echo $obj->features;
-      /*for($i = 0; $i < 15; $i++){
+      $data = array(["id" => 1, "name" => "Gestor", "email" => "gestor@gmail.com", "password" => Hash::make(123123123), "is_activated" => 1]);
+      User::insert($data);
 
-      }*/
-      //for ($i = 0; $i < DB::table('location')->count(); $i++) {
-
-
-       /*$brand = $this->randomBrand();
-       $location = $i+1;//$this->generateRandomNumber(1,10);
-       $district = $this->associateDistrict($i+1);
-       $fuel_price = $this->generateRandomNumber(1,10);
-       $services = $this->generateRandomNumber(1,10);
-       $schedule = $this->generateRandomNumber(1,10);
-
-
-         DB::table('station')->insert([
-           'name' => "a$i",
-           'brand' => $brand,
-           'location' => $location,
-           'district' => $district,
-           'fuel_price' => $fuel_price,
-           'services' => $services,
-           'last_update' => date("Y-m-d H:i:s", strtotime("12/04/2017 19:00")),
-           'schedule' => $schedule
-         ]);*/
-
-      //}
     }
 
     private function array_combine2($arr1, $arr2) {
@@ -159,16 +131,28 @@ $counter = 0;
 
     public function associateDistrict($id)
     {
+      $temporaryVar = array_shift($this->keys);
+      $key=$temporaryVar;
+      array_push($this->keys, $temporaryVar);
       $districts = array("Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra", "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo", "Vila Real", "Viseu");
       $location = Location::where('id', $id)->first();
-      $link = "http://maps.google.com/maps/api/geocode/json?address=$location->latitude,$location->longitude";
+      for($j=0;$j<2500;$j++){
+        if ($j==2499) {
+          $temp = array_shift($this->keys);
+          $key=$temp;
+          array_push($this->keys, $temp);
+          $j=0;
+        }
+        $link = "https://maps.google.com/maps/api/geocode/json?address=$location->latitude,$location->longitude&key=$key";
+
+
       $data = file_get_contents($link);
       $json = json_decode($data, true);
       $districtString = "";
         foreach ($districts as $district) {
 
           for($i=0; $i<7;$i++){//6 address components from google api
-            
+
             if(isset($json['results'][0]['address_components'][$i]['long_name'])){
               if(strcmp($json['results'][0]['address_components'][$i]['long_name'], $district)!==0){
                 continue;
@@ -185,6 +169,7 @@ $counter = 0;
           }else{
             $district = District::where('name', 'like', "%$districtName%")->first();
           }
+          echo $link;
           if(isset($district)){
             return $district->id;
           }else{
@@ -192,5 +177,5 @@ $counter = 0;
             return $districtId;
           }
     //  return 1;
-    }
+  }}
 }
