@@ -1,56 +1,43 @@
-/* Remove the navbar's default margin-bottom and rounded borders */
-   .navbar {
-     margin-bottom: 0;
-     border-radius: 0;
-   }
-
-   /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-   .row.content {height: 900px}
-
-   /* Set gray background color and 100% height */
-   .sidenav {
-     padding-top: 20px;
-     background-color: #f1f1f1;
-     height: 100%;
-   }
-
-   /* Set black background color, white text and some padding */
-   footer {
-     background-color: #555;
-     color: white;
-     padding: 15px;
-   }
-
-   /* On small screens, set height to 'auto' for sidenav and grid */
-   @media screen and (max-width: 767px) {
-     .sidenav {
-       height: auto;
-       padding: 15px;
-     }
-     .row.content {height:auto;}
-   }
-
-.center {
-
-  text-align: center;
-
+body {
+  background-color: #555555;
+  color: white;
 }
 
-#map {
-  height: 700px;
-  width: 400px;
+@media (max-width: 1200px) {
+    body {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+h2{
+  text-align: center;
+}
+
+footer {
+  background-color: #262626;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav.navbar-center{
+    position: fixed;
+    left: 50%;
+    transform: translatex(-50%);
+    color: white;
+  }
+}
+
+#map{
+  width: 85%;
+  height: 650px;
  }
 
- #ui-id-1, #ui-id-2 {
-            list-style-type: none;
-            width: 400px;
-            margin-top: 5px;
-            padding: 8px 12px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 8px 8px 8px 8px;
-            font-size: 18px;
-            color: #111;
-            background-color: #F1F1F1;
-        }
+ #mapUP{
+   width: 85%;
+   height: 650px;
+ }

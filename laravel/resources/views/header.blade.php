@@ -1,80 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>!GeoComb!</title>
+	<title>GeoComb</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link	href="{{ URL::asset('css/style.css') }}" rel="stylesheet">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{asset('css/style.css') }}">
   <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
 
-
 	</head>
-					<body><nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{{route('home')}}"><img src="../../files/gasico.png" style="heihgt: 25px; width: 25px; float: left">GeoComb</img></a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="{{route('home')}}">Home</a></li>
-        <li><a href="#">About</a></li>
-        @if (Auth::user())
-          <li><a href="{{route('planRoute')}}">My Area</a></li>
-        @endif
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
 
-@if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Registar</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+<body>
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-{{--
-                                        <li><a href="{{route('users.view', [Auth::user()->id])}}"><i class="fa fa-btn fa-user"></i>My Profile</a></li>
-                                        <li><a href="{{route('advertisements.create')}}"><i class="fa fa-btn fa-plus"></i>Create Advertisement</a></li>
-                                        <li><a href="{{route('bids.list')}}"><i class="fa fa-btn fa-credit-card"></i>My Bids</a></li>
-                                @if (Auth::user()->admin)
-                                        <li><a href="{{route('admin.list')}}"><i class="fa fa-btn fa-briefcase"></i>Admin Page</a></li>
-                                @endif
-                                        <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
---}}
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
+<!-- Fixed navbar-->
+		<div class="navbar navbar-inverse navbar-static-top">
+				<div class="container">
+					<nav class="navbar navbar-main">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
 
-      </ul>
-    </div>
-  </div>
-</nav>
+						<div class="navbar-collapse collapse">
 
-<div class="container-fluid text-center">
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
+							<ul class="nav navbar-nav navbar-left">
+								<a class="navbar-brand" href="{{route('home')}}"><img src="../../files/gasico.png" style="heihgt: 35px; width: 35px;"></img></a>
+								<li><a href="{{route('home')}}"><h4>GeoComb</h4></a></li>
+							</ul>
 
-    </div>
+							<ul class="nav navbar-nav navbar-center">
+									<li><h2>Preço dos Combustíveis</h2></li>
+							</ul>
+
+						<ul class="nav navbar-nav navbar-right">
+							@if (Auth::user())
+	          		<li><a href="{{route('planRoute')}}"><h4>My Area</h4></a></li>
+	        		@endif
+
+							@if (Auth::guest())
+								<li><a href="{{ route('login') }}"><h4>Login</h4></a></li>
+								<li><a href="{{ route('register') }}"><h4>Registar</h4></a></li>
+							@else
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+										{{ Auth::user()->name }} <span class="caret"></span>
+	                </a>
+									<ul class="dropdown-menu" role="menu">
+										<li>
+											<a href="{{ route('logout') }}" onclick="event.preventDefault();
+												document.getElementById('logout-form').submit();">
+												Logout
+	                    </a>
+
+											{{--
+
+												<li><a href="{{route('users.view', [Auth::user()->id])}}"><i class="fa fa-btn fa-user"></i>My Profile</a></li>
+	                      <li><a href="{{route('advertisements.create')}}"><i class="fa fa-btn fa-plus"></i>Create Advertisement</a></li>
+												<li><a href="{{route('bids.list')}}"><i class="fa fa-btn fa-credit-card"></i>My Bids</a></li>
+	                        @if (Auth::user()->admin)
+	                        	<li><a href="{{route('admin.list')}}"><i class="fa fa-btn fa-briefcase"></i>Admin Page</a></li>
+	                        @endif
+	                        <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+
+											--}}
+											<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+	                    	{{ csrf_field() }}
+	                    </form>
+										</li>
+									</ul>
+								</li>
+								@endif
+							</ul>
+						</div><!--/.nav-collapse -->
+						</nav>
+					</div>
+				</div>
