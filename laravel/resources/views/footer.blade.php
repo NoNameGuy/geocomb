@@ -1,14 +1,12 @@
-<div class="col-sm-2 sidenav">
-    </div>
-  </div>
-</div>
 
-<footer class="container-fluid text-center">
-  <p>GeoComb - Combustíveis ao Mais Baixo Preço - © 2017</p>
-</footer>
+		<footer class="footer navbar-nav navbar-center">
+			<div class="container">
+				<p>GeoComb - Combustíveis ao Mais Baixo Preço - © 2017</p>
+			</div>
+		</footer>
 
-</body>
+	</body>
 
+	<script src="{{asset('js/javascript.js')}}"></script>
 
-<script src="{{asset('js/javascript.js')}}"></script>
 </html>

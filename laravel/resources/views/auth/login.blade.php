@@ -1,10 +1,6 @@
 @include('header')
-        <div class="col-sm-8 text-left">
-          <h1 class="center">Preço dos Combustíveis</h1>
-          <hr>
-
-            <div class="panel panel-default">
-              <div class="panel-heading center">Login</div>
+        <div class="col-lg-12 text-left" style="background-color:grey">
+          <h1 style="text-align:center">Login</h1>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
@@ -75,6 +71,5 @@
                         </div>
                     </form>
                 </div>
-            </div>
 </div>
 @include('footer')
