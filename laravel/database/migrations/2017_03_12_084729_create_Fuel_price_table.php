@@ -15,13 +15,13 @@ class CreateFuelPriceTable extends Migration
     {
         Schema::create('fuel_price', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('petrol_95_simple', 4, 3);
-            $table->decimal('petrol_95', 4, 3);
-            $table->decimal('petrol_98_simple', 4, 3);
-            $table->decimal('petrol_98', 4, 3);
-            $table->decimal('diesel_simple', 4, 3);
-            $table->decimal('diesel', 4, 3);
-            $table->decimal('gpl', 4, 3);
+            $table->decimal('petrol_95_simple', 4, 3)->nullable();
+            $table->decimal('petrol_95', 4, 3)->nullable();
+            $table->decimal('petrol_98_simple', 4, 3)->nullable();
+            $table->decimal('petrol_98', 4, 3)->nullable();
+            $table->decimal('diesel_simple', 4, 3)->nullable();
+            $table->decimal('diesel', 4, 3)->nullable();
+            $table->decimal('gpl', 4, 3)->nullable();
         });
     }
 
