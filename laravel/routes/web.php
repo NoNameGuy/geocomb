@@ -65,6 +65,8 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/userpage/info', 'UserPageController@getInfo')->name('manageInfo');
   Route::get('/userpage/vehicles/{id}', 'UserPageController@removeVehicle')->name('removeVehicle');
   Route::post('/userpage', 'UserPageController@index')->name('selectVehicle');
+  Route::get('/sendRouteEmail', 'UserPageController@sendEmailRoute')->name('sendRouteEmail');
+  Route::post('/sendRouteEmail', 'UserPageController@sendEmailRoute')->name('sendRouteEmail');
 });
 
 Route::post('/showGpsCoordinates', 'LandingController@index');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 use App\Vehicle;
 use App\Vehicles;
@@ -21,6 +22,8 @@ class UserPageController extends Controller
 {
 
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
+    private $address;
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -308,5 +311,30 @@ class UserPageController extends Controller
           return view('manageInfo', ['name'=>$user->name, 'vehicles' => $vehicles]);
 
       }
+
+
+      public function sendEmailRoute(Request $request){
+
+/*
+        Mail::raw('Endereço $this->address', function ($message){
+          $message->from('geo.comb.ipl@gmail.com')
+            ->to(Auth::user()->email)
+            ->subject("A minha rota Geocomb");
+        });
+
+        $user = Auth::user();
+        $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
+            ->join('users', 'users.id', 'vehicles.user_id')
+            ->where('users.email', $user->email)
+            ->select('vehicle.id as vehicleId', 'brand', 'model')
+            ->get();
+
+        $vehicleData = null;
+        $vehicleData = Vehicle::where('id', $request->upSelectVehicle)
+          ->first();
+
+        return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData]);*/
+      }
+
 
 }

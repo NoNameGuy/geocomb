@@ -87,6 +87,16 @@
 
       </div>
 
+      <form method="post" action="{{route('sendRouteEmail')}}">
+        {{csrf_field()}}
+        <input type="text" name="routeLink">
+
+      </form>
+
+      <a id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Enviar rota para o meu Email</a>
+      
+
+
     </div>
 
   </div>

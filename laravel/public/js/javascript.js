@@ -3,6 +3,7 @@ var js = $(document).ready(function(){
 
 	var waypts = [];
 	getLocation();
+	var routePoints = [];
 
 	$("#district").val(localStorage.getItem("district"));
 
@@ -13,18 +14,18 @@ var js = $(document).ready(function(){
 				response($.ui.autocomplete.filter(array, request.term));
 			}else{
 			$.ajax({
-	            url: "api/districts",
-	            type: "GET",
-	            dataType: "json",
-	            //delay: 50,
-	            data: request.term,
+				url: "api/districts",
+				type: "GET",
+				dataType: "json",
+				//delay: 50,
+				data: request.term,
 
-	            success: function (data) {
-	                response(array = $.map(data["districts"] , function (key, value) {
-		                return data["districts"][value];
-	            }))}
+				success: function (data) {
+					response(array = $.map(data["districts"] , function (key, value) {
+						return data["districts"][value];
+				}))}
 
-	         });
+			 });
 		}
 	}
 	});
@@ -88,18 +89,18 @@ var array2;
 		$.ajax({
 						async: false,
 						url: link,
-            type: "GET",
-            dataType: "json",
+			type: "GET",
+			dataType: "json",
 						success: function (data) {
 							stationsData = data["stations"];
 							//console.table(stationsData);
 						},
 
-            error: function (textStatus, errorThrown) {
-                console.log("Error getting the station data")
-            }
+			error: function (textStatus, errorThrown) {
+				console.log("Error getting the station data")
+			}
 
-         });
+		 });
 
 			 }
 			 //console.table(stationsData);
@@ -116,7 +117,7 @@ var array2;
 				if($("#latitude").val()!='' && $("#longitude").val()!=''){
 					coordinates = {"latitude": $("#latitude").val(), "longitude": $("#longitude").val()};
 				}else{
-				 	coordinates = {"latitude": 39.676944, "longitude": -8.1425};
+					coordinates = {"latitude": 39.676944, "longitude": -8.1425};
 				}
 			}
 
@@ -158,11 +159,11 @@ var array2;
 
 		}else{
 			if($("#latitude").val()==="" || $("#longitude").val()===""){
-			    if (navigator.geolocation) {
-			        navigator.geolocation.getCurrentPosition(showPosition);
-			    } else {
-			        alert("Geolocation is not supported by this browser.");
-			    }
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(showPosition);
+				} else {
+					alert("Geolocation is not supported by this browser.");
+				}
 			}
 		}
 	}
@@ -179,20 +180,20 @@ var array2;
 			$.ajax({
 							async: false,
 							url: link,
-	            type: "GET",
-	            dataType: "json",
+				type: "GET",
+				dataType: "json",
 							success: function (data) {
 								localStorage.setItem("district", data["results"]["0"]["address_components"]["1"]["long_name"]);
 							},
 
-	            error: function (textStatus, errorThrown) {
-	                console.log("Error getting the station data")
-	            }
+				error: function (textStatus, errorThrown) {
+					console.log("Error getting the station data")
+				}
 
-	         });
+			 });
 
 
-		    submitForm();
+			submitForm();
 
 	}
 	function submitForm(){
@@ -219,42 +220,42 @@ var array2;
 
 	var delay = (function(){
 		var timer = 0;
-	  	return function(callback, ms){
-	    	clearTimeout (timer);
-	    	timer = setTimeout(callback, ms);
-	  	};
+		return function(callback, ms){
+			clearTimeout (timer);
+			timer = setTimeout(callback, ms);
+		};
 	})();
 
 	function geocodeAddress(geocoder, resultsMap) {
-        var address = $('#district').val();
-        var location = { 'latitude':null, 'longitude':null};
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-          	location.latitude = results[0].geometry.location.lat();
-          	location.longitude = results[0].geometry.location.lng();
-            initMap(location);
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
+		var address = $('#district').val();
+		var location = { 'latitude':null, 'longitude':null};
+		geocoder.geocode({'address': address}, function(results, status) {
+		  if (status === 'OK') {
+			location.latitude = results[0].geometry.location.lat();
+			location.longitude = results[0].geometry.location.lng();
+			initMap(location);
+		  } else {
+			alert('Geocode was not successful for the following reason: ' + status);
+		  }
+		});
 	}
 
 	$('#landingSearch').click(function(){
 		/*$.ajax({
-            url: "api/stations",
-            type: "GET",
-            dataType: "json",
-            //delay: 50,
-            //data: request,
+			url: "api/stations",
+			type: "GET",
+			dataType: "json",
+			//delay: 50,
+			//data: request,
 
-            success: function (data) {
-                response($.map(data["districts"] , function (key, value) {
-                	//console.log(data["districts"][value]);
-	                return data["districts"][value];
-            }))}
+			success: function (data) {
+				response($.map(data["districts"] , function (key, value) {
+					//console.log(data["districts"][value]);
+					return data["districts"][value];
+			}))}
 
-         });*/
-         initMap();
+		 });*/
+		 initMap();
 	});
 
 	function updateVehiclePage(brand, model, fuel, consumption, preferred){
@@ -338,7 +339,7 @@ var array2;
 						});
 
 						currentMarker.addListener('dblclick', function() {
-							alert("double click"+ currentMarker.position);
+							//alert("double click"+ currentMarker.position);
 							waypts.push({
 								location:currentMarker.position,
 								stopover: true
@@ -352,24 +353,36 @@ var array2;
 	});
 }
 
+	$('#sendRouteEmail').click(function(){
+		//console.table(routePoints);
+		var start = routePoints["legs"][0]["start_address"];
+		var station = routePoints["legs"][0]["end_address"];
+		var end = routePoints["legs"][1]["end_address"];
+		var link = "https://www.google.com/maps/dir/"+start+"/"+station+"/"+end;
+		$('#routeLink').val("asdf");
+		console.log(link);
+	});
+
+
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
 
-        directionsService.route({
-          origin: $("#upOrigin").val(),
-          destination: $("#upDestination").val(),
-          waypoints: waypts,
-          optimizeWaypoints: true,
-          travelMode: 'DRIVING'
-        }, function(response, status) {
-          if (status === 'OK') {
-            directionsDisplay.setDirections(response);
-            var route = response.routes[0];
+		directionsService.route({
+		  origin: $("#upOrigin").val(),
+		  destination: $("#upDestination").val(),
+		  waypoints: waypts,
+		  optimizeWaypoints: true,
+		  travelMode: 'DRIVING'
+		}, function(response, status) {
+		  if (status === 'OK') {
+			directionsDisplay.setDirections(response);
+			var route = response.routes[0];
+			routePoints = route;
 						//console.table(route);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
-      }
+		  } else {
+			window.alert('Directions request failed due to ' + status);
+		  }
+		});
+	  }
 
 
 	function getCoordinates(){
@@ -397,33 +410,33 @@ var array2;
 		return coordinates;
 	}
 
-function getStationsUP(){
-	var origin = $("#upOrigin").val();
-	var destination = $("#upDestination").val();
-	var autonomy = localStorage.getItem("autonomy");
-	var link= "api/stationsup/"+origin+"/"+destination+"/"+autonomy;
-	var stationsData =null;
-//console.log(link);
-$.ajax({
-				async: false,
-				url: link,
-				type: "GET",
-				dataType: "json",
-				success: function (data) {
-					stationsData = data["stations"];
-					//console.table(stationsData);
-				},
+	function getStationsUP(){
+		var origin = $("#upOrigin").val();
+		var destination = $("#upDestination").val();
+		var autonomy = localStorage.getItem("autonomy");
+		var link= "api/stationsup/"+origin+"/"+destination+"/"+autonomy;
+		var stationsData =null;
+	//console.log(link);
+	$.ajax({
+					async: false,
+					url: link,
+					type: "GET",
+					dataType: "json",
+					success: function (data) {
+						stationsData = data["stations"];
+						//console.table(stationsData);
+					},
 
-				error: function (textStatus, errorThrown) {
-						console.log("Error getting the station data")
-				}
+					error: function (textStatus, errorThrown) {
+							console.log("Error getting the station data")
+					}
 
-		 });
+			 });
 
-	 //console.table(stationsData);
-	 return stationsData;
+		 //console.table(stationsData);
+		 return stationsData;
 
-}
+	}
 
 	window.initMap = initMap;
 	window.initMapUP = initMapUP;

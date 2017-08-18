@@ -97,7 +97,7 @@ class LandingController extends BaseController
           $stations = Station::join('district', 'station.district', 'district.id')
               ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
               ->join('location', 'station.location', 'location.id')
-              ->join('services', 'station.services', 'services.id')
+              //->join('services', 'station.services', 'services.id')
               ->where('district.name','like', "%$district%")
               ->where("fuel_price.$fuelType",'!=', null)
               ->orderBy("fuel_price.$fuelType", "asc")

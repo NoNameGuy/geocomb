@@ -15,7 +15,7 @@ use DateTime;
 
 class UpdateDatabase extends Command
 {
-   private $keys = array("AIzaSyDs4W6IghtD3Wom6EZ_nxM934CR3vLqtTs", "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s", "AIzaSyAHkz73a9x-GmDi6-TrRKdmnrPEHZE2SFs", "AIzaSyAlJB4WvHqzbe2lmydazxqQsho3aqPSVQw");
+   private $keys = array("AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s", "AIzaSyAHkz73a9x-GmDi6-TrRKdmnrPEHZE2SFs", "AIzaSyAlJB4WvHqzbe2lmydazxqQsho3aqPSVQw", "AIzaSyDs4W6IghtD3Wom6EZ_nxM934CR3vLqtTs");
     /**
      * The name and signature of the console command.
      *
