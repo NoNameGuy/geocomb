@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::post('/userpage', 'UserPageController@index')->name('selectVehicle');
   Route::get('/sendRouteEmail', 'UserPageController@sendEmailRoute')->name('sendRouteEmail');
   Route::post('/sendRouteEmail', 'UserPageController@sendEmailRoute')->name('sendRouteEmail');
+  Route::get('/userpage/feelingLucky', 'UserPageController@feelingLucky')->name('feelingLucky');
 });
 
 Route::post('/showGpsCoordinates', 'LandingController@index');

@@ -14,6 +14,7 @@ use App\Station;
 use App\Fuel;
 use App\Fuels;
 
+use Redirect;
 use Validator;
 use Hash;
 use Illuminate\Support\Facades\Response;
@@ -315,8 +316,8 @@ class UserPageController extends Controller
 
       public function sendEmailRoute(Request $request){
 
-/*
-        Mail::raw('Endereço $this->address', function ($message){
+
+        Mail::raw('Endereço: <a href="'.$request->link.'" style="background-color:#428bca;border:1px solid #EB7035;border-radius:5px;color:white;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">Aceder</a> ', function ($message){
           $message->from('geo.comb.ipl@gmail.com')
             ->to(Auth::user()->email)
             ->subject("A minha rota Geocomb");
@@ -332,9 +333,10 @@ class UserPageController extends Controller
         $vehicleData = null;
         $vehicleData = Vehicle::where('id', $request->upSelectVehicle)
           ->first();
-
-        return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData]);*/
+        return Redirect::back()->withSuccess('Message sent!');
       }
 
-
+      public function feelingLucky(Request $request){
+        //echo "$request->upOrigin\n$request->upDestination\n$request->"
+      }
 }

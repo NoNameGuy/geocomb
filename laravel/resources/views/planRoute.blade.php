@@ -84,19 +84,17 @@
 
         <button  id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
         <button  id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button>
-
+        <a id="btnFeelingLucky" type="button" class="btn btn-info btn-lg" <!--href="{{route('feelingLucky')}}"-->>"Estou com sorte"</a>
       </div>
 
-      <form method="post" action="{{route('sendRouteEmail')}}">
+      <form id="formEmailLink" method="post" action="{{route('sendRouteEmail')}}">
         {{csrf_field()}}
-        <input type="text" name="routeLink">
-
+        <input type="hidden" id="routeLink" name="link">
       </form>
 
-      <a id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Enviar rota para o meu Email</a>
+      <button id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Enviar rota para o meu Email</button>
       
-
-
+      
     </div>
 
   </div>

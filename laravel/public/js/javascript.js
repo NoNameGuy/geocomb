@@ -358,9 +358,32 @@ var array2;
 		var start = routePoints["legs"][0]["start_address"];
 		var station = routePoints["legs"][0]["end_address"];
 		var end = routePoints["legs"][1]["end_address"];
-		var link = "https://www.google.com/maps/dir/"+start+"/"+station+"/"+end;
-		$('#routeLink').val("asdf");
-		console.log(link);
+		var link;
+		link = "https://www.google.com/maps/dir/"+start+"/"+station+"/"+end;
+		link = link.replace(/ /g , "+");
+		$('#routeLink').val(link);
+		$('#formEmailLink').submit();
+	});
+
+	$('#btnFeelingLucky').click(function(){
+		var coordinates = {origin: {latitude:null, longitude:null},destination: {latitude:null, longitude:null} };
+		var points = [];
+		var key = "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s";
+		coordinates = getCoordinates();
+		alert("origem: "+$("#upOrigin").val() +" "+coordinates.origin.latitude+" destino: "+$("#upDestination").val()+" "+coordinates.destination.latitude);
+		$.ajax({
+			//async: false,
+			crossDomain: true,
+			dataType: "json",
+			type: "GET",
+			url: "https://maps.googleapis.com/maps/api/elevation/json?path="+coordinates.origin.latitude+","+coordinates.origin.longitude+"|"+coordinates.destination.latitude+","+coordinates.destination.longitude+"&samples=15&key="+key,
+			success: function(data){
+				data.forEach(function(element){
+					console.log(element);
+				});
+				
+			}
+		});
 	});
 
 
@@ -392,6 +415,7 @@ var array2;
 		var coordinates = {origin: {latitude:null, longitude:null},destination: {latitude:null, longitude:null} };
 
 		$.ajax({
+			async: false,
 			dataType: "json",
 			url: "https://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&key="+key,
 			success: function(data){
@@ -400,6 +424,7 @@ var array2;
 			}
 		});
 		$.ajax({
+			async: false,
 			dataType: "json",
 			url: "https://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&key="+key,
 			success: function(data){
