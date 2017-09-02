@@ -1,9 +1,10 @@
 "use strict";
 var js = $(document).ready(function(){
 
-	var waypts = [];
+	var waypts = new Array();
 	getLocation();
 	var routePoints = [];
+	var mapUP;
 
 	$("#district").val(localStorage.getItem("district"));
 
@@ -123,7 +124,7 @@ var array2;
 
 			var pt = {lat: parseFloat(coordinates.latitude), lng:  parseFloat(coordinates.longitude)};
 			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 10,
+				zoom: 7,
 				center: pt
 			});
 
@@ -136,7 +137,7 @@ var array2;
 
 			markers.forEach(function(marker){
 				for (var i = 0; i < marker.length; i++) {
-					//console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
+					console.log(parseFloat(marker[i].latitude)+" lng"+ parseFloat(marker[i].longitude));
 					new google.maps.Marker({
 							position: {"lat": parseFloat(marker[i].latitude), "lng": parseFloat(marker[i].longitude)},
 							label: labels[labelIndex++ % labels.length],
@@ -241,20 +242,7 @@ var array2;
 	}
 
 	$('#landingSearch').click(function(){
-		/*$.ajax({
-			url: "api/stations",
-			type: "GET",
-			dataType: "json",
-			//delay: 50,
-			//data: request,
 
-			success: function (data) {
-				response($.map(data["districts"] , function (key, value) {
-					//console.log(data["districts"][value]);
-					return data["districts"][value];
-			}))}
-
-		 });*/
 		 initMap();
 	});
 
@@ -274,8 +262,8 @@ var array2;
 		var directionsService = new google.maps.DirectionsService;
 		var directionsDisplay = new google.maps.DirectionsRenderer;
 
-		var mapUP = new google.maps.Map(document.getElementById('mapUP'), {
-			zoom: 10,
+		 mapUP = new google.maps.Map(document.getElementById('mapUP'), {
+			zoom: 7,
 			center: pt
 		});
 		directionsDisplay.setMap(mapUP);
@@ -307,7 +295,7 @@ var array2;
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
 				markers.push(getStationsUP());
 				//console.table(markers[0][1]);
-				var myLatLng = {"lat": 39.7495, "lng":-8.8077};
+				//var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 				var labels = '12345';
 				var labelIndex = 0;
 				/*for(var j=0;j<markers[0].length;j++){
@@ -370,21 +358,186 @@ var array2;
 		var points = [];
 		var key = "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s";
 		coordinates = getCoordinates();
-		alert("origem: "+$("#upOrigin").val() +" "+coordinates.origin.latitude+" destino: "+$("#upDestination").val()+" "+coordinates.destination.latitude);
-		$.ajax({
-			//async: false,
-			crossDomain: true,
-			dataType: "json",
+		var link = "https://maps.googleapis.com/maps/api/elevation/json?path="+coordinates.origin.latitude+","+coordinates.origin.longitude+"|"+coordinates.destination.latitude+","+coordinates.destination.longitude+"&samples=15&key="+key;
+		var i, j, k, l;
+		var multiplier=1;
+
+		var autonomyKm = $('#upAutonomyKm').val();
+		var checkForStationPoints = [];
+		var point = {"latitude":null, "longitude":null};
+		var pointsArray = [];
+		var vehicleId = $('select[name=upSelectVehicle]').val();
+		var distance = $('#upAutonomyKm').val();
+		console.log("distance: "+ distance);
+
+		console.log("latitude origin: "+coordinates.origin.latitude);
+
+		var directionsService = new google.maps.DirectionsService();
+	  var directionsDisplay = new google.maps.DirectionsRenderer({
+	    map: mapUP,
+	    preserveViewport: true
+	  });
+	  directionsService.route({
+	    origin: new google.maps.LatLng(coordinates.origin.latitude, coordinates.origin.longitude),
+	    destination: new google.maps.LatLng(coordinates.destination.latitude, coordinates.destination.longitude),
+	    /*waypoints: [{
+	      stopover: true,
+	      //location: new google.maps.LatLng(51.263439, 1.03489)
+	    }],*/
+	    travelMode: google.maps.TravelMode.DRIVING
+	  }, function(response, status) {
+	    if (status === google.maps.DirectionsStatus.OK) {
+		      // directionsDisplay.setDirections(response);
+		      var polyline = new google.maps.Polyline({
+		        path: [],
+		        strokeColor: '#0000FF',
+		        strokeWeight: 3
+		      });
+		      var bounds = new google.maps.LatLngBounds();
+
+
+		      var legs = response.routes[0].legs;
+		      for (i = 0; i < legs.length; i++) {
+		        var steps = legs[i].steps;
+		        for (j = 0; j < steps.length; j++) {
+		          var nextSegment = steps[j].path;
+	            for (k = 0; k < nextSegment.length; k++) {
+		          polyline.getPath().push(nextSegment[k]);
+		          bounds.extend(nextSegment[k]);
+		        }
+		      }
+		    }
+
+
+			var totalPoints = polyline.getPath().getArray().length;
+	    	var previousPoint = {"latitude":null, "longitude": null};
+	    	var previousPointString = polyline.getPath().getArray()[0].toString();
+	    	previousPoint.latitude = previousPointString.substring( 1, previousPointString.indexOf(','));
+	    	previousPoint.longitude = previousPointString.substring( previousPointString.indexOf(',')+1,previousPointString.length-1);
+	    	point.latitude = previousPoint.latitude;
+	    	point.longitude = previousPoint.longitude;
+	    	pointsArray.push(previousPoint);
+
+	    	for (l = 1; l < totalPoints; l++) {
+	    		var currentPointString = polyline.getPath().getArray()[l].toString();
+	    		var currentPoint= {"latitude":null, "longitude":null};
+	    		currentPoint.latitude = currentPointString.substring( 1, currentPointString.indexOf(','));
+	    		currentPoint.longitude = currentPointString.substring( currentPointString.indexOf(',')+1, currentPointString.length-1);
+	    		var currentDistance = calculateDistance(previousPoint.latitude, previousPoint.longitude, currentPoint.latitude, currentPoint.longitude);
+	    		if(currentDistance>4*multiplier && currentDistance<(4*multiplier+1)){
+	    			console.log("GUARDAR ESTE PONTO");
+	    			console.log("lat: "+currentPoint.latitude+" lng: "+currentPoint.longitude);
+	    			pointsArray.push(currentPoint);
+	    			multiplier++;
+	    		}
+
+	    	}
+
+	    	pointsArray.push(currentPoint);
+	    	console.table(pointsArray);
+
+				//console.log("COORDS ORIGIN"+ coordinates.origin.latitude +" "+ coordinates.origin.longitude);
+	    	$.ajax({
+			    url: '/receiveCoords',//'http://geocomb.app/receiveCoords',
+			    type: 'POST',
+			    data: {"points": pointsArray, "vehicleId": vehicleId, "distance": distance, "latitudeOrigin": coordinates.origin.latitude, "longitudeOrigin": coordinates.origin.longitude},//{ "_token" : $('meta[name=_token]').attr('content'), name: "John", location: "Boston" },//JSON.stringify(pointsArray),//{_token: CSRF_TOKEN},
+			    //contentType: "application/json; charset=utf-8",
+
+			    success: function (response) {
+			        console.log("data sent "+ response);
+			        $("body").html(response);
+			    },
+			    error: function(error){
+			    	console.log("could not send data, error: ");
+			    	console.table(error);
+			    }
+			});
+
+
+			var link= "/receivedCoords";
+			var stationData;
+			console.log(link);
+			$.ajax({
+						async: false,
+						url: link,
 			type: "GET",
-			url: "https://maps.googleapis.com/maps/api/elevation/json?path="+coordinates.origin.latitude+","+coordinates.origin.longitude+"|"+coordinates.destination.latitude+","+coordinates.destination.longitude+"&samples=15&key="+key,
-			success: function(data){
-				data.forEach(function(element){
-					console.log(element);
-				});
-				
+			dataType: "json",
+						success: function (data) {
+							stationData = data['station'];
+							console.table(stationData);
+						},
+
+			error: function (error) {
+				console.log("Error getting the station data");
+				console.table(error);
 			}
-		});
+
+			});
+			console.table(stationData);
+
+	      	//polyline.setMap(mapUP);
+
+					//directionsDisplay.setMap(mapUP);
+					waypts.push({
+						location: new google.maps.LatLng(stationData["latitude"], stationData["longitude"]),
+						stopover: true
+					});
+					calculateAndDisplayRoute(directionsService, directionsDisplay);
+					waypts.pop();
+
+
+	    } else {
+	      window.alert('Directions request failed due to ' + status);
+	    }
+	  });
+
+
+
+
+
+
+
+
+		//getCoordinatePoints(route);
+
 	});
+
+
+	function calculateDistance(latitudeOrigin, longitudeOrigin, latitudeDestination, longitudeDestination)
+    {
+        /*var earthRadius = 6371;//km
+
+        var latitudeDifference = latitudeOrigin-latitudeDestination;
+        var longitudeDifference = longitudeOrigin-longitudeDestination;
+
+        var a = Math.pow(Math.sin(latitudeDifference/2),2) + Math.cos(latitudeOrigin) * Math.cos(latitudeDestination) * Math.pow(Math.sin(longitudeDifference/2), 2);
+        var c = 2 * a * Math.pow(Math.tan(Math.sqrt(a)*Math.sqrt(1-a)) ,2);
+        return earthRadius * c;*/
+
+        var lat1 = latitudeOrigin* Math.PI / 180;
+		var lat2 = latitudeDestination* Math.PI / 180;
+		var lon1 = longitudeOrigin* Math.PI / 180;
+		var lon2 = longitudeDestination* Math.PI / 180;
+
+		var dist = (6371 * Math.acos( Math.cos( lat1 ) * Math.cos( lat2 ) * Math.cos( lon2 - lon1 ) + Math.sin( lat1 ) * Math.sin(lat2) ) );
+		//dist = number_format($dist, 2, '.', '');
+		return dist;
+    }
+
+	function getCoordinatePoints(result) {
+            var currentRouteArray = result.routes[0];  //Returns a complex object containing the results of the current route
+            var currentRoute = currentRouteArray.overview_path; //Returns a simplified version of all the coordinates on the path
+
+
+            obj_newPolyline = new google.maps.Polyline({ map: map }); //a polyline just to verify my code is fetching the coordinates
+            var path = obj_newPolyline.getPath();
+            for (var x = 0; x < currentRoute.length; x++) {
+                var pos = new google.maps.LatLng(currentRoute[x].kb, currentRoute[x].lb)
+                latArray[x] = currentRoute[x].kb; //Returns the latitude
+                lngArray[x] = currentRoute[x].lb; //Returns the longitude
+                path.push(pos);
+            }
+      }
 
 
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {

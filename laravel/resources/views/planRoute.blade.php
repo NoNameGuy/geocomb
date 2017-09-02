@@ -1,4 +1,5 @@
 @include('header')
+<meta name="_token" content="{{ csrf_token() }}">
 <div class="col-lg-12 text-center">
   <h1 class="center">Bem-Vindo, {{$name}}</h1>
   <br><br>
@@ -32,7 +33,7 @@
             {{csrf_field()}}
             <div class="col-lg-6">
               <label for="inputdefault">Veiculos:</label>
-              <select name="upSelectVehicle" onchange="this.form.submit()" >
+              <select name="upSelectVehicle" id="upSelectVehicle" onchange="this.form.submit()" >
                 @if(isset($vehicles))
 
                   @foreach($vehicles as $vehicle)
@@ -93,8 +94,8 @@
       </form>
 
       <button id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Enviar rota para o meu Email</button>
-      
-      
+
+
     </div>
 
   </div>
@@ -104,6 +105,6 @@
 
 </div>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMapUP" ></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s&callback=initMapUP&libraries=places" ></script>
 
 @include('footer')

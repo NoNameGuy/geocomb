@@ -77,3 +77,6 @@ Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistric
 Route::get('/api/brands', 'LandingController@apiBrands')->name('apibrands');
 Route::get('/api/stations/{district}/{brand}/{fuelType}', 'LandingController@apiStations')->name('apistations');
 Route::get('/api/stationsup/{origin}/{destination}/{autonomy}', 'UserPageController@apiStations')->name('apistationsup');
+
+Route::post('/receiveCoords','UserPageController@receiveCoordinates');
+Route::get('/receivedCoords','UserPageController@receivedCoordinates');
