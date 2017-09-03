@@ -34,11 +34,7 @@
 
 							<ul class="nav navbar-nav navbar-left">
 								<a class="navbar-brand" href="{{route('home')}}"><img src="../../files/gasico.png" style="heihgt: 35px; width: 35px;"></img></a>
-								<li><a href="{{route('home')}}"><h4>GeoComb</h4></a></li>
-							</ul>
-
-							<ul class="nav navbar-nav navbar-center">
-									<li><h2>Preço dos Combustíveis</h2></li>
+								<li><a href="{{route('home')}}"><h4>GeoComb - O Preço dos Combustíveis</h4></a></li>
 							</ul>
 
 						<ul class="nav navbar-nav navbar-right">

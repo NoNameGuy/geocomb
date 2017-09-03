@@ -33,6 +33,8 @@ Route::get('/', 'LandingController@index')->name('home');
 
 Route::get('/fetchStation', 'LandingController@getJsonOpenMaps');
 
+Route::get('/combDetails', 'LandingController@combDetails')->name('details');
+
 /*
 Route::get('/login', 'Auth\LoginController@index');
 Route::post('/login', 'Auth\LoginController@login')->name('login');

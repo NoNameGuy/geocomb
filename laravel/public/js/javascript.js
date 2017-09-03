@@ -151,6 +151,16 @@ var array2;
 
 		}
 
+
+		function initMapDetails() {
+
+				var map = new google.maps.Map(document.getElementById('mapDetails'), {
+					zoom: 7,
+					center: {lat: 39.7495, lng: -8.8077}
+				});
+
+			}
+
 	function getLocation() {
 
 		if (($('#latitude').val()==='' || $('#longitude').val()==='') && localStorage.getItem("latitude")!==null && localStorage.getItem("longitude")!==null) {
@@ -381,7 +391,7 @@ var array2;
 				data.forEach(function(element){
 					console.log(element);
 				});
-				
+
 			}
 		});
 	});
@@ -465,5 +475,6 @@ var array2;
 
 	window.initMap = initMap;
 	window.initMapUP = initMapUP;
+	window.initMapDetails = initMapDetails;
 	window.updateVehiclePage = updateVehiclePage;
 });

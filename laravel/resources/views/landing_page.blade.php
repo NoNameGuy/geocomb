@@ -8,6 +8,7 @@
 <br><br>
 		<div class="container-fluid"  style="background-color: grey">
 			<h2 class="center">Pesquisar Postos:</h2>
+			<a href="{{route('details')}}">DETALHES</a>
 			<br><br><br>
 
 			<div class="row">
@@ -93,41 +94,44 @@
 
 					@else
 
-					<form method="post" action="{{route('home')}}">
-						{{csrf_field()}}
-						<input type="hidden" name="district" value="">
-						<input type="hidden" name="brand" value="">
-						<button class="btn btn-success" id="landingBack">Back</button>
-					</form>
+					<h3 class="text-center">Posto de Combustieis Mais Baratos</h3>
 
-					<h3 class="text-center">Mais baratas ()</h3>
+					<div class="col-lg-12">
 
-					<div class="form-group">
-						@foreach($stations as $key=>$station)
+						<div class="form-group">
+							@foreach($stations as $key=>$station)
 
-						<div class="well well-lg">
+							<div class="col-lg-6">
 
-							<label for="nome">Nome: </label>
-							{{$station->stationName}}<br>
+								<div class="well well-lg" id="postosMaisBaratos" style="background-color:silver; color:black">
 
-							<label for="nome">Marca: </label>
-							{{$station->stationBrand}}<br>
+										<label for="nome">Nome: </label>
+										{{$station->stationName}}<br>
 
-							<label for="nome">Preço: </label>
-							{{$station->fuelPrice}}
+										<label for="nome">Marca: </label>
+										{{$station->stationBrand}}<br>
 
-							<!--<button type="button" class="btn btn-link" style="float:right">Detalhes</button>-->
-							<img src="../../files/{{$key+1}}.jpg" style="float:right"></img>
-							<br>
+										<label for="nome">Preço: </label>
+										{{$station->fuelPrice}}
 
-							<label for="nome">Serviços: </label>
-							{{$station->services}}<br>
+										<!--<button type="button" class="btn btn-link" style="float:right">Detalhes</button>-->
+										<img src="../../files/{{$key+1}}.jpg"></img>
+										<br>
 
+								</div>
+
+							</div>
+
+							@endforeach
 						</div>
 
-						@endforeach
-					</div>
-
+						<form method="post" action="{{route('home')}}">
+							{{csrf_field()}}
+							<input type="hidden" name="district" value="">
+							<input type="hidden" name="brand" value="">
+							<button class="btn btn-success" id="landingBack">Nova Pesquisa</button>
+						</form>
+				</div>
 					@endif
 				</div>
 				</div>

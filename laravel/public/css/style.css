@@ -41,3 +41,13 @@ footer {
    width: 85%;
    height: 650px;
  }
+
+ #mapDetails{
+   width: 85%;
+   height: 650px;
+ }
+
+ #postosMaisBaratos{
+  background-color:silver;
+  color:black
+ }

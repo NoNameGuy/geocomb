@@ -78,6 +78,12 @@ class LandingController extends BaseController
         return View('landing_page', ['district' => $districts, 'districtsName' => $districtsName, 'brandsName' => $brandsName, 'centerMapCoordinates' => $coordinates, 'stations' => $stations, 'fuels' => $fuels]);
     }
 
+    public function combDetails()
+    {
+      # code...
+      return View('details');
+    }
+
     private function getStations($district, $brand, $fuelType)
     {
         $stations=null;
