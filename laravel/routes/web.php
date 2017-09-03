@@ -73,12 +73,14 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::post('/showGpsCoordinates', 'LandingController@index');
+Route::get('/station/details/{id}', 'DetailsController@index')->name('stationDetails');
 
 //API
 Route::get('/api/districts', 'LandingController@apiDistricts')->name('apidistricts');
 Route::get('/api/brands', 'LandingController@apiBrands')->name('apibrands');
 Route::get('/api/stations/{district}/{brand}/{fuelType}', 'LandingController@apiStations')->name('apistations');
 Route::get('/api/stationsup/{origin}/{destination}/{autonomy}', 'UserPageController@apiStations')->name('apistationsup');
+Route::get('/api/station/{id}', 'DetailsController@apiStation')->name('apiStation');
 
 Route::post('/receiveCoords','UserPageController@receiveCoordinates');
 Route::get('/receivedCoords','UserPageController@receivedCoordinates');

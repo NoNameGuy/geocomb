@@ -95,7 +95,7 @@ class LandingController extends BaseController
               ->where('station.brand','like', "%$brand%")
               ->where("fuel_price.$fuelType",'!=', null)
               ->orderBy("fuel_price.$fuelType", "asc")
-              ->select('station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
+              ->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
               ->take(5)
               ->get();
         }
@@ -107,7 +107,7 @@ class LandingController extends BaseController
               ->where('district.name','like', "%$district%")
               ->where("fuel_price.$fuelType",'!=', null)
               ->orderBy("fuel_price.$fuelType", "asc")
-              ->select('station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
+              ->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
               ->take(5)
               ->get();
         }
