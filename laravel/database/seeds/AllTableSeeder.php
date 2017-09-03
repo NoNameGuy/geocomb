@@ -6,6 +6,7 @@ use App\Location;
 use App\FuelPrice;
 use App\District;
 use App\User;
+use App\Fuel;
 
 class AllTableSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class AllTableSeeder extends Seeder
     public function run()
     {
 
-      $all = array();
+    /*  $all = array();
       array_push($all, file_get_contents('public/files/Postos-Alves-Bandeira.geojson'));
       array_push($all, file_get_contents('public/files/Postos-BP.geojson'));
       array_push($all, file_get_contents('public/files/Postos-Cepsa.geojson'));
@@ -52,22 +53,15 @@ class AllTableSeeder extends Seeder
           $descriptionString = html_entity_decode($description, ENT_QUOTES);
           $descriptionString = preg_replace("/(<div[^>]*>)(.*?)(<\/div>)/i", '$2', $descriptionString);
 
-          // Convert HTML entities to characters
-          // Remove characters other than the specified list.
-          /*FUEL TYPES*/
+
+          //FUEL TYPES
           preg_match_all('/(title=")(.*?)(")/', $descriptionString, $fuel);
           //print_r($fuel[2]);
 
-          /*PRICES*/
+          //PRICES
           $fuelPriceArray = array();//main array
           $fuelKeys = array();//fuel => price array
-          /*foreach($fuel[2] as $key => $value){
 
-            echo $value;
-          }
-          array_push($fuelPriceArray, $fuelKeys);
-
-*/
           preg_match_all('/\d.\d\d\d+/', $descriptionString, $priceMatches);
 
           $fuelPriceArray = $this->array_combine2($fuel[2], $priceMatches[0]);
@@ -94,13 +88,7 @@ class AllTableSeeder extends Seeder
           $priceId = FuelPrice::insertGetId($fuelPrices);
 
 
-/*
-          foreach($priceMatches[0] as $key => $value){
-
-            echo $value;
-          }*/
-
-          /*Coordinates and Insert Coordinates*/
+          //Coordinates and Insert Coordinates
           $latitude = $feature->geometry->coordinates[1];
           $longitude = $feature->geometry->coordinates[0];
           $locationId = Location::insertGetId(['latitude' => $latitude, 'longitude' => $longitude]);
@@ -118,9 +106,11 @@ class AllTableSeeder extends Seeder
 
 
         }
-      }
+      }*/
       $data = array(["id" => 1, "name" => "Gestor", "email" => "gestor@gmail.com", "password" => Hash::make(123123123), "is_activated" => 1]);
       User::insert($data);
+      $fuelsData = array(["id" => 1, "name" => "petrol_95_simple"], ["id" => 2, "name" => "petrol_95"], ["id" => 3, "name" => "petrol_98_simple"], ["id" => 4, "name" => "petrol_98"], ["id" => 5, "name" => "diesel_simple"], ["id" => 6, "name" => "diesel"], ["id" => 7, "name" => "gpl"]);
+      Fuel::insert($fuelsData);
 
     }
 

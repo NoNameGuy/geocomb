@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 
 use App\Vehicle;
 use App\Vehicles;
@@ -14,16 +15,22 @@ use App\Station;
 use App\Fuel;
 use App\Fuels;
 
+use Illuminate\Support\Facades\Input;
 use Redirect;
 use Validator;
 use Hash;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 class UserPageController extends Controller
 {
 
     private $apiKey = 'AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s';
     private $address;
+    private $coordinates;
+    private $distanceY = 5;
+    private $distanceX = 5;
+
 
     public function index(Request $request)
     {
@@ -38,14 +45,15 @@ class UserPageController extends Controller
         $vehicleData = Vehicle::where('id', $request->upSelectVehicle)
           ->first();
 
+        if ($request->points) {
+         var_dump($request->points);
+        }
+
     	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData]);
     }
 
     public function add(Request $request)
     {
-      //$fuels =$request->upFuelType;
-
-
     	$data = ['brand' => $request->brand, 'model' => $request->model, 'consumption' => $request->consumption];
 
         Vehicle::insert($data);
@@ -56,7 +64,7 @@ class UserPageController extends Controller
 
 
       foreach($request->upFuelType as $fuel){
-          $currentFuel = Fuel::where('name', 'like', "%$fuel%")->select('id')->first();
+          $currentFuel = Fuel::where('name', 'like', "$fuel")->select('id')->first();
           Fuels::insert(['vehicle_id'=>$vehicleId, 'fuel_id'=>$currentFuel->id]);
         }
 
@@ -118,7 +126,7 @@ class UserPageController extends Controller
       Vehicle::where('id', $id)->update($data);
       Fuels::where('vehicle_id', $id)->delete();
       foreach($request->upFuelType as $fuel){
-        $currentFuel = Fuel::where('name', 'like', "%$fuel%")->select('id')->first();
+        $currentFuel = Fuel::where('name', 'like', "$fuel")->select('id')->first();
         Fuels::insert(['vehicle_id'=>$id, 'fuel_id'=>$currentFuel->id]);
       }
       return redirect(route('manageVehicles'));
@@ -268,11 +276,7 @@ class UserPageController extends Controller
                   "latitude" => $value->latitude,
                   "longitude" => $value->longitude
                 ];
-                array_push($response["stations"], $array /*[
-                    'id' => $district->id,*/
-                    //'name' =>
-                //]
-                );
+                array_push($response["stations"], $array );
               }
 
 
@@ -336,7 +340,160 @@ class UserPageController extends Controller
         return Redirect::back()->withSuccess('Message sent!');
       }
 
-      public function feelingLucky(Request $request){
-        //echo "$request->upOrigin\n$request->upDestination\n$request->"
+
+      public function receiveCoordinates(Request $request){
+
+        Session::forget('coordinates');
+        Session::forget('vehicleId');
+        Session::forget('autonomyKm');
+      //  Cache::forget('latitudeOrigin');
+      //  Cache::forget('longitudeOrigin');
+
+        Session::put("coordinates", $request->points);
+        Session::put("vehicleId", $request->vehicleId);
+        Session::put("autonomyKm", $request->distance);
+        Session::put("latitudeOrigin",$request->latitudeOrigin);
+        Session::put("longitudeOrigin", $request->longitudeOrigin);
+        Cache::put('latitudeOrigin', $request->latitudeOrigin, 4);//2 minutes
+        Cache::put('longitudeOrigin', $request->longitudeOrigin, 4);
+        /*$request->latitude = null;
+        $request->longitude = null;*/
+
+        return Response::json(["data"=> $data, "vehicleId"=> vehicleId, $request->vehicleId=> distance, "latitudeOrigin"=> $request->latitudeOrigin, "longitudeOrigin"=> $request->longitudeOrigin]);
+      }
+
+      public function receivedCoordinates(Request $request){
+        $data = Session::get("coordinates");
+        $vehicleData = Session::get("vehicleId");
+        $autonomyKmData = Session::get("autonomyKm");
+        $latitudeOrigin = Cache::get('latitudeOrigin');//Session::get("latitudeOrigin");
+        $longitudeOrigin = Cache::get('longitudeOrigin');//Session::get("longitudeOrigin");
+
+        $data = json_encode($data);
+        $data = json_decode($data, true);
+        $stationsArray = array();
+      //  echo "latitude origin $latitudeOrigin";
+      //  echo "longitude origin $longitudeOrigin";
+        $index=0;
+        $station = null;
+        $outOfRange = false;
+        //echo Auth::user()->id;
+
+        //user's vehicle fuel types
+            $vehicleFuels = Vehicles::join('vehicle', 'vehicles.vehicle_id', 'vehicle.id')
+                  ->join('fuels', 'fuels.vehicle_id', 'vehicle.id')
+                  ->join('fuel', 'fuels.fuel_id', 'fuel.id')
+                  ->where('vehicles.user_id', '=', Auth::user()->id)
+                  ->where('vehicle.id', '=', $vehicleData)
+                  ->select('fuel.name as fuelName')
+                  ->get();
+    //echo $vehicleFuels;
+            $stations = null;
+
+            if(empty($stationsArray)){
+            //iterate all stations
+            //var_dump( $data);
+              foreach ($data as $key => $value) {
+                $latitude = $data[$key]["latitude"];
+                $longitude = $data[$key]["longitude"];
+
+                /*echo "latitude: ".$latitude."<br>";
+                echo $longitude."<br><br>";*/
+
+                //formula to calculate near points
+                $newLatitudePlus  = $latitude  + ($this->distanceY / 6371) * (180 / pi());
+                $newLongitudePlus = $longitude + ($this->distanceX / 6371) * (180 / pi()) / cos($latitude * pi()/180);
+                $newLatitudeMinus  = $latitude  + ((-$this->distanceY) / 6371) * (180 / pi());
+                $newLongitudeMinus = $longitude + ((-$this->distanceX) / 6371) * (180 / pi()) / cos($latitude * pi()/180);
+
+
+                //stations near
+                $stations = Station::join('location', 'station.location', 'location.id')
+                            ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
+                            ->join('district', 'station.district', 'district.id')
+                            ->where('location.latitude', '<', $newLatitudePlus)
+                            ->where('location.latitude', '>', $newLatitudeMinus)
+                            ->where('location.longitude', '<', $newLongitudePlus)
+                            ->where('location.longitude', '>', $newLongitudeMinus);
+
+                //filter the stations that have the vehicle's fuel
+                foreach ($vehicleFuels as $key => $value) {
+                    $stations->whereNotNull("fuel_price.$value->fuelName");
+                }
+
+                foreach ($vehicleFuels as $key => $value) {
+                    $stations->orderBy("fuel_price.$value->fuelName");
+                }
+                $stations->select('station.name as stationName', 'station.brand as stationBrand', 'district.name as district', 'latitude', 'longitude', 'petrol_95_simple', 'petrol_95', 'petrol_98_simple', 'petrol_98', 'diesel_simple', 'diesel', 'gpl');
+                $stationsResult = $stations->get();
+
+//echo $stationsResult;
+                //Create a stations array
+                foreach($stationsResult as $stationResult){
+                //  echo $station;
+                  array_push($stationsArray, $stationResult);
+                }
+              }
+            }
+            //order array by price
+            usort($stationsArray, array($this, "sortByPriceLower"));
+
+            do{
+              $station = $stationsArray[$index];
+
+              if ($station!=null) {
+
+                  $latitudeStation = $station->latitude;
+                  $longitudeStation = $station->longitude;
+              /*    echo "latitude destination: ".$latitudeDestination;
+                  echo "longitude destination: ".$longitudeDestination;*/
+                  $distance = $this->checkStationDistance($latitudeOrigin, $longitudeOrigin, $latitudeStation, $longitudeStation);
+              /*    echo "distance: $distance<br>";
+                  echo "autonomy data: $autonomyKmData";*/
+                  if ($distance<$autonomyKmData) {
+
+                    $outOfRange = false;
+
+                    try{
+                        $statusCode = 200;
+                        $response['station'] = $station ;
+
+                    }catch (Exception $e){
+                        $statusCode = 400;
+                    }finally{
+                        return Response::json($response, $statusCode);
+                    }
+
+
+
+                  }else{
+                    $outOfRange = true;
+                    $index++;
+                  }
+            }
+          //  }
+        }while($outOfRange==true && $index<count($stationsArray));
+
+          //}
+      //  }
+      }
+
+      private function checkStationDistance( $latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination){
+        $origin = "$latitudeOrigin,$longitudeOrigin";
+        $destination = "$latitudeDestination,$longitudeDestination";
+        $link = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&key=$this->apiKey";
+        $array = json_decode(file_get_contents($link, true), true);
+        $distance = $array['rows'][0]['elements'][0]['distance']['value'];
+        $distance = $distance/1000;//m to km
+        return $distance;
+      }
+
+      public function sortByPriceLower($station1, $station2){
+        //echo round($station2[0]->petrol_95_simple, 3) - round($station1[0]->petrol_95_simple, 3);
+          //if (round($station2[0]->petrol_95_simple, 3) < round($station1[0]->petrol_95_simple, 3)) {
+          $result = round($station2->petrol_95_simple, 3) - round($station1->petrol_95_simple, 3);
+          $result<0?-1:1;
+
+          return $result;
       }
 }
