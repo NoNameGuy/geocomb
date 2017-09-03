@@ -288,9 +288,7 @@ var array2;
 			var consumption = $("#upConsumption").val();
 			//original logic
 			//(autonomykm==='' && autonomyl==='')||(autonomykm!=='' && autonomyl!=='' || consumption!=='') || (autonomyl!=='' && autonomykm!=='' && consumption==='') || (autonomyl!=='' && autonomyl==='' && consumption!=='')
-			if( (autonomykm==='' && autonomyl==='') || (autonomyl!=='' && consumption==='') || (autonomykm!=='' && autonomyl!=='') ){
-				alert("Preencha apenas a autonomia em km ou a autonomia em litros e o consumo");
-			}else{
+
 				var coordinates = getCoordinates();
 				/*console.table(coordinates.origin);
 				console.table(coordinates.destination);*/
@@ -347,7 +345,7 @@ var array2;
 
 				});
 
-		}
+
 	});
 }
 

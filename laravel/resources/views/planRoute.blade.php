@@ -67,35 +67,41 @@
 
             </div>
 
+            <label>Autonomia (km):<br><input type="number" name="upAutonomyKm" id="upAutonomyKm"></label><br>
+
+            <br>
+
+            <button  id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
+            <button  id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button><br><br>
+            <a id="btnFeelingLucky" type="button" class="btn btn-primary btn-lg" <!--href="{{route('feelingLucky')}}"-->Pesquisa Automática</a>
+
+            <form id="formEmailLink" method="post" action="{{route('sendRouteEmail')}}">
+              {{csrf_field()}}
+              <input type="hidden" id="routeLink" name="link">
+            </form>
+
+            <button id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Envio P/ Email</button>
+
           </div>
 
-          <div class="col-lg-6">
+          <!--<div class="col-lg-6">
 
             <label>Autonomia (km):<input type="number" name="upAutonomyKm" id="upAutonomyKm"></label><br>
             <p>Ou</p>
             <label>Autonomia (l):<input type="number" name="upAutonomyL" id="upAutonomyL"></label>
             <label>Consumo (l/km):<input type="number" name="upConsumption" id="upConsumption" value="@if(isset($vehicleData)){{$vehicleData->consumption}}@endif"></label>
 
-          </div>
+          </div>-->
         </div>
       </div>
 
-      <div class="col-lg-6 center">
+    <!--  <div class="col-lg-6 center">
         <br>
 
         <button  id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
-        <button  id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button>
-        <a id="btnFeelingLucky" type="button" class="btn btn-info btn-lg" <!--href="{{route('feelingLucky')}}"-->>"Estou com sorte"</a>
-      </div>
+        <button  id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button><br><br>
 
-      <form id="formEmailLink" method="post" action="{{route('sendRouteEmail')}}">
-        {{csrf_field()}}
-        <input type="hidden" id="routeLink" name="link">
-      </form>
-
-      <button id="sendRouteEmail" type="button" class="btn btn-info btn-lg" >Enviar rota para o meu Email</button>
-
-
+      </div>-->
     </div>
 
   </div>
