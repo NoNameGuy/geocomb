@@ -114,6 +114,8 @@
 										<label for="nome">Preço: </label>
 										{{$station->fuelPrice}}
 
+										<a href="{{route('stationDetails', $station->stationId)}}">Station Details</a>
+
 										<!--<button type="button" class="btn btn-link" style="float:right">Detalhes</button>-->
 										<img src="../../files/{{$key+1}}.jpg"></img>
 										<br>

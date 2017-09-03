@@ -30,7 +30,9 @@ class UserPageController extends Controller
     private $coordinates;
     private $distanceY = 5;
     private $distanceX = 5;
-
+    private $mainFuel;
+    private $latitudeOrigin;
+    private $longitudeOrigin;
 
     public function index(Request $request)
     {
@@ -346,18 +348,16 @@ class UserPageController extends Controller
         Session::forget('coordinates');
         Session::forget('vehicleId');
         Session::forget('autonomyKm');
-      //  Cache::forget('latitudeOrigin');
-      //  Cache::forget('longitudeOrigin');
+        Session::forget('latitudeOrigin');
+        Session::forget('longitudeOrigin');
 
         Session::put("coordinates", $request->points);
         Session::put("vehicleId", $request->vehicleId);
         Session::put("autonomyKm", $request->distance);
         Session::put("latitudeOrigin",$request->latitudeOrigin);
         Session::put("longitudeOrigin", $request->longitudeOrigin);
-        Cache::put('latitudeOrigin', $request->latitudeOrigin, 4);//2 minutes
-        Cache::put('longitudeOrigin', $request->longitudeOrigin, 4);
-        /*$request->latitude = null;
-        $request->longitude = null;*/
+        Session::put('latitudeOrigin', $request->latitudeOrigin);
+        Session::put('longitudeOrigin', $request->longitudeOrigin);
 
         return Response::json(["data"=> $data, "vehicleId"=> vehicleId, $request->vehicleId=> distance, "latitudeOrigin"=> $request->latitudeOrigin, "longitudeOrigin"=> $request->longitudeOrigin]);
       }
@@ -366,8 +366,10 @@ class UserPageController extends Controller
         $data = Session::get("coordinates");
         $vehicleData = Session::get("vehicleId");
         $autonomyKmData = Session::get("autonomyKm");
-        $latitudeOrigin = Cache::get('latitudeOrigin');//Session::get("latitudeOrigin");
-        $longitudeOrigin = Cache::get('longitudeOrigin');//Session::get("longitudeOrigin");
+        $latitudeOrigin = Session::get('latitudeOrigin');
+        $longitudeOrigin = Session::get('longitudeOrigin');
+        Session::forget('latitudeOrigin');
+        Session::forget('longitudeOrigin');
 
         $data = json_encode($data);
         $data = json_decode($data, true);
@@ -435,6 +437,7 @@ class UserPageController extends Controller
                 }
               }
             }
+            $this->mainFuel = $vehicleFuels[0];
             //order array by price
             usort($stationsArray, array($this, "sortByPriceLower"));
 
@@ -489,9 +492,8 @@ class UserPageController extends Controller
       }
 
       public function sortByPriceLower($station1, $station2){
-        //echo round($station2[0]->petrol_95_simple, 3) - round($station1[0]->petrol_95_simple, 3);
-          //if (round($station2[0]->petrol_95_simple, 3) < round($station1[0]->petrol_95_simple, 3)) {
-          $result = round($station2->petrol_95_simple, 3) - round($station1->petrol_95_simple, 3);
+          $fuel =$this->mainFuel->fuelName;
+          $result = round($station2->$fuel, 3) - round($station1->$fuel, 3);
           $result<0?-1:1;
 
           return $result;

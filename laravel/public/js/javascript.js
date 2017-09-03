@@ -159,7 +159,30 @@ var array2;
 					zoom: 7,
 					center: {lat: 39.7495, lng: -8.8077}
 				});
+				var currentUrl = window.location.href;
+				var id = currentUrl.match(/\d+/g);
+				var coordinates = {lat: null, lng:null};
+				$.ajax({
+					async:false,
+			    url: '/api/station/'+id[0],//'http://geocomb.app/receiveCoords',
+			    type: 'GET',
 
+			    success: function (response) {
+			        //console.log("data sent "+ response["station"].latitude);
+							coordinates.lat = response["station"].latitude;
+			        coordinates.lng = response["station"].longitude;
+
+			    },
+			    error: function(error){
+			    	console.log("could not send data, error: ");
+			    	console.table(error);
+			    }
+			});
+
+				new google.maps.Marker({
+						position: {"lat": parseFloat(coordinates.lat), "lng": parseFloat(coordinates.lng)},
+						map: map,
+					});
 			}
 
 	function getLocation() {
@@ -378,7 +401,7 @@ var array2;
 		var distance = $('#upAutonomyKm').val();
 		console.log("distance: "+ distance);
 
-		console.log("latitude origin: "+coordinates.origin.latitude);
+		console.log("latitude origin: "+coordinates.origin.latitude+" longitude origin: "+coordinates.origin.longitude);
 
 		var directionsService = new google.maps.DirectionsService();
 	  var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -468,8 +491,8 @@ var array2;
 			$.ajax({
 						async: false,
 						url: link,
+						crossDomain: true,
 			type: "GET",
-			url: "https://maps.googleapis.com/maps/api/elevation/json?path="+coordinates.origin.latitude+","+coordinates.origin.longitude+"|"+coordinates.destination.latitude+","+coordinates.destination.longitude+"&samples=15&key="+key,
 			dataType: "json",
 						success: function (data) {
 							stationData = data['station'];
