@@ -393,6 +393,10 @@ var array2;
 		var i, j, k, l;
 		var multiplier=1;
 
+
+		console.log("coordinates");
+		console.table(coordinates);
+
 		var autonomyKm = $('#upAutonomyKm').val();
 		var checkForStationPoints = [];
 		var point = {"latitude":null, "longitude":null};
@@ -469,6 +473,7 @@ var array2;
 
 				//console.log("COORDS ORIGIN"+ coordinates.origin.latitude +" "+ coordinates.origin.longitude);
 	    	$.ajax({
+					async: false,
 			    url: '/receiveCoords',//'http://geocomb.app/receiveCoords',
 			    type: 'POST',
 			    data: {"points": pointsArray, "vehicleId": vehicleId, "distance": distance, "latitudeOrigin": coordinates.origin.latitude, "longitudeOrigin": coordinates.origin.longitude},//{ "_token" : $('meta[name=_token]').attr('content'), name: "John", location: "Boston" },//JSON.stringify(pointsArray),//{_token: CSRF_TOKEN},
@@ -487,23 +492,21 @@ var array2;
 
 			var link= "/receivedCoords";
 			var stationData;
-			console.log(link);
+			//console.log(link);
 			$.ajax({
 						async: false,
 						url: link,
 						crossDomain: true,
-			type: "GET",
-			dataType: "json",
+						type: "GET",
+						dataType: "json",
 						success: function (data) {
 							stationData = data['station'];
 							console.table(stationData);
 						},
-
-			error: function (error) {
-				console.log("Error getting the station data");
-				console.table(error);
-			}
-
+						error: function (error) {
+							console.log("Error getting the station data");
+							console.table(error);
+						}
 			});
 			console.table(stationData);
 
@@ -624,7 +627,6 @@ var array2;
 		var i, j, k, l;
 		var multiplier = 1;
 		var point = {"latitude":null, "longitude":null};
-
 
 
 

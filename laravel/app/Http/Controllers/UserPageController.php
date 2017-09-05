@@ -215,9 +215,9 @@ class UserPageController extends Controller
       }
 
       public function receiveStationCoordinates(Request $request) {
-        Session::forget('autonomyKm');
+        /*Session::forget('autonomyKm');
         Session::forget('latitudeOrigin');
-        Session::forget('longitudeOrigin');
+        Session::forget('longitudeOrigin');*/
 
         Session::put("autonomyKm", $request->distance);
         Session::put("latitudeOrigin",$request->latitudeOrigin);
@@ -244,10 +244,10 @@ class UserPageController extends Controller
         $longitudeDestination = Session::get('longitudeDestination');
         $selectedVehicle = Session::get('selectedVehicle');
 
-        Session::forget('latitudeOrigin');
+      /*  Session::forget('latitudeOrigin');
         Session::forget('longitudeOrigin');
         Session::forget('latitudeDestination');
-        Session::forget('longitudeDestination');
+        Session::forget('longitudeDestination');*/
 
       /*  echo "origin lat $latitudeOrigin<br>";
         echo "origin lng $longitudeOrigin<br>";
@@ -337,46 +337,6 @@ class UserPageController extends Controller
                 return Response::json($response, $statusCode);
             }
 
-//            $this->mainFuel = $vehicleFuels[0];
-            //order array by price
-            //usort($stationsArray, array($this, "sortByPriceLower"));
-
-          /*  do{
-              $station = $stationsArray[$index];
-
-              if ($station!=null) {
-
-                  $latitudeStation = $station->latitude;
-                  $longitudeStation = $station->longitude;
-              //    echo "latitude destination: ".$latitudeDestination;
-              //    echo "longitude destination: ".$longitudeDestination;
-                  $distance = $this->checkStationDistance($latitudeOrigin, $longitudeOrigin, $latitudeStation, $longitudeStation);
-              //    echo "distance: $distance<br>";
-                  echo "autonomy data: $autonomyKmData";//
-                  if ($distance<$autonomyKmData) {
-
-                    $outOfRange = false;
-
-                    try{
-                        $statusCode = 200;
-                        $response['station'] = $station ;
-
-                    }catch (Exception $e){
-                        $statusCode = 400;
-                    }finally{
-                        return Response::json($response, $statusCode);
-                    }
-
-
-
-                }else{
-                    $outOfRange = true;
-                    $index++;
-                  }
-          //  }
-            }
-        }while($outOfRange==true && $index<count($stationsArray));
-*/
 
       }
 
