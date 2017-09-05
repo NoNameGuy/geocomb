@@ -68,13 +68,15 @@
               <div class="form-group">
                 <label for="fuel">Tipo de Combustível: </label>
                 @if(isset($allFuels))
-                @foreach($allFuels as $fuel)
-                <label>{{$fuel->name}}<input type="checkbox" name="upFuelType[]" value="{{$fuel->name}}"
-                  @if(isset($vehicleFuels))
-                  @foreach($vehicleFuels as $vFuel)
-                  @if($fuel->name==$vFuel->name) checked @endif
-                  @endforeach @endif     ></label>
-                  @endforeach
+                  @foreach($allFuels as $fuel)
+                    <label>@if($fuel->name == "petrol_95") Gasolina 95 @elseif($fuel->name == "petrol_95_simple") Gasolina 95 Simples @elseif($fuel->name == "petrol_98") Gasolina 98 @elseif($fuel->name == "petrol_98_simple") Gasolina 98 Simples @elseif($fuel->name == "diesel") Diesel @elseif($fuel->name == "diesel_simple") Diesel Simples @elseif($fuel->name == "gpl") GPL @endif<input type="checkbox" name="upFuelType[]" value="{{$fuel->name}}"
+                      @if(isset($vehicleFuels))
+                        @foreach($vehicleFuels as $vFuel)
+                          @if($fuel->name==$vFuel->name) checked
+                          @endif
+                        @endforeach
+                      @endif     ></label>
+                    @endforeach
                   @endif
                 </div>
 

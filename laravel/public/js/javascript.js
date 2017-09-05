@@ -523,15 +523,6 @@ var array2;
 	    }
 	  });
 
-
-
-
-
-
-
-
-		//getCoordinatePoints(route);
-
 	});
 
 
@@ -624,17 +615,119 @@ var array2;
 		var origin = $("#upOrigin").val();
 		var destination = $("#upDestination").val();
 		var autonomy = localStorage.getItem("autonomy");
-		var link= "api/stationsup/"+origin+"/"+destination+"/"+autonomy;
+		var coordinates = {latitude:null, longitude:null};
+		coordinates = getCoordinates();
 		var stationsData =null;
-	//console.log(link);
+
+
+		var pointsArray = [];
+		var i, j, k, l;
+		var multiplier = 1;
+		var point = {"latitude":null, "longitude":null};
+
+
+
+
+		var directionsService = new google.maps.DirectionsService();
+		var directionsDisplay = new google.maps.DirectionsRenderer({
+			map: mapUP,
+			preserveViewport: true
+		});
+		directionsService.route({
+			origin: new google.maps.LatLng(coordinates.origin.latitude, coordinates.origin.longitude),
+			destination: new google.maps.LatLng(coordinates.destination.latitude, coordinates.destination.longitude),
+			/*waypoints: [{
+				stopover: true,
+				//location: new google.maps.LatLng(51.263439, 1.03489)
+			}],*/
+			travelMode: google.maps.TravelMode.DRIVING
+		}, function(response, status) {
+			if (status === google.maps.DirectionsStatus.OK) {
+					// directionsDisplay.setDirections(response);
+					var polyline = new google.maps.Polyline({
+						path: [],
+						strokeColor: '#0000FF',
+						strokeWeight: 3
+					});
+					var bounds = new google.maps.LatLngBounds();
+
+
+					var legs = response.routes[0].legs;
+					for (i = 0; i < legs.length; i++) {
+						var steps = legs[i].steps;
+						for (j = 0; j < steps.length; j++) {
+							var nextSegment = steps[j].path;
+							for (k = 0; k < nextSegment.length; k++) {
+							polyline.getPath().push(nextSegment[k]);
+							bounds.extend(nextSegment[k]);
+						}
+					}
+				}
+
+
+			var totalPoints = polyline.getPath().getArray().length;
+				var previousPoint = {"latitude":null, "longitude": null};
+				var previousPointString = polyline.getPath().getArray()[0].toString();
+				previousPoint.latitude = previousPointString.substring( 1, previousPointString.indexOf(','));
+				previousPoint.longitude = previousPointString.substring( previousPointString.indexOf(',')+1,previousPointString.length-1);
+				point.latitude = previousPoint.latitude;
+				point.longitude = previousPoint.longitude;
+				pointsArray.push(previousPoint);
+
+				for (l = 1; l < totalPoints; l++) {
+					var currentPointString = polyline.getPath().getArray()[l].toString();
+					var currentPoint= {"latitude":null, "longitude":null};
+					currentPoint.latitude = currentPointString.substring( 1, currentPointString.indexOf(','));
+					currentPoint.longitude = currentPointString.substring( currentPointString.indexOf(',')+1, currentPointString.length-1);
+					var currentDistance = calculateDistance(previousPoint.latitude, previousPoint.longitude, currentPoint.latitude, currentPoint.longitude);
+					if(currentDistance>4*multiplier && currentDistance<(4*multiplier+1)){
+						console.log("GUARDAR ESTE PONTO");
+						console.log("lat: "+currentPoint.latitude+" lng: "+currentPoint.longitude);
+						pointsArray.push(currentPoint);
+						multiplier++;
+					}
+
+				}
+
+				pointsArray.push(currentPoint);
+
+
+
+
+
+
+console.table(pointsArray);
+		$.ajax({
+				async: false,
+				url: "/api/receiveCoordinates",
+				type: 'POST',
+				dataType: "json",
+				data: {"pathPoints": pointsArray,
+					"latitudeOrigin": coordinates.origin.latitude,
+					"longitudeOrigin": coordinates.origin.longitude,
+					"latitudeDestination": coordinates.destination.latitude,
+					"longitudeDestination": coordinates.destination.longitude
+					},//{ "_token" : $('meta[name=_token]').attr('content'), name: "John", location: "Boston" },//JSON.stringify(pointsArray),//{_token: CSRF_TOKEN},
+
+				success: function (response) {
+						console.table("data sent "+ response["stations"]);
+				},
+				error: function(error){
+					console.log("could not send data, error: ");
+					console.table(error);
+				}
+		});
+}});
+
+
 	$.ajax({
 					async: false,
-					url: link,
+					url: 'api/stationsup',
 					type: "GET",
 					dataType: "json",
 					success: function (data) {
 						stationsData = data["stations"];
-						//console.table(stationsData);
+						console.table(stationsData);
 					},
 
 					error: function (textStatus, errorThrown) {
