@@ -69,6 +69,7 @@ class LandingController extends BaseController
           array_push($brandsName, $brands[$i]->brand);
         }
 
+
         $stations = array();
         $stations = $this->getStations($request->district, $request->brand, $request->fuelType);
 
@@ -86,30 +87,35 @@ class LandingController extends BaseController
 
     private function getStations($district, $brand, $fuelType)
     {
+    //  echo $fuelType[0];
+
         $stations=null;
         if($district!=null && $brand!='all' && $fuelType!=null){
-          $stations = Station::join('district', 'station.district', 'district.id')
+           $query= Station::join('district', 'station.district', 'district.id')
               ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
               ->join('location', 'station.location', 'location.id')
               ->where('district.name','like', "%$district%")
-              ->where('station.brand','like', "%$brand%")
-              ->where("fuel_price.$fuelType",'!=', null)
-              ->orderBy("fuel_price.$fuelType", "asc")
-              ->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
-              ->take(5)
-              ->get();
+              ->where('station.brand','like', "%$brand%");
+              foreach($fuelType as $key=>$val)
+                $query->where("fuel_price.$fuelType[$key]",'!=', null);
+              foreach($fuelType as $key=>$val)
+                $query->orderBy("fuel_price.$fuelType[$key]", "asc");
+              $query->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType[0] as fuelPrice", "latitude", "longitude", "$fuelType[0] as fuelType")
+              ->take(5);
+              $stations = $query->get();
         }
         if($district!=null && $brand=='all' && $fuelType!=null){
-          $stations = Station::join('district', 'station.district', 'district.id')
+          $query = Station::join('district', 'station.district', 'district.id')
               ->join('fuel_price', 'station.fuel_price', 'fuel_price.id')
               ->join('location', 'station.location', 'location.id')
-              //->join('services', 'station.services', 'services.id')
-              ->where('district.name','like', "%$district%")
-              ->where("fuel_price.$fuelType",'!=', null)
-              ->orderBy("fuel_price.$fuelType", "asc")
-              ->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType as fuelPrice", "latitude", "longitude", "$fuelType as fuelType")
-              ->take(5)
-              ->get();
+              ->where('district.name','like', "%$district%");
+              foreach($fuelType as $key=>$val)
+                $query->where("fuel_price.$fuelType[$key]",'!=', null);
+              foreach($fuelType as $key=>$val)
+                $query->orderBy("fuel_price.$fuelType[$key]", "asc");
+              $query->select('station.id as stationId', 'station.name as stationName', "station.brand as stationBrand", "district.name as districtName", "fuel_price.$fuelType[0] as fuelPrice", "latitude", "longitude", "$fuelType[0] as fuelType")
+              ->take(5);
+              $stations = $query->get();
         }
         return $stations;
 
@@ -439,9 +445,10 @@ $uniqueMatch1 = array();
 
     public function apiStations($district, $brand, $fuelType) {
         try{
+            $array = explode(',', $fuelType);
             $statusCode = 200;
             $response['stations'] = array();
-            $stations = $this->getStations($district, $brand, $fuelType);
+            $stations = $this->getStations($district, $brand, $array);
 
             foreach($stations as $station){
               //echo "$station";
@@ -451,13 +458,8 @@ $uniqueMatch1 = array();
                 "latitude" => $station->latitude,
                 "longitude" => $station->longitude
               ];
-                array_push($response["stations"], $data /*[
-                    'id' => $district->id,*/
-                    //'name' =>
-                //]
-                );
+                array_push($response["stations"], $data);
             }
-            //dd($response);
 
         }catch (Exception $e){
             $statusCode = 400;

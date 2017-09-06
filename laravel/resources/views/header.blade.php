@@ -43,7 +43,7 @@
 
 						<ul class="nav navbar-nav navbar-right">
 							@if (Auth::user())
-	          		<li><a href="{{route('planRoute')}}"><h4>My Area</h4></a></li>
+	          		<li><a href="{{route('planRoute')}}"><h4>Área Pessoal</h4></a></li>
 	        		@endif
 
 							@if (Auth::guest())

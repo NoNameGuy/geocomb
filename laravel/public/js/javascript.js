@@ -128,8 +128,10 @@ var array2;
 				center: pt
 			});
 
-			var markers=new Array();
-			markers.push(getStations());
+			var markers=new Array(getStations());
+			console.log("markers");
+			console.table(markers);
+			markers.push(markers);
 
 			var myLatLng = {"lat": 39.7495, "lng":-8.8077};
 			var labels = '12345';

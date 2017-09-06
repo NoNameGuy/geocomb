@@ -8,7 +8,6 @@
 <br><br>
 		<div class="container-fluid"  style="background-color: grey">
 			<h2 class="center">Pesquisar Postos:</h2>
-			<a href="{{route('details')}}">DETALHES</a>
 			<br><br><br>
 
 			<div class="row">
@@ -37,15 +36,16 @@
 						<div class="row">
 							<div class="checkbox-inline" id="landingFuelType">
 								<div class="form-group"  style="text-align:center">
-									<label style="font-weight:bold">Tipo de Combustível (Escolha 1): </label>
+									<label style="font-weight:bold">Tipo de Combustível: </label>
 								</div>
-
+							<div class="col-lg-12">
 								@if($fuels)
 									@foreach($fuels as $fuel)
-										<label><input type="checkbox" name="fuelType" value="{{$fuel->name}}">@if($fuel->name == "petrol_95") Gasolina 95 @elseif($fuel->name == "petrol_95_simple") Gasolina 95 Simples @elseif($fuel->name == "petrol_98") Gasolina 98 @elseif($fuel->name == "petrol_98_simple") Gasolina 98 Simples @elseif($fuel->name == "diesel") Diesel @elseif($fuel->name == "diesel_simple") Diesel Simples @elseif($fuel->name == "gpl") GPL @endif</label><br>
+										<label><input type="checkbox" name="fuelType[]" value="{{$fuel->name}}">@if($fuel->name == "petrol_95") Gasolina 95 @elseif($fuel->name == "petrol_95_simple") Gasolina 95 Simples @elseif($fuel->name == "petrol_98") Gasolina 98 @elseif($fuel->name == "petrol_98_simple") Gasolina 98 Simples @elseif($fuel->name == "diesel") Diesel @elseif($fuel->name == "diesel_simple") Diesel Simples @elseif($fuel->name == "gpl") GPL @endif</label><br>
 									@endforeach
 								@endif
-
+							</div>
+<!--
 								<div class="col-lg-6">
 									<label class="checkbox-inline"><input type="checkbox" name="fuelType" value="diesel">Gasóleo</label><br>
 									<label class="checkbox-inline"><input type="checkbox" name="fuelType" value="diesel_simple">Gasóleo Simples</label><br>
@@ -68,7 +68,7 @@
 									<label class="checkbox-inline"><input type="checkbox" name="fuelType" value="petrol_simple_98">Gasolina Simples 98</label><br>
 									<label class="checkbox-inline"><input type="checkbox" name="fuelType" value="petrol_special_98">Gasolina Especial 98</label><br>
 										<br><br>
-								</div>
+								</div>-->
 							</div>
 						</div>
 
