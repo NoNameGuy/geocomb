@@ -368,9 +368,43 @@ var array2;
 
 				});
 
+				$.ajax({
+					async: false,
+			    url: '/userpage',//'http://geocomb.app/receiveCoords',
+			    type: 'POST',
+			    data: {"searching": true},
+			    //contentType: "application/json; charset=utf-8",
+
+			    success: function (response) {
+			        console.log("data sent "+ response);
+			    },
+			    error: function(error){
+			    	console.log("could not send data, error: ");
+			    	console.table(error);
+			    }
+			});
+
 
 	});
 }
+
+	$('#upNewSearch').click(function(){
+		$.ajax({
+			async: false,
+			url: '/userpage',
+			type: 'POST',
+			data: {"searching": false},
+			//contentType: "application/json; charset=utf-8",
+
+			success: function (response) {
+					console.log("data sent "+ response);
+			},
+			error: function(error){
+				console.log("could not send data, error: ");
+				console.table(error);
+			}
+		});
+	});
 
 	$('#sendRouteEmail').click(function(){
 		//console.table(routePoints);
@@ -389,7 +423,6 @@ var array2;
 		var points = [];
 		var key = "AIzaSyDsZDCiU1k6mSuywRRL88xxXY-81RMEU7s";
 		coordinates = getCoordinates();
-		var link = "https://maps.googleapis.com/maps/api/elevation/json?path="+coordinates.origin.latitude+","+coordinates.origin.longitude+"|"+coordinates.destination.latitude+","+coordinates.destination.longitude+"&samples=15&key="+key;
 		var i, j, k, l;
 		var multiplier=1;
 
@@ -572,6 +605,7 @@ var array2;
 		  origin: $("#upOrigin").val(),
 		  destination: $("#upDestination").val(),
 		  waypoints: waypts,
+			avoidTolls: $('#upPaidRoads').is(':checked'),
 		  optimizeWaypoints: true,
 		  travelMode: 'DRIVING'
 		}, function(response, status) {
@@ -642,6 +676,7 @@ var array2;
 				stopover: true,
 				//location: new google.maps.LatLng(51.263439, 1.03489)
 			}],*/
+			avoidTolls: !$('#upPaidRoads').is(':checked'),
 			travelMode: google.maps.TravelMode.DRIVING
 		}, function(response, status) {
 			if (status === google.maps.DirectionsStatus.OK) {
@@ -649,7 +684,7 @@ var array2;
 					var polyline = new google.maps.Polyline({
 						path: [],
 						strokeColor: '#0000FF',
-						strokeWeight: 3
+						strokeWeight: 3,
 					});
 					var bounds = new google.maps.LatLngBounds();
 
@@ -695,10 +730,7 @@ var array2;
 
 
 
-
-
-
-console.table(pointsArray);
+//console.table(pointsArray);
 		$.ajax({
 				async: false,
 				url: "/api/receiveCoordinates",
@@ -729,6 +761,7 @@ console.table(pointsArray);
 					dataType: "json",
 					success: function (data) {
 						stationsData = data["stations"];
+						console.log("stationsData");
 						console.table(stationsData);
 					},
 

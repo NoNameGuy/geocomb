@@ -11,7 +11,7 @@
   </div>
 
   <br><br>
-
+@if($searchingFlag == true)
   <div class="row">
 
     <div class="col-lg-12" id="divPercurso" style="background-color: grey">
@@ -66,14 +66,20 @@
               <input class="form-control" id="upDestination" name="upDestination" type="text">
 
             </div>
+            <div class="form-group">
+
+              <label for="inputdefault">Evitar Estradas Pagas: </label>
+              <input class="form-control" id="upPaidRoads" name="upPaidRoads" type="checkbox">
+
+            </div>
 
             <label>Autonomia (km):<br><input type="number" name="upAutonomyKm" id="upAutonomyKm"></label><br>
 
             <br>
 
-            <button  id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
-            <button  id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button><br><br>
-            <a id="btnFeelingLucky" type="button" class="btn btn-primary btn-lg" <!--href="{{route('feelingLucky')}}"-->Pesquisa Automática</a>
+            <button id="upSearch" class="btn btn-primary btn-lg">Pesquisar</button>
+            <button id="cleanSearch" class="btn btn-danger btn-lg">Limpar Pesquisa</button><br><br>
+            <button id="btnFeelingLucky" type="button" class="btn btn-primary btn-lg" >Pesquisa Automática</button>
 
             <form id="formEmailLink" method="post" action="{{route('sendRouteEmail')}}">
               {{csrf_field()}}
@@ -107,7 +113,15 @@
   </div>
 
 </div>
+@elseif($searchingFlag == false)
+  <p>Searching</p>
+  <div class="col-lg-6">
+    <div class="center-block" id="mapUP"></div>
+    <br><br>
+  </div>
+  <a id="upNewSearch" class="btn btn-primary btn-lg" href="{{ route('planRoute') }}">Nova Pesquisa</a>
 
+@endif
 
 </div>
 

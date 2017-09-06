@@ -49,7 +49,7 @@ Route::post('/register', 'Auth\RegisterController@register');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/userpage', 'UserPageController@index')->name('userpage');
-	Route::post('/userpage', 'UserPageController@index');
+	Route::post('/userpagerefresh', 'UserPageController@postUserPage');
 	Route::post('/addvehicle', 'UserPageController@add')->name('addvehicle');
 
   Route::get('/userpage/vehicles/edit/{id}', 'UserPageController@editVehicle')->name('editVehicle');
@@ -58,7 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/userpage/info/edit/{id}', 'UserPageController@editInfo')->name('editInfo');
   Route::post('/userpage/info/edit/{id}', 'UserPageController@saveInfo')->name('postInfo');
 
-  Route::post('/userpage', 'UserPageController@postTripData')->name('sendTripData');
+  Route::post('/userpage', 'UserPageController@postTripData')->name('postUserPAge');
 
   Route::post('/userpage/editPass', 'UserPageController@postCredentials')->name('editPass');
 

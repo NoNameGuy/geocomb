@@ -12,6 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'login', 'receiveCoords', '/api/receiveCoordinates'
+        'login', 'receiveCoords', '/api/receiveCoordinates', '/userpage'
     ];
 }

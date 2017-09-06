@@ -33,9 +33,11 @@ class UserPageController extends Controller
     private $mainFuel;
     private $latitudeOrigin;
     private $longitudeOrigin;
+    private $searchingFlag= true;
 
     public function index(Request $request)
     {
+
         $user = Auth::user();
         $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')
             ->join('users', 'users.id', 'vehicles.user_id')
@@ -47,12 +49,14 @@ class UserPageController extends Controller
         $vehicleData = Vehicle::where('id', $request->upSelectVehicle)
           ->first();
         Session::put('selectedVehicle', $request->upSelectVehicle);
-        if ($request->points) {
-         //var_dump($request->points);
-        }
 
-    	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData]);
+
+
+      //$this->searchingFlag==true?$this->searchingFlag=false:$this->searchingFlag=true;
+    	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData, 'searchingFlag'=>$this->searchingFlag]);
     }
+
+    
 
     public function add(Request $request)
     {
@@ -210,8 +214,8 @@ class UserPageController extends Controller
         $user = Auth::user();
         $vehicles = Vehicle::join('vehicles', 'vehicle.id', 'vehicles.vehicle_id')->join('users', 'users.id', 'vehicles.user_id')->where('users.email', $user->email)->get();
 
-
-        return view('user_page', ['name'=>$user->name, 'stations' => $data, 'vehicles' => $vehicles]);
+        $this->searchingFlag = $request->searching;
+        return view('user_page', ['name'=>$user->name, 'stations' => $data, 'vehicles' => $vehicles, 'searchingFlag'=>$this->searchingFlag]);
       }
 
       public function receiveStationCoordinates(Request $request) {
@@ -244,15 +248,6 @@ class UserPageController extends Controller
         $longitudeDestination = Session::get('longitudeDestination');
         $selectedVehicle = Session::get('selectedVehicle');
 
-      /*  Session::forget('latitudeOrigin');
-        Session::forget('longitudeOrigin');
-        Session::forget('latitudeDestination');
-        Session::forget('longitudeDestination');*/
-
-      /*  echo "origin lat $latitudeOrigin<br>";
-        echo "origin lng $longitudeOrigin<br>";
-        echo "destination lat $latitudeDestination<br>";
-        echo "destination lng $longitudeDestination<br>";*/
         $data = json_encode($data);
         $data = json_decode($data, true);
 
@@ -265,13 +260,6 @@ class UserPageController extends Controller
           $latitude = $data[$key]["latitude"];
           $longitude = $data[$key]["longitude"];
 
-        /*  echo "latitude: ".$latitude."<br>";
-          echo $longitude."<br><br>";*/
-
-
-
-        //echo Auth::user()->id;
-
         //user's vehicle fuel types
             $vehicleFuels = Vehicles::join('vehicle', 'vehicles.vehicle_id', 'vehicle.id')
                   ->join('fuels', 'fuels.vehicle_id', 'vehicle.id')
@@ -280,7 +268,6 @@ class UserPageController extends Controller
                   ->where('vehicle.id', '=', $selectedVehicle)
                   ->select('fuel.name as fuelName')
                   ->get();
-  //  echo $vehicleFuels;
             $stations = null;
 
             if(empty($stationsArray)){
@@ -318,7 +305,6 @@ class UserPageController extends Controller
                 $stations->select('station.name as stationName', 'station.brand as stationBrand', 'district.name as district', 'latitude', 'longitude', 'petrol_95_simple', 'petrol_95', 'petrol_98_simple', 'petrol_98', 'diesel_simple', 'diesel', 'gpl');
                 $stationsResult = $stations->get();
 
-//echo $stationsResult;
                 //Create a stations array
                 foreach($stationsResult as $stationResult){
                   //echo $stationResult;
@@ -502,8 +488,7 @@ class UserPageController extends Controller
               /*    echo "latitude destination: ".$latitudeDestination;
                   echo "longitude destination: ".$longitudeDestination;*/
                   $distance = $this->checkStationDistance($latitudeOrigin, $longitudeOrigin, $latitudeStation, $longitudeStation);
-              /*    echo "distance: $distance<br>";
-                  echo "autonomy data: $autonomyKmData";*/
+
                   if ($distance<$autonomyKmData) {
 
                     $outOfRange = false;
@@ -525,11 +510,8 @@ class UserPageController extends Controller
                     $index++;
                   }
             }
-          //  }
         }while($outOfRange==true && $index<count($stationsArray));
 
-          //}
-      //  }
       }
 
       private function checkStationDistance( $latitudeOrigin, $longitudeOrigin, $latitudeDestination, $longitudeDestination){

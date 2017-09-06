@@ -42,7 +42,7 @@
 
 								@if($fuels)
 									@foreach($fuels as $fuel)
-										<label><input type="checkbox" name="fuelType" value="{{$fuel->name}}">{{$fuel->name}}</label><br>
+										<label><input type="checkbox" name="fuelType" value="{{$fuel->name}}">@if($fuel->name == "petrol_95") Gasolina 95 @elseif($fuel->name == "petrol_95_simple") Gasolina 95 Simples @elseif($fuel->name == "petrol_98") Gasolina 98 @elseif($fuel->name == "petrol_98_simple") Gasolina 98 Simples @elseif($fuel->name == "diesel") Diesel @elseif($fuel->name == "diesel_simple") Diesel Simples @elseif($fuel->name == "gpl") GPL @endif</label><br>
 									@endforeach
 								@endif
 
