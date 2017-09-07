@@ -56,7 +56,7 @@ class UserPageController extends Controller
     	return view('planRoute', ['name'=>$user->name, 'vehicles' => $vehicles, 'vehicleData' => $vehicleData, 'searchingFlag'=>$this->searchingFlag]);
     }
 
-    
+
 
     public function add(Request $request)
     {
@@ -71,7 +71,7 @@ class UserPageController extends Controller
 
       foreach($request->upFuelType as $fuel){
           $currentFuel = Fuel::where('name', 'like', "$fuel")->select('id')->first();
-          Fuels::insert(['vehicle_id'=>$vehicleId, 'fuel_id'=>$currentFuel->id]);
+          Fuels::insert(['vehicle_id'=>$vehicleId, 'fuels_id'=>$currentFuel->id]);
         }
 
 
@@ -95,7 +95,7 @@ class UserPageController extends Controller
 
       $selectedVehicle=Vehicle::where('vehicle.id', $id)
           ->first();
-      $vehicleFuels = Fuel::join('fuels', 'fuels.fuel_id', 'fuel.id')
+      $vehicleFuels = Fuel::join('fuels', 'fuels.fuels_id', 'fuel.id')
           ->where('fuels.vehicle_id', $id)
           ->select('fuel.name as name')
           ->get();
@@ -133,7 +133,7 @@ class UserPageController extends Controller
       Fuels::where('vehicle_id', $id)->delete();
       foreach($request->upFuelType as $fuel){
         $currentFuel = Fuel::where('name', 'like', "$fuel")->select('id')->first();
-        Fuels::insert(['vehicle_id'=>$id, 'fuel_id'=>$currentFuel->id]);
+        Fuels::insert(['vehicle_id'=>$id, 'fuels_id'=>$currentFuel->id]);
       }
       return redirect(route('manageVehicles'));
     }
@@ -263,7 +263,7 @@ class UserPageController extends Controller
         //user's vehicle fuel types
             $vehicleFuels = Vehicles::join('vehicle', 'vehicles.vehicle_id', 'vehicle.id')
                   ->join('fuels', 'fuels.vehicle_id', 'vehicle.id')
-                  ->join('fuel', 'fuels.fuel_id', 'fuel.id')
+                  ->join('fuel', 'fuels.fuels_id', 'fuel.id')
                   ->where('vehicles.user_id', '=', Auth::user()->id)
                   ->where('vehicle.id', '=', $selectedVehicle)
                   ->select('fuel.name as fuelName')
@@ -421,7 +421,7 @@ class UserPageController extends Controller
         //user's vehicle fuel types
             $vehicleFuels = Vehicles::join('vehicle', 'vehicles.vehicle_id', 'vehicle.id')
                   ->join('fuels', 'fuels.vehicle_id', 'vehicle.id')
-                  ->join('fuel', 'fuels.fuel_id', 'fuel.id')
+                  ->join('fuel', 'fuels.fuels_id', 'fuel.id')
                   ->where('vehicles.user_id', '=', Auth::user()->id)
                   ->where('vehicle.id', '=', $vehicleData)
                   ->select('fuel.name as fuelName')
