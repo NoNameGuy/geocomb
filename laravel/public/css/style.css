@@ -32,6 +32,8 @@ footer {
   }
 }
 
+.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus { background-color: rgba(0,0,0,0.4); }
+
 #map{
   width: 85%;
   height: 650px;

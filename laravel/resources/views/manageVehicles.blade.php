@@ -19,7 +19,7 @@
 
       <div class="col-lg-6">
 
-        <div class="list-group" id="vehicleList">
+        <div class="list-group" id="vehicleList" style="color:black">
 
           @if($vehicles)
 

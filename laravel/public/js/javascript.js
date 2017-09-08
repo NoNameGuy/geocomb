@@ -603,9 +603,10 @@ var array2;
 		  travelMode: 'DRIVING'
 		}, function(response, status) {
 		  if (status === 'OK') {
-			directionsDisplay.setDirections(response);
-			var route = response.routes[0];
-			routePoints = route;
+				directionsDisplay.setDirections(response);
+				var route = response.routes[0];
+				routePoints = route;
+				//console.table(routePoints);
 						//console.table(route);
 						//console.log(tempOrigin);
 						//console.log(tempDestination);
@@ -678,7 +679,7 @@ var array2;
 				stopover: true,
 				//location: new google.maps.LatLng(51.263439, 1.03489)
 			}],*/
-			avoidTolls: !$('#upPaidRoads').is(':checked'),
+			avoidTolls: $('#upPaidRoads').is(':checked'),
 			travelMode: google.maps.TravelMode.DRIVING
 		}, function(response, status) {
 			if (status === google.maps.DirectionsStatus.OK) {
@@ -794,6 +795,7 @@ markers[0].forEach(function(marker){
 				location:currentMarker.position,
 				stopover: true
 			});
+
 			calculateAndDisplayRoute(directionsService, directionsDisplay);
 		});
 

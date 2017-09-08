@@ -26,7 +26,7 @@
 						{{csrf_field()}}
 						<div class="col-lg-6">
 							<div class="form-group">
-								<label for="district">Distrito(s): </label>
+								<label for="district">Distrito: </label>
 								<input class="form-control" id="district" name="district" type="text" @if(Auth::user() && isset($location)) value="$location" @endif>
 							</div>
 						</div>
@@ -114,7 +114,7 @@
 										<label for="nome">Preço: </label>
 										{{$station->fuelPrice}}
 
-										<a href="{{route('stationDetails', $station->stationId)}}">Station Details</a>
+										<a href="{{route('stationDetails', $station->stationId)}}">Detalhes</a>
 
 										<!--<button type="button" class="btn btn-link" style="float:right">Detalhes</button>-->
 										<img src="../../files/{{$key+1}}.jpg"></img>

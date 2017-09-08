@@ -26,7 +26,7 @@
 
       </div>
 
-      <div class="col-lg-6">
+      <div class="col-lg-6" style="color:black">
         <div class="container-fluid">
 
           <form method="post" action="{{route('selectVehicle')}}">
