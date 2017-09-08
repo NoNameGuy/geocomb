@@ -305,9 +305,12 @@ var array2;
 
 
 
-		var markers=new Array();
 
 		$("#upSearch").click(function(){
+
+			var markers=new Array();
+			//var stationsData = null;
+
 			var autonomykm = $("#upAutonomyKm").val();
 			var autonomyl = $("#upAutonomyL").val();
 			var consumption = $("#upConsumption").val();
@@ -318,38 +321,25 @@ var array2;
 				/*console.table(coordinates.origin);
 				console.table(coordinates.destination);*/
 
-				if($("#upAutonomyKm").val()!==''){
-					localStorage.setItem("autonomy", $("#upAutonomyKm").val());
-				} else {
-					var autonomy = $("#upAutonomyL").val()*100/$("#upConsumption").val();
-					localStorage.setItem("autonomy", autonomy);
-				}
-
 				calculateAndDisplayRoute(directionsService, directionsDisplay);
-				markers.push(getStationsUP());
-				//console.table(markers[0][1]);
+				getStationsUP();
+				//stationsF.push(getStationsUP());
+
+				//console.table(stationsF);
+
+				//stationsF.forEach(function(station){
+					//markers.push(getStationsUP());
+
+					//stationsData.push(getStationsUP());
+					//console.table(stationsData);
+
+				//});
+
+				//console.table(markers[0]);
 				//var myLatLng = {"lat": 39.7495, "lng":-8.8077};
-				var labels = '12345';
+				/*var labels = '12345';
 				var labelIndex = 0;
-				/*for(var j=0;j<markers[0].length;j++){
 
-					var marker = new google.maps.Marker({
-							position: {"lat": parseFloat(markers[0][j].latitude), "lng": parseFloat(markers[0][j].longitude)},
-							label: labels[labelIndex++ % labels.length],
-							map: mapUP,
-							title: markers[0][j].stationName
-						});
-
-					/*marker.addListener('dblclick', function() {
-						alert("double click"+ marker.position);
-						waypts.push({
-							location:marker.position,
-							stopover: true
-						});
-					});*/
-
-				//	calculateAndDisplayRoute(directionsService, directionsDisplay);
-				//}
 				markers[0].forEach(function(marker){
 					//console.table(marker);
 					var currentMarker = new google.maps.Marker({
@@ -368,7 +358,7 @@ var array2;
 							calculateAndDisplayRoute(directionsService, directionsDisplay);
 						});
 
-				});
+				});*/
 
 				$.ajax({
 					async: false,
@@ -602,10 +592,11 @@ var array2;
 
 
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-
+		var tempOrigin = $("#upOrigin").val();
+		var tempDestination = $("#upDestination").val();
 		directionsService.route({
-		  origin: $("#upOrigin").val(),
-		  destination: $("#upDestination").val(),
+		  origin: tempOrigin,
+		  destination: tempDestination,
 		  waypoints: waypts,
 			avoidTolls: $('#upPaidRoads').is(':checked'),
 		  optimizeWaypoints: true,
@@ -616,6 +607,8 @@ var array2;
 			var route = response.routes[0];
 			routePoints = route;
 						//console.table(route);
+						//console.log(tempOrigin);
+						//console.log(tempDestination);
 		  } else {
 			window.alert('Directions request failed due to ' + status);
 		  }
@@ -650,19 +643,26 @@ var array2;
 		return coordinates;
 	}
 
-	function getStationsUP(){
+	function getStationsUP(stationsData){
 		var origin = $("#upOrigin").val();
 		var destination = $("#upDestination").val();
 		var autonomy = localStorage.getItem("autonomy");
 		var coordinates = {latitude:null, longitude:null};
 		coordinates = getCoordinates();
-		var stationsData =null;
+		var stationsData = null;
 
+		//console.log(origin);
+		//console.log(destination);
+
+		//console.table(coordinates.origin);
+		//console.table(coordinates.destination);
 
 		var pointsArray = [];
 		var i, j, k, l;
 		var multiplier = 1;
 		var point = {"latitude":null, "longitude":null};
+
+		var markers=new Array();
 
 
 
@@ -731,50 +731,76 @@ var array2;
 				pointsArray.push(currentPoint);
 
 
-
 //console.table(pointsArray);
-		$.ajax({
-				async: false,
-				url: "/api/receiveCoordinates",
-				type: 'POST',
-				dataType: "json",
-				data: {"pathPoints": pointsArray,
-					"latitudeOrigin": coordinates.origin.latitude,
-					"longitudeOrigin": coordinates.origin.longitude,
-					"latitudeDestination": coordinates.destination.latitude,
-					"longitudeDestination": coordinates.destination.longitude
-					},//{ "_token" : $('meta[name=_token]').attr('content'), name: "John", location: "Boston" },//JSON.stringify(pointsArray),//{_token: CSRF_TOKEN},
 
-				success: function (response) {
-						console.table("data sent "+ response["stations"]);
-				},
-				error: function(error){
-					console.log("could not send data, error: ");
-					console.table(error);
-				}
+$.ajax({
+		async: false,
+		url: "/api/receiveCoordinates",
+		type: 'POST',
+		dataType: "json",
+		data: {"pathPoints": pointsArray,
+			"latitudeOrigin": coordinates.origin.latitude,
+			"longitudeOrigin": coordinates.origin.longitude,
+			"latitudeDestination": coordinates.destination.latitude,
+			"longitudeDestination": coordinates.destination.longitude
+			},//{ "_token" : $('meta[name=_token]').attr('content'), name: "John", location: "Boston" },//JSON.stringify(pointsArray),//{_token: CSRF_TOKEN},
+
+		success: function (response) {
+				console.table("data sent "+ response["stations"]);
+		},
+		error: function(error){
+			console.log("could not send data, error: ");
+			console.table(error);
+		}
+});
+
+
+			$.ajax({
+							async: false,
+							url: 'api/stationsup',
+							type: "GET",
+							dataType: "json",
+							success: function (data) {
+								stationsData = data["stations"];
+								//console.log("stationsData");
+								//console.table(stationsData);
+							},
+
+							error: function (textStatus, errorThrown) {
+									console.log("Error getting the station data")
+							}
+
+					 });
+
+//return stationsData;
+
+markers.push(stationsData);
+
+var labels = '12345';
+var labelIndex = 0;
+
+markers[0].forEach(function(marker){
+	//console.table(marker);
+	var currentMarker = new google.maps.Marker({
+			position: {"lat": parseFloat(marker.latitude), "lng": parseFloat(marker.longitude)},
+			label: labels[labelIndex++ % labels.length],
+			map: mapUP,
+			title: marker.stationName
 		});
+
+		currentMarker.addListener('dblclick', function() {
+			//alert("double click"+ currentMarker.position);
+			waypts.push({
+				location:currentMarker.position,
+				stopover: true
+			});
+			calculateAndDisplayRoute(directionsService, directionsDisplay);
+		});
+
+});
+
+
 }});
-
-
-	$.ajax({
-					async: false,
-					url: 'api/stationsup',
-					type: "GET",
-					dataType: "json",
-					success: function (data) {
-						stationsData = data["stations"];
-						console.log("stationsData");
-						console.table(stationsData);
-					},
-
-					error: function (textStatus, errorThrown) {
-							console.log("Error getting the station data")
-					}
-
-			 });
-
-		 //console.table(stationsData);
-		 return stationsData;
 
 	}
 
